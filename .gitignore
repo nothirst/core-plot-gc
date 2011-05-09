@@ -1,20 +1,8 @@
 build
-.bzr
 *.xcodeproj/*.mode*
 *.xcodeproj/*pbxuser
 *.xcodeproj/*perspective*
-**/build
-**/*.xcodeproj/*.mode*
-**/*.xcodeproj/*pbxuser
-**/*.xcodeproj/*perspective*
-*tmproj
-**/~*
 *.xcodeproj/project.xcworkspace/xcuserdata
 *.xcodeproj/xcuserdata
-Subprojects/*/*.xcodeproj/project.xcworkspace/xcuserdata
-Subprojects/*/*.xcodeproj/xcuserdata
 .DS_Store
-
-xcuserdata
-Breakpoints.xcbkptlist
-MoneyWell Spotlight Importer.xcscheme
+**/*.xcodeproj/xcuserdata
