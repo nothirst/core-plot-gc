@@ -5,11 +5,11 @@
 
 @interface CPGridLines : CPLayer {
 @private
-	__weak CPAxis *axis;
+	CPAxis *axis;
 	BOOL major;
 }
 
-@property (nonatomic, readwrite, assign) __weak CPAxis *axis;
+@property (nonatomic, readwrite, assign) CPAxis *axis;
 @property (nonatomic, readwrite) BOOL major;
 
 @end
