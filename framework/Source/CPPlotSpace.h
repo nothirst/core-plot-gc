@@ -90,16 +90,16 @@ extern NSString * const CPPlotSpaceCoordinateMappingDidChangeNotification;
 
 @interface CPPlotSpace : NSObject <CPResponder> {
 	@private
-    CPGraph *graph;
+    __weak CPGraph *graph;
 	id <NSCopying, NSObject> identifier;
-    id <CPPlotSpaceDelegate> delegate;
+    __weak id <CPPlotSpaceDelegate> delegate;
     BOOL allowsUserInteraction;
 }
 
 @property (nonatomic, readwrite, copy) id <NSCopying, NSObject> identifier;
 @property (nonatomic, readwrite, assign) BOOL allowsUserInteraction;
-@property (nonatomic, readwrite, assign) CPGraph *graph;
-@property (nonatomic, readwrite, assign) id <CPPlotSpaceDelegate> delegate;
+@property (nonatomic, readwrite, assign) __weak CPGraph *graph;
+@property (nonatomic, readwrite, assign) __weak id <CPPlotSpaceDelegate> delegate;
 
 @end
 

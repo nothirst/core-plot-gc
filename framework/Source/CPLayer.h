@@ -17,14 +17,14 @@
 	id <CPLayoutManager> layoutManager;
 	BOOL renderingRecursively;
 	BOOL useFastRendering;
-    CPGraph *graph;
+    __weak CPGraph *graph;
 	CGPathRef outerBorderPath;
 	CGPathRef innerBorderPath;
 }
 
 /// @name Graph
 /// @{
-@property (nonatomic, readwrite, assign) CPGraph *graph;
+@property (nonatomic, readwrite, assign) __weak CPGraph *graph;
 /// @}
 
 /// @name Padding

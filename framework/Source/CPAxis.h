@@ -108,9 +108,9 @@ typedef enum _CPAxisLabelingPolicy {
 	NSArray *alternatingBandFills;
 	NSMutableArray *mutableBackgroundLimitBands;
 	BOOL separateLayers;
-	CPPlotArea *plotArea;
-	CPGridLines *minorGridLines;
-	CPGridLines *majorGridLines;
+	__weak CPPlotArea *plotArea;
+	__weak CPGridLines *minorGridLines;
+	__weak CPGridLines *majorGridLines;
 }
 
 /// @name Axis
@@ -189,9 +189,9 @@ typedef enum _CPAxisLabelingPolicy {
 /// @name Layers
 /// @{
 @property (nonatomic, readwrite, assign) BOOL separateLayers;
-@property (nonatomic, readwrite, assign) CPPlotArea *plotArea;
-@property (nonatomic, readonly, assign) CPGridLines *minorGridLines;
-@property (nonatomic, readonly, assign) CPGridLines *majorGridLines;
+@property (nonatomic, readwrite, assign) __weak CPPlotArea *plotArea;
+@property (nonatomic, readonly, assign) __weak CPGridLines *minorGridLines;
+@property (nonatomic, readonly, assign) __weak CPGridLines *majorGridLines;
 @property (nonatomic, readonly, retain) CPAxisSet *axisSet;
 ///	@}
 

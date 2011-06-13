@@ -7,7 +7,7 @@
 #pragma mark Graphics Context
 
 // linked list to store saved contexts
-static CPContextNode *pushedContexts = nil;
+static CPContextNode *pushedContexts = NULL;
 
 /**	@brief Pushes the current AppKit graphics context onto a stack and replaces it with the given Core Graphics context.
  *	@param newContext The graphics context.
@@ -15,10 +15,10 @@ static CPContextNode *pushedContexts = nil;
 void CPPushCGContext(CGContextRef newContext)
 {
 	if (newContext) {
-		CPContextNode *newNode = [[CPContextNode alloc] init];
-		newNode.context = [NSGraphicsContext currentContext];
+		CPContextNode *newNode = malloc(sizeof(CPContextNode));
+		(*newNode).context = [NSGraphicsContext currentContext];
 		[NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:newContext flipped:NO]];
-		newNode.nextNode = pushedContexts;
+		(*newNode).nextNode = pushedContexts;
 		pushedContexts = newNode;
 	}
 }
@@ -28,8 +28,9 @@ void CPPushCGContext(CGContextRef newContext)
 void CPPopCGContext(void)
 {
 	if (pushedContexts) {
-		[NSGraphicsContext setCurrentContext:pushedContexts.context];
-		CPContextNode *next = pushedContexts.nextNode;
+		[NSGraphicsContext setCurrentContext:(*pushedContexts).context];
+		CPContextNode *next = (*pushedContexts).nextNode;
+		free(pushedContexts);
 		pushedContexts = next;
 	}
 }
