@@ -7,13 +7,12 @@
 //
 
 #import "PlotItem.h"
-#import "PlotGallery.h"
 
-@interface SimpleScatterPlot : PlotItem < CPPlotSpaceDelegate,
-                                          CPPlotDataSource,
-                                          CPScatterPlotDelegate>
+@interface SimpleScatterPlot : PlotItem < CPTPlotSpaceDelegate,
+                                          CPTPlotDataSource,
+                                          CPTScatterPlotDelegate>
 {
-    CPLayerAnnotation   *symbolTextAnnotation;
+    CPTLayerAnnotation   *symbolTextAnnotation;
 
     CGFloat             xShift;
     CGFloat             yShift;

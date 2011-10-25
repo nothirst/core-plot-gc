@@ -7,13 +7,12 @@
 //
 
 #import "PlotItem.h"
-#import "PlotGallery.h"
 
-@interface VerticalBarChart : PlotItem <CPPlotSpaceDelegate,
-                                        CPPlotDataSource,
-                                        CPBarPlotDelegate>
+@interface VerticalBarChart : PlotItem <CPTPlotSpaceDelegate,
+                                        CPTPlotDataSource,
+                                        CPTBarPlotDelegate>
 {
-    CPLayerAnnotation   *symbolTextAnnotation;
+    CPTLayerAnnotation   *symbolTextAnnotation;
 
     CGFloat             xShift;
     CGFloat             yShift;

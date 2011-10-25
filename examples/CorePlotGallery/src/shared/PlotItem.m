@@ -7,7 +7,6 @@
 //
 
 #import "PlotGallery.h"
-#import "PlotItem.h"
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 #else
@@ -46,35 +45,27 @@
     return self;
 }
 
-- (void)addGraph:(CPGraph *)graph toHostingView:(CPGraphHostingView *)layerHostingView
+- (void)addGraph:(CPTGraph *)graph toHostingView:(CPTGraphHostingView *)layerHostingView
 {
     [graphs addObject:graph];
 
     if (layerHostingView) {
-#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-    layerHostingView.hostedGraph = graph;
-#else
-    layerHostingView.hostedLayer = graph;
-#endif
+		layerHostingView.hostedGraph = graph;
     }
 }
 
-- (void)addGraph:(CPGraph *)graph
+- (void)addGraph:(CPTGraph *)graph
 {
     [self addGraph:graph toHostingView:nil];
 }
 
 - (void)killGraph
 {
-    // Remove the CPLayerHostingView
+    // Remove the CPTLayerHostingView
     if (defaultLayerHostingView) {
         [defaultLayerHostingView removeFromSuperview];
         
-#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
         defaultLayerHostingView.hostedGraph = nil;
-#else
-        defaultLayerHostingView.hostedLayer = nil;
-#endif
         [defaultLayerHostingView release];
         defaultLayerHostingView = nil;
     }
@@ -91,24 +82,29 @@
     [super dealloc];
 }
 
+// override to generate data for the plot if needed
+- (void)generateData
+{
+}
+
 - (NSComparisonResult)titleCompare:(PlotItem *)other
 {
     return [title caseInsensitiveCompare:other.title];
 }
 
-- (void)setTitleDefaultsForGraph:(CPGraph *)graph withBounds:(CGRect)bounds
+- (void)setTitleDefaultsForGraph:(CPTGraph *)graph withBounds:(CGRect)bounds
 {
     graph.title = title;
-    CPMutableTextStyle *textStyle = [CPMutableTextStyle textStyle];
-    textStyle.color = [CPColor grayColor];
+    CPTMutableTextStyle *textStyle = [CPTMutableTextStyle textStyle];
+    textStyle.color = [CPTColor grayColor];
     textStyle.fontName = @"Helvetica-Bold";
     textStyle.fontSize = round(bounds.size.height / 20.0f);
     graph.titleTextStyle = textStyle;
     graph.titleDisplacement = CGPointMake(0.0f, round(bounds.size.height / 18.0f)); // Ensure that title displacement falls on an integral pixel
-    graph.titlePlotAreaFrameAnchor = CPRectAnchorTop;    
+    graph.titlePlotAreaFrameAnchor = CPTRectAnchorTop;    
 }
 
-- (void)setPaddingDefaultsForGraph:(CPGraph *)graph withBounds:(CGRect)bounds
+- (void)setPaddingDefaultsForGraph:(CPTGraph *)graph withBounds:(CGRect)bounds
 {
     float boundsPadding = round(bounds.size.width / 20.0f); // Ensure that padding falls on an integral pixel
     graph.paddingLeft = boundsPadding;
@@ -128,20 +124,18 @@
 
 // There's a UIImage function to scale and orient an existing image,
 // but this will also work in pre-4.0 iOS
-- (CGImageRef)scaleCGImage:(CGImageRef)image toSize:(CGSize)size
+- (CGImageRef)newCGImageFromImage:(CGImageRef)image scaledToSize:(CGSize)size
 {
-    CGColorSpaceRef colorspace = CGImageGetColorSpace(image);
     CGContextRef c = CGBitmapContextCreate(NULL,
                                            size.width,
                                            size.height,
                                            CGImageGetBitsPerComponent(image),
                                            CGImageGetBytesPerRow(image),
-                                           colorspace,
+                                           CGImageGetColorSpace(image),
                                            CGImageGetAlphaInfo(image));
-    CGColorSpaceRelease(colorspace);
 
-    if (c == NULL) {
-        return nil;
+    if ( c == NULL ) {
+        return NULL;
     }
 
     CGContextDrawImage(c, CGRectMake(0, 0, size.width, size.height), image);
@@ -154,13 +148,12 @@
 - (UIImage *)image
 {
     if (cachedImage == nil) {
-        CGRect imageFrame = CGRectMake(0, 0, 100, 75);
+        CGRect imageFrame = CGRectMake(0, 0, 400, 300);
         UIView *imageView = [[UIView alloc] initWithFrame:imageFrame];
         [imageView setOpaque:YES];
         [imageView setUserInteractionEnabled:NO];
 
         [self renderInView:imageView withTheme:nil];        
-        [self reloadData];
 
         UIGraphicsBeginImageContext(imageView.bounds.size);
             CGContextRef c = UIGraphicsGetCurrentContext();
@@ -170,13 +163,11 @@
             [imageView.layer renderInContext:c];
             cachedImage = [UIGraphicsGetImageFromCurrentImageContext() retain];
         
-            // This code was to rescale a graph that needed a larger rendering
-            // area because of absolute pixel sizing. All of the sample plots
-            // are now aware of device/screen sizes and should render properly
-            // even to a thumbnail size.
-            //UIImage* bigImage = UIGraphicsGetImageFromCurrentImageContext();
-            //cachedImage = [[UIImage imageWithCGImage:[self scaleCGImage:[bigImage CGImage] toSize:CGSizeMake(100.0f, 75.0f)]] retain];
-
+            // rescale graph
+            UIImage* bigImage = UIGraphicsGetImageFromCurrentImageContext();
+			CGImageRef scaledImage = [self newCGImageFromImage:[bigImage CGImage] scaledToSize:CGSizeMake(100.0f, 75.0f)];
+            cachedImage = [[UIImage imageWithCGImage:scaledImage] retain];
+			CGImageRelease(scaledImage);
         UIGraphicsEndImageContext();
 
         [imageView release];
@@ -196,7 +187,6 @@
         [imageView setWantsLayer:YES];
 
         [self renderInView:imageView withTheme:nil];
-        [self reloadData];
 
         CGSize boundsSize = imageFrame.size;
 
@@ -233,7 +223,7 @@
 
 #endif
 
-- (void)applyTheme:(CPTheme *)theme toGraph:(CPGraph *)graph withDefault:(CPTheme *)defaultTheme
+- (void)applyTheme:(CPTTheme *)theme toGraph:(CPTGraph *)graph withDefault:(CPTTheme *)defaultTheme
 {
     if (theme == nil) {
         [graph applyTheme:defaultTheme];
@@ -252,19 +242,14 @@
 
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-- (void)renderInView:(UIView*)hostingView withTheme:(CPTheme*)theme
+- (void)renderInView:(UIView*)hostingView withTheme:(CPTTheme*)theme
 #else
-- (void)renderInView:(NSView*)hostingView withTheme:(CPTheme*)theme
+- (void)renderInView:(NSView*)hostingView withTheme:(CPTTheme*)theme
 #endif
 {
     [self killGraph];
 
-#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-	CGRect bounds = [hostingView bounds];
-#else
-    CGRect bounds = NSRectToCGRect([hostingView bounds]);
-#endif
-    defaultLayerHostingView = [[CPGraphHostingView alloc] initWithFrame:bounds];
+    defaultLayerHostingView = [(CPTGraphHostingView *)[CPTGraphHostingView alloc] initWithFrame:hostingView.bounds];
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     defaultLayerHostingView.collapsesLayers = NO;
@@ -274,17 +259,18 @@
 #endif
 
     [hostingView addSubview:defaultLayerHostingView];
+	[self generateData];
     [self renderInLayer:defaultLayerHostingView withTheme:theme];
 }
 
-- (void)renderInLayer:(CPGraphHostingView *)layerHostingView withTheme:(CPTheme *)theme
+- (void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
 {
     NSLog(@"PlotItem:renderInLayer: Override me");
 }
 
 - (void)reloadData
 {
-    for (CPGraph *g in graphs) {
+    for (CPTGraph *g in graphs) {
         [g reloadData];
     }
 }

@@ -11,7 +11,7 @@
 #import "dlfcn.h"
 //#define EMBED_NU	1
 
-const float CP_SPLIT_VIEW_MIN_LHS_WIDTH = 150.0f;
+const float CPT_SPLIT_VIEW_MIN_LHS_WIDTH = 150.0f;
 
 #define kThemeTableViewControllerNoTheme        @"None"
 #define kThemeTableViewControllerDefaultTheme   @"Default"
@@ -26,8 +26,8 @@ const float CP_SPLIT_VIEW_MIN_LHS_WIDTH = 150.0f;
     [themePopUpButton addItemWithTitle:kThemeTableViewControllerDefaultTheme];
     [themePopUpButton addItemWithTitle:kThemeTableViewControllerNoTheme];
 
-    for (Class c in [CPTheme themeClasses]) {
-        [themePopUpButton addItemWithTitle:[c defaultName]];
+    for (Class c in [CPTTheme themeClasses]) {
+        [themePopUpButton addItemWithTitle:[c name]];
     }
 
     self.currentThemeName = kThemeTableViewControllerDefaultTheme;
@@ -96,9 +96,9 @@ const float CP_SPLIT_VIEW_MIN_LHS_WIDTH = 150.0f;
 #pragma mark -
 #pragma mark Theme Selection
 
-- (CPTheme *)currentTheme
+- (CPTTheme *)currentTheme
 {
-    CPTheme *theme;
+    CPTTheme *theme;
 
     if (currentThemeName == kThemeTableViewControllerNoTheme) {
         theme = (id)[NSNull null];
@@ -107,7 +107,7 @@ const float CP_SPLIT_VIEW_MIN_LHS_WIDTH = 150.0f;
         theme = nil;
     }
     else {
-        theme = [CPTheme themeNamed:currentThemeName];
+        theme = [CPTTheme themeNamed:currentThemeName];
     }
 
     return theme;
@@ -155,9 +155,9 @@ const float CP_SPLIT_VIEW_MIN_LHS_WIDTH = 150.0f;
 
 - (void)imageBrowserSelectionDidChange:(IKImageBrowserView *)browser
 {
-    int index = [[browser selectionIndexes] firstIndex];
+    NSUInteger index = [[browser selectionIndexes] firstIndex];
 
-    if (index >= 0) {
+    if (index != NSNotFound) {
         PlotItem *item = [[PlotGallery sharedPlotGallery] objectAtIndex:index];
         self.plotItem = item;
     }
@@ -167,12 +167,12 @@ const float CP_SPLIT_VIEW_MIN_LHS_WIDTH = 150.0f;
 
 - (CGFloat)splitView:(NSSplitView *)sv constrainMinCoordinate:(CGFloat)coord ofSubviewAt:(NSInteger)index
 {
-    return coord + CP_SPLIT_VIEW_MIN_LHS_WIDTH;
+    return coord + CPT_SPLIT_VIEW_MIN_LHS_WIDTH;
 }
 
 - (CGFloat)splitView:(NSSplitView *)sv constrainMaxCoordinate:(CGFloat)coord ofSubviewAt:(NSInteger)index
 {
-    return coord - CP_SPLIT_VIEW_MIN_LHS_WIDTH;
+    return coord - CPT_SPLIT_VIEW_MIN_LHS_WIDTH;
 }
 
 - (void)splitView:(NSSplitView*)sender resizeSubviewsWithOldSize:(NSSize)oldSize

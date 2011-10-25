@@ -7,11 +7,10 @@
 //
 
 #import "PlotItem.h"
-#import "PlotGallery.h"
 
-@interface SteppedScatterPlot : PlotItem <CPPlotSpaceDelegate,
-                                          CPPlotDataSource,
-                                          CPScatterPlotDelegate>
+@interface SteppedScatterPlot : PlotItem <CPTPlotSpaceDelegate,
+                                          CPTPlotDataSource,
+                                          CPTScatterPlotDelegate>
 {
     CGFloat     xShift;
     CGFloat     yShift;

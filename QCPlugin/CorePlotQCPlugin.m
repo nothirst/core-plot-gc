@@ -12,9 +12,8 @@ void drawErrorText(CGContextRef context, CGRect rect)
 
 	CGContextSaveGState(context);
 	
-    float w, h;
-    w = rect.size.width;
-    h = rect.size.height;
+    CGFloat w = rect.size.width;
+    CGFloat h = rect.size.height;
 	
     CGContextSelectFont (context, "Verdana", h/4, kCGEncodingMacRoman);
     CGContextSetTextDrawingMode (context, kCGTextFillStroke);
@@ -30,11 +29,11 @@ void drawErrorText(CGContextRef context, CGRect rect)
     CGContextShowText(context, "ERROR", 5); // 10
 	CGPoint r1 = CGContextGetTextPosition(context);
 	
-	float width = r1.x - r0.x;
-	float height = h/3;
+	CGFloat width = r1.x - r0.x;
+	CGFloat height = h/3;
 
-	float x = rect.origin.x + rect.size.width/2.0 - width/2.0;
-	float y = rect.origin.y + rect.size.height/2.0 - height/2.0;
+	CGFloat x = rect.origin.x + w/2.0 - width/2.0;
+	CGFloat y = rect.origin.y + h/2.0 - height/2.0;
 	
 	CGContextSetTextDrawingMode(context, kCGTextFillStroke);
     CGContextShowTextAtPoint (context, x, y, "ERROR", 5);
@@ -100,7 +99,7 @@ Synthesized accessors for internal PlugIn settings
 
 - (id) init
 {
-	if (self = [super init]) 
+	if ( (self = [super init]) )
 	{
 		/*
 		Allocate any permanent resource required by the plug-in.
@@ -260,11 +259,15 @@ Synthesized accessors for internal PlugIn settings
 				[NSNumber numberWithInt:0], QCPortAttributeMinimumValueKey,
 				nil];
 	
-	if ([key isEqualToString:@"inputAxisColor"])
-		return [NSDictionary dictionaryWithObjectsAndKeys:
-				@"Axis Color", QCPortAttributeNameKey,
-				[(id)CGColorCreateGenericRGB(1.0, 1.0, 1.0, 1.0) autorelease], QCPortAttributeDefaultValueKey,
-				nil];
+	if ([key isEqualToString:@"inputAxisColor"]) {
+		CGColorRef axisColor = CGColorCreateGenericRGB(1.0, 1.0, 1.0, 1.0);
+		NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:
+								@"Axis Color", QCPortAttributeNameKey,
+								(id)axisColor, QCPortAttributeDefaultValueKey,
+								nil];
+		CGColorRelease(axisColor);
+		return result;
+	}
 	
 	if ([key isEqualToString:@"inputAxisLineWidth"])
 		return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -316,11 +319,15 @@ Synthesized accessors for internal PlugIn settings
 				nil];
 	
 
-	if ([key isEqualToString:@"inputPlotAreaColor"])
-		return [NSDictionary dictionaryWithObjectsAndKeys:
-				@"Plot Area Color", QCPortAttributeNameKey,
-				[(id)CGColorCreateGenericRGB(0.0, 0.0, 0.0, 0.4) autorelease], QCPortAttributeDefaultValueKey,
-				nil];
+	if ([key isEqualToString:@"inputPlotAreaColor"]) {
+		CGColorRef plotAreaColor = CGColorCreateGenericRGB(0.0, 0.0, 0.0, 0.4);
+		NSDictionary *result = [NSDictionary dictionaryWithObjectsAndKeys:
+								@"Plot Area Color", QCPortAttributeNameKey,
+								(id)plotAreaColor, QCPortAttributeDefaultValueKey,
+								nil];
+		CGColorRelease(plotAreaColor);
+		return result;
+	}
 	
 	if ([key isEqualToString:@"inputPixelsWide"])
 		return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -352,28 +359,28 @@ Synthesized accessors for internal PlugIn settings
 	if (!graph)
 	{
 		// Create graph from theme
-		CPTheme *theme = [CPTheme themeNamed:kCPPlainBlackTheme];
-		graph = (CPXYGraph *)[theme newGraph];
+		CPTTheme *theme = [CPTTheme themeNamed:kCPTPlainBlackTheme];
+		graph = (CPTXYGraph *)[theme newGraph];
 				
 		// Setup scatter plot space
-		CPXYPlotSpace *plotSpace = (CPXYPlotSpace *)graph.defaultPlotSpace;
-		plotSpace.xRange = [CPPlotRange plotRangeWithLocation:CPDecimalFromFloat(1.0) length:CPDecimalFromFloat(1.0)];
-		plotSpace.yRange = [CPPlotRange plotRangeWithLocation:CPDecimalFromFloat(-1.0) length:CPDecimalFromFloat(1.0)];
+		CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
+		plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(1.0) length:CPTDecimalFromFloat(1.0)];
+		plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(-1.0) length:CPTDecimalFromFloat(1.0)];
 		
 		// Axes
-		CPXYAxisSet *axisSet = (CPXYAxisSet *)graph.axisSet;
+		CPTXYAxisSet *axisSet = (CPTXYAxisSet *)graph.axisSet;
 		
-		CPXYAxis *x = axisSet.xAxis;
-		x.majorIntervalLength = CPDecimalFromFloat(0.5);
+		CPTXYAxis *x = axisSet.xAxis;
+		x.majorIntervalLength = CPTDecimalFromFloat(0.5);
 		x.minorTicksPerInterval = 2;
 		
-		CPXYAxis *y = axisSet.yAxis;
-		y.majorIntervalLength = CPDecimalFromFloat(0.5);
+		CPTXYAxis *y = axisSet.yAxis;
+		y.majorIntervalLength = CPTDecimalFromFloat(0.5);
 		y.minorTicksPerInterval = 5;
 	}		
 }
 
-- (CGColorRef) defaultColorForPlot:(NSUInteger)index alpha:(float)alpha
+- (CGColorRef) newDefaultColorForPlot:(NSUInteger)index alpha:(CGFloat)alpha
 {
 	CGColorRef color;
 	switch (index) {
@@ -400,7 +407,6 @@ Synthesized accessors for internal PlugIn settings
 			break;
 	}
 	
-	[(id)color autorelease];
 	return color;
 }
 
@@ -412,10 +418,10 @@ Synthesized accessors for internal PlugIn settings
 
 - (BOOL) configureAxis
 {
-	CPColor *axisColor = [CPColor colorWithCGColor:self.inputAxisColor];
+	CPTColor *axisColor = [CPTColor colorWithCGColor:self.inputAxisColor];
 	
-	CPXYAxisSet *set = (CPXYAxisSet *)graph.axisSet;
-    CPMutableLineStyle *lineStyle = [CPMutableLineStyle lineStyle];
+	CPTXYAxisSet *set = (CPTXYAxisSet *)graph.axisSet;
+    CPTMutableLineStyle *lineStyle = [CPTMutableLineStyle lineStyle];
     lineStyle.lineColor = axisColor;
     lineStyle.lineWidth = self.inputAxisLineWidth;
 	set.xAxis.axisLineStyle = lineStyle;
@@ -429,16 +435,16 @@ Synthesized accessors for internal PlugIn settings
 	set.xAxis.minorTickLineStyle = lineStyle;
 	set.yAxis.minorTickLineStyle = lineStyle;
 	
-    CPMutableTextStyle *textStyle = [CPMutableTextStyle textStyle];
+    CPTMutableTextStyle *textStyle = [CPTMutableTextStyle textStyle];
     textStyle.color = axisColor;
 	set.xAxis.labelTextStyle = textStyle;
 	
 	double xrange = self.inputXMax - self.inputXMin;
-	set.xAxis.majorIntervalLength = CPDecimalFromDouble(xrange / (self.inputXMajorIntervals));
+	set.xAxis.majorIntervalLength = CPTDecimalFromDouble(xrange / (self.inputXMajorIntervals));
 	set.xAxis.minorTicksPerInterval = self.inputXMinorIntervals;
 	
 	double yrange = self.inputYMax - self.inputYMin;
-	set.yAxis.majorIntervalLength = CPDecimalFromDouble(yrange / (self.inputYMajorIntervals));
+	set.yAxis.majorIntervalLength = CPTDecimalFromDouble(yrange / (self.inputYMajorIntervals));
 	set.yAxis.minorTicksPerInterval = self.inputYMinorIntervals;
 	
 	set.xAxis.minorTickLength = self.inputAxisMinorTickLength;
@@ -449,13 +455,13 @@ Synthesized accessors for internal PlugIn settings
 	
 	if ([self didValueForInputKeyChange:@"inputMajorGridLineWidth"] || [self didValueForInputKeyChange:@"inputAxisColor"])
 	{
-		CPMutableLineStyle *majorGridLineStyle = nil;
+		CPTMutableLineStyle *majorGridLineStyle = nil;
 		if (self.inputMajorGridLineWidth == 0.0)
 			majorGridLineStyle = nil;
 		else
 		{
-			majorGridLineStyle = [CPMutableLineStyle lineStyle];
-			majorGridLineStyle.lineColor = [CPColor colorWithCGColor:self.inputAxisColor];
+			majorGridLineStyle = [CPTMutableLineStyle lineStyle];
+			majorGridLineStyle.lineColor = [CPTColor colorWithCGColor:self.inputAxisColor];
 			majorGridLineStyle.lineWidth = self.inputMajorGridLineWidth;
 		}
 		
@@ -465,13 +471,13 @@ Synthesized accessors for internal PlugIn settings
 
 	if ([self didValueForInputKeyChange:@"inputMinorGridLineWidth"] || [self didValueForInputKeyChange:@"inputAxisColor"])
 	{
-		CPMutableLineStyle *minorGridLineStyle;
+		CPTMutableLineStyle *minorGridLineStyle;
 		if (self.inputMinorGridLineWidth == 0.0)
 			minorGridLineStyle = nil;
 		else
 		{
-			minorGridLineStyle = [CPMutableLineStyle lineStyle];
-			minorGridLineStyle.lineColor = [CPColor colorWithCGColor:self.inputAxisColor];
+			minorGridLineStyle = [CPTMutableLineStyle lineStyle];
+			minorGridLineStyle.lineColor = [CPTColor colorWithCGColor:self.inputAxisColor];
 			minorGridLineStyle.lineWidth = self.inputMinorGridLineWidth;
 		}
 		
@@ -483,10 +489,10 @@ Synthesized accessors for internal PlugIn settings
 }	
 
 
-- (CGColorRef) dataLineColor:(NSUInteger)index
+- (id) dataLineColor:(NSUInteger)index
 {
 	NSString *key = [NSString stringWithFormat:@"plotDataLineColor%i", index];
-	return (CGColorRef)[self valueForInputKey:key];
+	return [self valueForInputKey:key];
 }
 
 - (CGFloat) dataLineWidth:(NSUInteger)index
@@ -495,13 +501,13 @@ Synthesized accessors for internal PlugIn settings
 	return [[self valueForInputKey:key] floatValue];
 }
 
-- (CGColorRef) areaFillColor:(NSUInteger)index
+- (id) areaFillColor:(NSUInteger)index
 {
 	NSString *key = [NSString stringWithFormat:@"plotFillColor%i", index];
-	return (CGColorRef)[self valueForInputKey:key];
+	return [self valueForInputKey:key];
 }
 
-- (CGImageRef) areaFillImage:(NSUInteger)index
+- (CGImageRef) newAreaFillImage:(NSUInteger)index
 {
 	NSString *key = [NSString stringWithFormat:@"plotFillImage%i", index];
 	id<QCPlugInInputImageSource> img = [self valueForInputKey:key];
@@ -514,7 +520,9 @@ Synthesized accessors for internal PlugIn settings
     NSString *pixelFormat = QCPlugInPixelFormatBGRA8;
 	#endif
 	
-	[img lockBufferRepresentationWithPixelFormat:pixelFormat colorSpace:CGColorSpaceCreateDeviceRGB() forBounds:[img imageBounds]];
+	CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
+	[img lockBufferRepresentationWithPixelFormat:pixelFormat colorSpace:rgbColorSpace forBounds:[img imageBounds]];
+	CGColorSpaceRelease(rgbColorSpace);
 	void *baseAddress = (void *)[img bufferBaseAddress];
 	NSUInteger pixelsWide = [img bufferPixelsWide];
 	NSUInteger pixelsHigh = [img bufferPixelsHigh];
@@ -607,12 +615,12 @@ static void _BufferReleaseCallback(const void* address, void* context)
 #pragma mark -
 #pragma markData source methods
 
--(NSUInteger)numberOfRecordsForPlot:(CPPlot *)plot 
+-(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot 
 {	
 	return 0;
 }
 
--(NSNumber *)numberForPlot:(CPPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index 
+-(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index 
 {
 	return [NSNumber numberWithInt:0];
 }
@@ -715,12 +723,12 @@ static void _BufferReleaseCallback(const void* address, void* context)
 	[graph layoutIfNeeded];
 	
 	graph.fill = nil;
-	graph.plotAreaFrame.fill = [CPFill fillWithColor:[CPColor colorWithCGColor:self.inputPlotAreaColor]];
+	graph.plotAreaFrame.fill = [CPTFill fillWithColor:[CPTColor colorWithCGColor:self.inputPlotAreaColor]];
 	if (self.inputAxisLineWidth > 0.0)
 	{	
-    	CPMutableLineStyle *lineStyle = [CPMutableLineStyle lineStyle];
+    	CPTMutableLineStyle *lineStyle = [CPTMutableLineStyle lineStyle];
         lineStyle.lineWidth = self.inputAxisLineWidth;
-        lineStyle.lineColor = [CPColor colorWithCGColor:self.inputAxisColor];
+        lineStyle.lineColor = [CPTColor colorWithCGColor:self.inputAxisColor];
 		graph.plotAreaFrame.borderLineStyle = lineStyle;
 	}
 	else {
@@ -728,9 +736,9 @@ static void _BufferReleaseCallback(const void* address, void* context)
 	}
 	
 	// Configure the plot space and axis sets	
-	CPXYPlotSpace *plotSpace = (CPXYPlotSpace *)graph.defaultPlotSpace;
-	plotSpace.xRange = [CPPlotRange plotRangeWithLocation:CPDecimalFromFloat(self.inputXMin) length:CPDecimalFromFloat(self.inputXMax-self.inputXMin)];
-	plotSpace.yRange = [CPPlotRange plotRangeWithLocation:CPDecimalFromFloat(self.inputYMin) length:CPDecimalFromFloat(self.inputYMax-self.inputYMin)];
+	CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
+	plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(self.inputXMin) length:CPTDecimalFromFloat(self.inputXMax-self.inputXMin)];
+	plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(self.inputYMin) length:CPTDecimalFromFloat(self.inputYMax-self.inputYMin)];
 	
 	[self configureAxis];
 	
