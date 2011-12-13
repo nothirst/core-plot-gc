@@ -7,6 +7,7 @@
 #import "CPTLegend.h"
 #import "CPTMutableLineStyle.h"
 #import "CPTMutableNumericData.h"
+#import "CPTMutablePlotRange.h"
 #import "CPTMutableTextStyle.h"
 #import "CPTNumericData.h"
 #import "CPTPathExtensions.h"
@@ -493,6 +494,44 @@ NSString *const CPTBarPlotBindingBarBases	  = @"barBases";     ///< Bar bases.
 }
 
 #pragma mark -
+#pragma mark Data Ranges
+
+-(CPTPlotRange *)plotRangeForCoordinate:(CPTCoordinate)coord
+{
+	CPTPlotRange *range = [super plotRangeForCoordinate:coord];
+
+	if ( !self.barBasesVary ) {
+		switch ( coord ) {
+			case CPTCoordinateX:
+				if ( self.barsAreHorizontal ) {
+					NSDecimal base = self.baseValue;
+					if ( ![range contains:base] ) {
+						CPTMutablePlotRange *newRange = [[range mutableCopy] autorelease];
+						[newRange unionPlotRange:[CPTPlotRange plotRangeWithLocation:base length:CPTDecimalFromInteger(0)]];
+						range = newRange;
+					}
+				}
+				break;
+
+			case CPTCoordinateY:
+				if ( !self.barsAreHorizontal ) {
+					NSDecimal base = self.baseValue;
+					if ( ![range contains:base] ) {
+						CPTMutablePlotRange *newRange = [[range mutableCopy] autorelease];
+						[newRange unionPlotRange:[CPTPlotRange plotRangeWithLocation:base length:CPTDecimalFromInteger(0)]];
+						range = newRange;
+					}
+				}
+				break;
+
+			default:
+				break;
+		}
+	}
+	return range;
+}
+
+#pragma mark -
 #pragma mark Drawing
 
 -(void)renderAsVectorInContext:(CGContextRef)theContext
@@ -666,21 +705,23 @@ NSString *const CPTBarPlotBindingBarBases	  = @"barBases";     ///< Bar bases.
 	// Align to device pixels if there is a line border.
 	// Otherwise, align to view space, so fills are sharp at edges.
 	// Note: may not have a context if doing hit testing.
-	if ( self.lineStyle.lineWidth > 0.0 ) {
-		if ( self.alignsPointsToPixels && context ) {
-			alignedPoint1 = CPTAlignPointToUserSpace(context, alignedPoint1);
-			alignedPoint2 = CPTAlignPointToUserSpace(context, alignedPoint2);
-			alignedPoint3 = CPTAlignPointToUserSpace(context, alignedPoint3);
-			alignedPoint4 = CPTAlignPointToUserSpace(context, alignedPoint4);
-			alignedPoint5 = CPTAlignPointToUserSpace(context, alignedPoint5);
+	if ( self.alignsPointsToPixels ) {
+		if ( self.lineStyle.lineWidth > 0.0 ) {
+			if ( context ) {
+				alignedPoint1 = CPTAlignPointToUserSpace(context, alignedPoint1);
+				alignedPoint2 = CPTAlignPointToUserSpace(context, alignedPoint2);
+				alignedPoint3 = CPTAlignPointToUserSpace(context, alignedPoint3);
+				alignedPoint4 = CPTAlignPointToUserSpace(context, alignedPoint4);
+				alignedPoint5 = CPTAlignPointToUserSpace(context, alignedPoint5);
+			}
 		}
-	}
-	else {
-		alignedPoint1 = CPTPointIntegral(alignedPoint1);
-		alignedPoint2 = CPTPointIntegral(alignedPoint2);
-		alignedPoint3 = CPTPointIntegral(alignedPoint3);
-		alignedPoint4 = CPTPointIntegral(alignedPoint4);
-		alignedPoint5 = CPTPointIntegral(alignedPoint5);
+		else {
+			alignedPoint1 = CPTAlignIntegralPointToUserSpace(context, alignedPoint1);
+			alignedPoint2 = CPTAlignIntegralPointToUserSpace(context, alignedPoint2);
+			alignedPoint3 = CPTAlignIntegralPointToUserSpace(context, alignedPoint3);
+			alignedPoint4 = CPTAlignIntegralPointToUserSpace(context, alignedPoint4);
+			alignedPoint5 = CPTAlignIntegralPointToUserSpace(context, alignedPoint5);
+		}
 	}
 
 	CGFloat radius = MIN(self.barCornerRadius, halfBarWidth);
@@ -1059,32 +1100,56 @@ NSString *const CPTBarPlotBindingBarBases	  = @"barBases";     ///< Bar bases.
 
 -(NSUInteger)numberOfFields
 {
-	return 2;
+	return 3;
 }
 
 -(NSArray *)fieldIdentifiers
 {
-	return [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarLocation], [NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarTip], nil];
+	return [NSArray arrayWithObjects:
+			[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarLocation],
+			[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarTip],
+			[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarLocation],
+			nil];
 }
 
 -(NSArray *)fieldIdentifiersForCoordinate:(CPTCoordinate)coord
 {
-	CPTBarPlotField fieldIdentifier;
+	NSArray *result = nil;
 
 	switch ( coord ) {
 		case CPTCoordinateX:
-			fieldIdentifier = (self.barsAreHorizontal ? CPTBarPlotFieldBarTip : CPTBarPlotFieldBarLocation);
+			if ( self.barsAreHorizontal ) {
+				if ( self.barBasesVary ) {
+					result = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarTip], [NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarBase], nil];
+				}
+				else {
+					result = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarTip], nil];
+				}
+			}
+			else {
+				result = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarLocation], nil];
+			}
 			break;
 
 		case CPTCoordinateY:
-			fieldIdentifier = (self.barsAreHorizontal ? CPTBarPlotFieldBarLocation : CPTBarPlotFieldBarTip);
+			if ( self.barsAreHorizontal ) {
+				result = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarLocation], nil];
+			}
+			else {
+				if ( self.barBasesVary ) {
+					result = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarTip], [NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarBase], nil];
+				}
+				else {
+					result = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:CPTBarPlotFieldBarTip], nil];
+				}
+			}
 			break;
 
 		default:
 			[NSException raise:CPTException format:@"Invalid coordinate passed to fieldIdentifiersForCoordinate:"];
 			break;
 	}
-	return [NSArray arrayWithObject:[NSNumber numberWithUnsignedInt:fieldIdentifier]];
+	return result;
 }
 
 @end
