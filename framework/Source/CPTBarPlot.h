@@ -175,4 +175,6 @@ CPTBarPlotField;
 -(CPTPlotRange *)plotRangeEnclosingBars;
 ///	@}
 
+-(CGMutablePathRef)newBarPathWithContext:(CGContextRef)context recordIndex:(NSUInteger)recordIndex;
+
 @end
