@@ -8,17 +8,21 @@
 #pragma mark -
 #pragma mark Drawing
 
+///	@cond
+
 -(void)renderAsVectorInContext:(CGContextRef)context
 {
-	// nothing to draw
+    // nothing to draw
 }
+
+///	@endcond
 
 #pragma mark -
 #pragma mark Layout
 
 -(void)layoutSublayers
 {
-	// do nothing--axis is responsible for positioning its labels
+    // do nothing--axis is responsible for positioning its labels
 }
 
 @end

@@ -7,7 +7,7 @@
 #import "NSCoderExtensions.h"
 #import "NSDecimalNumberExtensions.h"
 
-/**	@cond */
+///	@cond
 @interface CPTPlotRange()
 
 @property (nonatomic, readwrite) NSDecimal location;
@@ -15,7 +15,7 @@
 
 @end
 
-/**	@endcond */
+///	@endcond
 
 /**
  *	@brief Defines an immutable range of plot data.
@@ -24,31 +24,35 @@
 
 /** @property location
  *  @brief The starting value of the range.
+ *	@see locationDouble
  **/
 @synthesize location;
 
 /** @property length
  *  @brief The length of the range.
+ *	@see lengthDouble
  **/
 @synthesize length;
 
 /** @property locationDouble
  *  @brief The starting value of the range as a <code>double</code>.
+ *	@see location
  **/
 @synthesize locationDouble;
 
 /** @property lengthDouble
  *  @brief The length of the range as a <code>double</code>.
+ *	@see length
  **/
 @synthesize lengthDouble;
 
 /** @property end
- *  @brief The ending value of the range.
+ *  @brief The ending value of the range, equivalent to @link CPTPlotRange::location location @endlink + @link CPTPlotRange::length length @endlink.
  **/
 @dynamic end;
 
 /** @property endDouble
- *  @brief The ending value of the range as a <code>double</code>.
+ *  @brief The ending value of the range as a <code>double</code>, equivalent to @link CPTPlotRange::locationDouble locationDouble @endlink + @link CPTPlotRange::lengthDouble lengthDouble @endlink.
  **/
 @dynamic endDouble;
 
@@ -92,7 +96,7 @@
  **/
 +(id)plotRangeWithLocation:(NSDecimal)loc length:(NSDecimal)len
 {
-	return [[[self alloc] initWithLocation:loc length:len] autorelease];
+    return [[[self alloc] initWithLocation:loc length:len] autorelease];
 }
 
 /** @brief Initializes a newly allocated CPTPlotRange object with the provided location and length.
@@ -102,125 +106,129 @@
  **/
 -(id)initWithLocation:(NSDecimal)loc length:(NSDecimal)len
 {
-	if ( (self = [super init]) ) {
-		self.location = loc;
-		self.length	  = len;
-	}
-	return self;
+    if ( (self = [super init]) ) {
+        self.location = loc;
+        self.length   = len;
+    }
+    return self;
 }
 
 -(id)init
 {
-	NSDecimal zero = CPTDecimalFromInteger(0);
+    NSDecimal zero = CPTDecimalFromInteger(0);
 
-	return [self initWithLocation:zero length:zero];
+    return [self initWithLocation:zero length:zero];
 }
 
 #pragma mark -
 #pragma mark Accessors
 
+///	@cond
+
 -(void)setLocation:(NSDecimal)newLocation
 {
-	if ( !CPTDecimalEquals(location, newLocation) ) {
-		location	   = newLocation;
-		locationDouble = [[NSDecimalNumber decimalNumberWithDecimal:newLocation] doubleValue];
-	}
+    if ( !CPTDecimalEquals(location, newLocation) ) {
+        location       = newLocation;
+        locationDouble = [[NSDecimalNumber decimalNumberWithDecimal:newLocation] doubleValue];
+    }
 }
 
 -(void)setLength:(NSDecimal)newLength
 {
-	if ( !CPTDecimalEquals(length, newLength) ) {
-		length		 = newLength;
-		lengthDouble = [[NSDecimalNumber decimalNumberWithDecimal:newLength] doubleValue];
-	}
+    if ( !CPTDecimalEquals(length, newLength) ) {
+        length       = newLength;
+        lengthDouble = [[NSDecimalNumber decimalNumberWithDecimal:newLength] doubleValue];
+    }
 }
 
 -(NSDecimal)end
 {
-	return CPTDecimalAdd(self.location, self.length);
+    return CPTDecimalAdd(self.location, self.length);
 }
 
 -(double)endDouble
 {
-	return self.locationDouble + self.lengthDouble;
+    return self.locationDouble + self.lengthDouble;
 }
 
 -(NSDecimal)minLimit
 {
-	NSDecimal loc = self.location;
-	NSDecimal len = self.length;
+    NSDecimal loc = self.location;
+    NSDecimal len = self.length;
 
-	if ( CPTDecimalLessThan( len, CPTDecimalFromInteger(0) ) ) {
-		return CPTDecimalAdd(loc, len);
-	}
-	else {
-		return loc;
-	}
+    if ( CPTDecimalLessThan( len, CPTDecimalFromInteger(0) ) ) {
+        return CPTDecimalAdd(loc, len);
+    }
+    else {
+        return loc;
+    }
 }
 
 -(double)minLimitDouble
 {
-	double doubleLoc = self.locationDouble;
-	double doubleLen = self.lengthDouble;
+    double doubleLoc = self.locationDouble;
+    double doubleLen = self.lengthDouble;
 
-	if ( doubleLen < 0.0 ) {
-		return doubleLoc + doubleLen;
-	}
-	else {
-		return doubleLoc;
-	}
+    if ( doubleLen < 0.0 ) {
+        return doubleLoc + doubleLen;
+    }
+    else {
+        return doubleLoc;
+    }
 }
 
 -(NSDecimal)midPoint
 {
-	return CPTDecimalAdd( self.location, CPTDecimalDivide( self.length, CPTDecimalFromInteger(2) ) );
+    return CPTDecimalAdd( self.location, CPTDecimalDivide( self.length, CPTDecimalFromInteger(2) ) );
 }
 
 -(double)midPointDouble
 {
-	return fma(self.lengthDouble, 0.5, self.locationDouble);
+    return fma(self.lengthDouble, 0.5, self.locationDouble);
 }
 
 -(NSDecimal)maxLimit
 {
-	NSDecimal loc = self.location;
-	NSDecimal len = self.length;
+    NSDecimal loc = self.location;
+    NSDecimal len = self.length;
 
-	if ( CPTDecimalGreaterThan( len, CPTDecimalFromInteger(0) ) ) {
-		return CPTDecimalAdd(loc, len);
-	}
-	else {
-		return loc;
-	}
+    if ( CPTDecimalGreaterThan( len, CPTDecimalFromInteger(0) ) ) {
+        return CPTDecimalAdd(loc, len);
+    }
+    else {
+        return loc;
+    }
 }
 
 -(double)maxLimitDouble
 {
-	double doubleLoc = self.locationDouble;
-	double doubleLen = self.lengthDouble;
+    double doubleLoc = self.locationDouble;
+    double doubleLen = self.lengthDouble;
 
-	if ( doubleLen > 0.0 ) {
-		return doubleLoc + doubleLen;
-	}
-	else {
-		return doubleLoc;
-	}
+    if ( doubleLen > 0.0 ) {
+        return doubleLoc + doubleLen;
+    }
+    else {
+        return doubleLoc;
+    }
 }
+
+///	@endcond
 
 #pragma mark -
 #pragma mark NSCopying
 
 -(id)copyWithZone:(NSZone *)zone
 {
-	CPTPlotRange *newRange = [[CPTPlotRange allocWithZone:zone] init];
+    CPTPlotRange *newRange = [[CPTPlotRange allocWithZone:zone] init];
 
-	if ( newRange ) {
-		newRange->location		 = self->location;
-		newRange->length		 = self->length;
-		newRange->locationDouble = self->locationDouble;
-		newRange->lengthDouble	 = self->lengthDouble;
-	}
-	return newRange;
+    if ( newRange ) {
+        newRange->location       = self->location;
+        newRange->length         = self->length;
+        newRange->locationDouble = self->locationDouble;
+        newRange->lengthDouble   = self->lengthDouble;
+    }
+    return newRange;
 }
 
 #pragma mark -
@@ -228,15 +236,15 @@
 
 -(id)mutableCopyWithZone:(NSZone *)zone
 {
-	CPTPlotRange *newRange = [[CPTMutablePlotRange allocWithZone:zone] init];
+    CPTPlotRange *newRange = [[CPTMutablePlotRange allocWithZone:zone] init];
 
-	if ( newRange ) {
-		newRange->location		 = self->location;
-		newRange->length		 = self->length;
-		newRange->locationDouble = self->locationDouble;
-		newRange->lengthDouble	 = self->lengthDouble;
-	}
-	return newRange;
+    if ( newRange ) {
+        newRange->location       = self->location;
+        newRange->length         = self->length;
+        newRange->locationDouble = self->locationDouble;
+        newRange->lengthDouble   = self->lengthDouble;
+    }
+    return newRange;
 }
 
 #pragma mark -
@@ -244,18 +252,18 @@
 
 -(void)encodeWithCoder:(NSCoder *)encoder
 {
-	[encoder encodeDecimal:self.location forKey:@"CPTPlotRange.location"];
-	[encoder encodeDecimal:self.length forKey:@"CPTPlotRange.length"];
+    [encoder encodeDecimal:self.location forKey:@"CPTPlotRange.location"];
+    [encoder encodeDecimal:self.length forKey:@"CPTPlotRange.length"];
 }
 
 -(id)initWithCoder:(NSCoder *)decoder
 {
-	if ( (self = [super init]) ) {
-		self.location = [decoder decodeDecimalForKey:@"CPTPlotRange.location"];
-		self.length	  = [decoder decodeDecimalForKey:@"CPTPlotRange.length"];
-	}
+    if ( (self = [super init]) ) {
+        self.location = [decoder decodeDecimalForKey:@"CPTPlotRange.location"];
+        self.length   = [decoder decodeDecimalForKey:@"CPTPlotRange.length"];
+    }
 
-	return self;
+    return self;
 }
 
 #pragma mark -
@@ -267,7 +275,7 @@
  **/
 -(BOOL)contains:(NSDecimal)number
 {
-	return CPTDecimalGreaterThanOrEqualTo(number, self.minLimit) && CPTDecimalLessThanOrEqualTo(number, self.maxLimit);
+    return CPTDecimalGreaterThanOrEqualTo(number, self.minLimit) && CPTDecimalLessThanOrEqualTo(number, self.maxLimit);
 }
 
 /** @brief Determines whether a given number is inside the range.
@@ -276,7 +284,7 @@
  **/
 -(BOOL)containsDouble:(double)number
 {
-	return (number >= self.minLimitDouble) && (number <= self.maxLimitDouble);
+    return (number >= self.minLimitDouble) && (number <= self.maxLimitDouble);
 }
 
 /** @brief Determines whether a given range is equal to the range of the receiver.
@@ -285,7 +293,37 @@
  **/
 -(BOOL)isEqualToRange:(CPTPlotRange *)otherRange
 {
-	return CPTDecimalEquals(self.location, otherRange.location) && CPTDecimalEquals(self.length, otherRange.length);
+    return CPTDecimalEquals(self.location, otherRange.location) && CPTDecimalEquals(self.length, otherRange.length);
+}
+
+/** @brief Determines whether the receiver entirely contains another range.
+ *  @param otherRange The range to check.
+ *  @return True if the other range fits entirely within the range of the receiver.
+ **/
+-(BOOL)containsRange:(CPTPlotRange *)otherRange
+{
+    return CPTDecimalGreaterThanOrEqualTo(otherRange.minLimit, self.minLimit) && CPTDecimalLessThanOrEqualTo(otherRange.maxLimit, self.maxLimit);
+}
+
+/** @brief Determines whether a given range intersects the receiver.
+ *  @param otherRange The range to check.
+ *  @return True if the ranges intersect.
+ **/
+-(BOOL)intersectsRange:(CPTPlotRange *)otherRange
+{
+    if ( !otherRange ) {
+        return NO;
+    }
+
+    NSDecimal min1    = self.minLimit;
+    NSDecimal min2    = otherRange.minLimit;
+    NSDecimal minimum = CPTDecimalGreaterThan(min1, min2) ? min1 : min2;
+
+    NSDecimal max1    = self.maxLimit;
+    NSDecimal max2    = otherRange.maxLimit;
+    NSDecimal maximum = CPTDecimalLessThan(max1, max2) ? max1 : max2;
+
+    return CPTDecimalGreaterThanOrEqualTo(maximum, minimum);
 }
 
 /** @brief Compares a number to the range, determining if it is in the range, or above or below it.
@@ -294,15 +332,15 @@
  **/
 -(CPTPlotRangeComparisonResult)compareToNumber:(NSNumber *)number
 {
-	CPTPlotRangeComparisonResult result;
+    CPTPlotRangeComparisonResult result;
 
-	if ( [number isKindOfClass:[NSDecimalNumber class]] ) {
-		result = [self compareToDecimal:number.decimalValue];
-	}
-	else {
-		result = [self compareToDouble:number.doubleValue];
-	}
-	return result;
+    if ( [number isKindOfClass:[NSDecimalNumber class]] ) {
+        result = [self compareToDecimal:number.decimalValue];
+    }
+    else {
+        result = [self compareToDouble:number.doubleValue];
+    }
+    return result;
 }
 
 /** @brief Compares a number to the range, determining if it is in the range, or above or below it.
@@ -311,18 +349,18 @@
  **/
 -(CPTPlotRangeComparisonResult)compareToDecimal:(NSDecimal)number
 {
-	CPTPlotRangeComparisonResult result;
+    CPTPlotRangeComparisonResult result;
 
-	if ( [self contains:number] ) {
-		result = CPTPlotRangeComparisonResultNumberInRange;
-	}
-	else if ( CPTDecimalLessThan(number, self.minLimit) ) {
-		result = CPTPlotRangeComparisonResultNumberBelowRange;
-	}
-	else {
-		result = CPTPlotRangeComparisonResultNumberAboveRange;
-	}
-	return result;
+    if ( [self contains:number] ) {
+        result = CPTPlotRangeComparisonResultNumberInRange;
+    }
+    else if ( CPTDecimalLessThan(number, self.minLimit) ) {
+        result = CPTPlotRangeComparisonResultNumberBelowRange;
+    }
+    else {
+        result = CPTPlotRangeComparisonResultNumberAboveRange;
+    }
+    return result;
 }
 
 /** @brief Compares a number to the range, determining if it is in the range, or above or below it.
@@ -331,18 +369,18 @@
  **/
 -(CPTPlotRangeComparisonResult)compareToDouble:(double)number
 {
-	CPTPlotRangeComparisonResult result;
+    CPTPlotRangeComparisonResult result;
 
-	if ( number < self.minLimitDouble ) {
-		result = CPTPlotRangeComparisonResultNumberBelowRange;
-	}
-	else if ( number > self.maxLimitDouble ) {
-		result = CPTPlotRangeComparisonResultNumberAboveRange;
-	}
-	else {
-		result = CPTPlotRangeComparisonResultNumberInRange;
-	}
-	return result;
+    if ( number < self.minLimitDouble ) {
+        result = CPTPlotRangeComparisonResultNumberBelowRange;
+    }
+    else if ( number > self.maxLimitDouble ) {
+        result = CPTPlotRangeComparisonResultNumberAboveRange;
+    }
+    else {
+        result = CPTPlotRangeComparisonResultNumberInRange;
+    }
+    return result;
 }
 
 #pragma mark -
@@ -350,10 +388,10 @@
 
 -(NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@ {%@, %@}>",
-			[super description],
-			NSDecimalString(&location, [NSLocale currentLocale]),
-			NSDecimalString(&length, [NSLocale currentLocale])];
+    return [NSString stringWithFormat:@"<%@ {%@, %@}>",
+            [super description],
+            NSDecimalString(&location, [NSLocale currentLocale]),
+            NSDecimalString(&length, [NSLocale currentLocale])];
 }
 
 @end

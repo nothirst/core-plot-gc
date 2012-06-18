@@ -4,7 +4,7 @@
 #import "CPTMutableShadow.h"
 #import "NSCoderExtensions.h"
 
-/**	@cond */
+///	@cond
 @interface CPTShadow()
 
 @property (nonatomic, readwrite, assign) CGSize shadowOffset;
@@ -13,7 +13,7 @@
 
 @end
 
-/**	@endcond */
+///	@endcond
 
 /** @brief Immutable wrapper for various shadow drawing properties.
  *
@@ -29,7 +29,7 @@
 /** @property shadowOffset
  *  @brief The horizontal and vertical offset values, specified using the width and height fields
  *	of the CGSize data type. The offsets are not affected by custom transformations. Positive values extend
- *	up and to the right. Default is CGSizeZero.
+ *	up and to the right. Default is <code>CGSizeZero</code>.
  **/
 @synthesize shadowOffset;
 
@@ -40,7 +40,7 @@
 @synthesize shadowBlurRadius;
 
 /** @property shadowColor
- *  @brief The shadow color. If nil (the default), the shadow will not be drawn.
+ *  @brief The shadow color. If <code>nil</code> (the default), the shadow will not be drawn.
  **/
 @synthesize shadowColor;
 
@@ -52,24 +52,24 @@
  **/
 +(id)shadow
 {
-	return [[[self alloc] init] autorelease];
+    return [[[self alloc] init] autorelease];
 }
 
 -(id)init
 {
-	if ( (self = [super init]) ) {
-		shadowOffset	 = CGSizeZero;
-		shadowBlurRadius = 0.0;
-		shadowColor		 = nil;
-	}
-	return self;
+    if ( (self = [super init]) ) {
+        shadowOffset     = CGSizeZero;
+        shadowBlurRadius = 0.0;
+        shadowColor      = nil;
+    }
+    return self;
 }
 
 -(void)dealloc
 {
-	[shadowColor release];
+    [shadowColor release];
 
-	[super dealloc];
+    [super dealloc];
 }
 
 #pragma mark -
@@ -77,19 +77,19 @@
 
 -(void)encodeWithCoder:(NSCoder *)coder
 {
-	[coder encodeCPTSize:self.shadowOffset forKey:@"CPTShadow.shadowOffset"];
-	[coder encodeCGFloat:self.shadowBlurRadius forKey:@"CPTShadow.shadowBlurRadius"];
-	[coder encodeObject:self.shadowColor forKey:@"CPTShadow.shadowColor"];
+    [coder encodeCPTSize:self.shadowOffset forKey:@"CPTShadow.shadowOffset"];
+    [coder encodeCGFloat:self.shadowBlurRadius forKey:@"CPTShadow.shadowBlurRadius"];
+    [coder encodeObject:self.shadowColor forKey:@"CPTShadow.shadowColor"];
 }
 
 -(id)initWithCoder:(NSCoder *)coder
 {
-	if ( (self = [super init]) ) {
-		shadowOffset	 = [coder decodeCPTSizeForKey:@"CPTShadow.shadowOffset"];
-		shadowBlurRadius = [coder decodeCGFloatForKey:@"CPTShadow.shadowBlurRadius"];
-		shadowColor		 = [[coder decodeObjectForKey:@"CPTShadow.shadowColor"] retain];
-	}
-	return self;
+    if ( (self = [super init]) ) {
+        shadowOffset     = [coder decodeCPTSizeForKey:@"CPTShadow.shadowOffset"];
+        shadowBlurRadius = [coder decodeCGFloatForKey:@"CPTShadow.shadowBlurRadius"];
+        shadowColor      = [[coder decodeObjectForKey:@"CPTShadow.shadowColor"] retain];
+    }
+    return self;
 }
 
 #pragma mark -
@@ -100,10 +100,10 @@
  **/
 -(void)setShadowInContext:(CGContextRef)theContext
 {
-	CGContextSetShadowWithColor(theContext,
-								self.shadowOffset,
-								self.shadowBlurRadius,
-								self.shadowColor.cgColor);
+    CGContextSetShadowWithColor(theContext,
+                                self.shadowOffset,
+                                self.shadowBlurRadius,
+                                self.shadowColor.cgColor);
 }
 
 #pragma mark -
@@ -111,13 +111,13 @@
 
 -(id)copyWithZone:(NSZone *)zone
 {
-	CPTShadow *shadowCopy = [[CPTShadow allocWithZone:zone] init];
+    CPTShadow *shadowCopy = [[CPTShadow allocWithZone:zone] init];
 
-	shadowCopy->shadowOffset	 = self->shadowOffset;
-	shadowCopy->shadowBlurRadius = self->shadowBlurRadius;
-	shadowCopy->shadowColor		 = [self->shadowColor copy];
+    shadowCopy->shadowOffset     = self->shadowOffset;
+    shadowCopy->shadowBlurRadius = self->shadowBlurRadius;
+    shadowCopy->shadowColor      = [self->shadowColor copy];
 
-	return shadowCopy;
+    return shadowCopy;
 }
 
 #pragma mark -
@@ -125,25 +125,29 @@
 
 -(id)mutableCopyWithZone:(NSZone *)zone
 {
-	CPTShadow *shadowCopy = [[CPTMutableShadow allocWithZone:zone] init];
+    CPTShadow *shadowCopy = [[CPTMutableShadow allocWithZone:zone] init];
 
-	shadowCopy->shadowOffset	 = self->shadowOffset;
-	shadowCopy->shadowBlurRadius = self->shadowBlurRadius;
-	shadowCopy->shadowColor		 = [self->shadowColor copy];
+    shadowCopy->shadowOffset     = self->shadowOffset;
+    shadowCopy->shadowBlurRadius = self->shadowBlurRadius;
+    shadowCopy->shadowColor      = [self->shadowColor copy];
 
-	return shadowCopy;
+    return shadowCopy;
 }
 
 #pragma mark -
 #pragma mark Accessors
 
+///	@cond
+
 -(void)setShadowBlurRadius:(CGFloat)newShadowBlurRadius
 {
-	NSParameterAssert(newShadowBlurRadius >= 0.0);
+    NSParameterAssert(newShadowBlurRadius >= 0.0);
 
-	if ( newShadowBlurRadius != shadowBlurRadius ) {
-		shadowBlurRadius = newShadowBlurRadius;
-	}
+    if ( newShadowBlurRadius != shadowBlurRadius ) {
+        shadowBlurRadius = newShadowBlurRadius;
+    }
 }
+
+///	@endcond
 
 @end

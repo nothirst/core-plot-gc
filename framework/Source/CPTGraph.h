@@ -5,6 +5,7 @@
 /// @file
 
 @class CPTAxisSet;
+@class CPTGraphHostingView;
 @class CPTLegend;
 @class CPTPlot;
 @class CPTPlotAreaFrame;
@@ -27,32 +28,38 @@ extern NSString *const CPTGraphNeedsRedrawNotification;
  *	@brief Enumeration of graph layers.
  **/
 typedef enum _CPTGraphLayerType {
-	CPTGraphLayerTypeMinorGridLines, ///< Minor grid lines.
-	CPTGraphLayerTypeMajorGridLines, ///< Major grid lines.
-	CPTGraphLayerTypeAxisLines,      ///< Axis lines.
-	CPTGraphLayerTypePlots,          ///< Plots.
-	CPTGraphLayerTypeAxisLabels,     ///< Axis labels.
-	CPTGraphLayerTypeAxisTitles      ///< Axis titles.
+    CPTGraphLayerTypeMinorGridLines, ///< Minor grid lines.
+    CPTGraphLayerTypeMajorGridLines, ///< Major grid lines.
+    CPTGraphLayerTypeAxisLines,      ///< Axis lines.
+    CPTGraphLayerTypePlots,          ///< Plots.
+    CPTGraphLayerTypeAxisLabels,     ///< Axis labels.
+    CPTGraphLayerTypeAxisTitles      ///< Axis titles.
 }
 CPTGraphLayerType;
 
 #pragma mark -
 
 @interface CPTGraph : CPTBorderedLayer {
-	@private
-	CPTPlotAreaFrame *plotAreaFrame;
-	NSMutableArray *plots;
-	NSMutableArray *plotSpaces;
-	NSString *title;
-	CPTTextStyle *titleTextStyle;
-	CPTRectAnchor titlePlotAreaFrameAnchor;
-	CGPoint titleDisplacement;
-	CPTLayerAnnotation *titleAnnotation;
-	CPTLegend *legend;
-	CPTLayerAnnotation *legendAnnotation;
-	CPTRectAnchor legendAnchor;
-	CGPoint legendDisplacement;
+    @private
+    __cpt_weak CPTGraphHostingView *hostingView;
+    CPTPlotAreaFrame *plotAreaFrame;
+    NSMutableArray *plots;
+    NSMutableArray *plotSpaces;
+    NSString *title;
+    CPTTextStyle *titleTextStyle;
+    CPTRectAnchor titlePlotAreaFrameAnchor;
+    CGPoint titleDisplacement;
+    CPTLayerAnnotation *titleAnnotation;
+    CPTLegend *legend;
+    CPTLayerAnnotation *legendAnnotation;
+    CPTRectAnchor legendAnchor;
+    CGPoint legendDisplacement;
 }
+
+/// @name Hosting View
+/// @{
+@property (nonatomic, readwrite, cpt_weak_property) __cpt_weak CPTGraphHostingView *hostingView;
+///	@}
 
 /// @name Title
 /// @{

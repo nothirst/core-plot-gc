@@ -2,28 +2,26 @@
 
 #import "NSCoderExtensions.h"
 
-/**	@cond */
+///	@cond
 @interface CPTColorSpace()
 
 @property (nonatomic, readwrite, assign) CGColorSpaceRef cgColorSpace;
 
 @end
 
-/**	@endcond */
+///	@endcond
 
 #pragma mark -
 
-/** @brief Wrapper around CGColorSpaceRef
+/** @brief An immutable color space.
  *
- *  A wrapper class around CGColorSpaceRef
- *
- * @todo More documentation needed
+ *  An immutable object wrapper class around CGColorSpaceRef.
  **/
 
 @implementation CPTColorSpace
 
 /** @property cgColorSpace.
- *  @brief The CGColorSpace to wrap around
+ *  @brief The CGColorSpaceRef to wrap around
  **/
 @synthesize cgColorSpace;
 
@@ -32,24 +30,25 @@
 
 /** @brief Returns a shared instance of CPTColorSpace initialized with the standard RGB space
  *
- * For the iPhone this is CGColorSpaceCreateDeviceRGB(), for Mac OS X CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB).
+ *	For the iPhone this is <code>CGColorSpaceCreateDeviceRGB()</code>;
+ *	for Mac OS X it is <code>CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB)</code>.
  *
- *  @return A shared CPTColorSpace object initialized with the standard RGB colorspace.
+ *	@return A shared CPTColorSpace object initialized with the standard RGB colorspace.
  **/
 +(CPTColorSpace *)genericRGBSpace;
 {
-	static CPTColorSpace *space = nil;
-	if ( nil == space ) {
-		CGColorSpaceRef cgSpace = NULL;
+    static CPTColorSpace *space = nil;
+    if ( nil == space ) {
+        CGColorSpaceRef cgSpace = NULL;
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-		cgSpace = CGColorSpaceCreateDeviceRGB();
+        cgSpace = CGColorSpaceCreateDeviceRGB();
 #else
-		cgSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+        cgSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
 #endif
-		space = [[CPTColorSpace alloc] initWithCGColorSpace:cgSpace];
-		CGColorSpaceRelease(cgSpace);
-	}
-	return space;
+        space = [[CPTColorSpace alloc] initWithCGColorSpace:cgSpace];
+        CGColorSpaceRelease(cgSpace);
+    }
+    return space;
 }
 
 #pragma mark -
@@ -63,23 +62,23 @@
  **/
 -(id)initWithCGColorSpace:(CGColorSpaceRef)colorSpace
 {
-	if ( (self = [super init]) ) {
-		CGColorSpaceRetain(colorSpace);
-		cgColorSpace = colorSpace;
-	}
-	return self;
+    if ( (self = [super init]) ) {
+        CGColorSpaceRetain(colorSpace);
+        cgColorSpace = colorSpace;
+    }
+    return self;
 }
 
 -(void)dealloc
 {
-	CGColorSpaceRelease(cgColorSpace);
-	[super dealloc];
+    CGColorSpaceRelease(cgColorSpace);
+    [super dealloc];
 }
 
 -(void)finalize
 {
-	CGColorSpaceRelease(cgColorSpace);
-	[super finalize];
+    CGColorSpaceRelease(cgColorSpace);
+    [super finalize];
 }
 
 #pragma mark -
@@ -87,27 +86,31 @@
 
 -(void)encodeWithCoder:(NSCoder *)coder
 {
-	[coder encodeCGColorSpace:self.cgColorSpace forKey:@"CPTColorSpace.cgColorSpace"];
+    [coder encodeCGColorSpace:self.cgColorSpace forKey:@"CPTColorSpace.cgColorSpace"];
 }
 
 -(id)initWithCoder:(NSCoder *)coder
 {
-	if ( (self = [super init]) ) {
-		cgColorSpace = [coder newCGColorSpaceDecodeForKey:@"CPTColorSpace.cgColorSpace"];
-	}
-	return self;
+    if ( (self = [super init]) ) {
+        cgColorSpace = [coder newCGColorSpaceDecodeForKey:@"CPTColorSpace.cgColorSpace"];
+    }
+    return self;
 }
 
 #pragma mark -
 #pragma mark Accessors
 
+///	@cond
+
 -(void)setCGColorSpace:(CGColorSpaceRef)newSpace
 {
-	if ( newSpace != cgColorSpace ) {
-		CGColorSpaceRelease(cgColorSpace);
-		CGColorSpaceRetain(newSpace);
-		cgColorSpace = newSpace;
-	}
+    if ( newSpace != cgColorSpace ) {
+        CGColorSpaceRelease(cgColorSpace);
+        CGColorSpaceRetain(newSpace);
+        cgColorSpace = newSpace;
+    }
 }
+
+///	@endcond
 
 @end
