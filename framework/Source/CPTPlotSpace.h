@@ -26,10 +26,10 @@ extern NSString *const CPTPlotSpaceCoordinateMappingDidChangeNotification;
 
 @optional
 
-/// @name Scrolling
+/// @name Scaling
 /// @{
 
-/** @brief (Optional) Informs the receiver that it should uniformly scale (e.g., in response to a pinch on iOS)
+/** @brief (Optional) Informs the receiver that it should uniformly scale (e.g., in response to a pinch on iOS).
  *  @param space The plot space.
  *  @param interactionScale The scaling factor.
  *  @param interactionPoint The coordinates of the scaling centroid.
@@ -38,47 +38,22 @@ extern NSString *const CPTPlotSpaceCoordinateMappingDidChangeNotification;
  **/
 -(BOOL)plotSpace:(CPTPlotSpace *)space shouldScaleBy:(CGFloat)interactionScale aboutPoint:(CGPoint)interactionPoint;
 
-/**	@brief (Optional) Notifies that plot space intercepted a device down event.
- *	@param space The plot space.
- *  @param event The native event (e.g., UIEvent on iPhone)
- *  @param point The point in the host view.
- *	@return Whether the plot space should handle the event or not.
- *  In either case, the delegate may choose to take extra actions, or handle the scaling itself.
- **/
--(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceDownEvent:(id)event atPoint:(CGPoint)point;
+/// @}
 
-/**	@brief (Optional) Notifies that plot space intercepted a device dragged event.
- *	@param space The plot space.
- *  @param event The native event (e.g., UIEvent on iPhone)
- *  @param point The point in the host view.
- *	@return Whether the plot space should handle the event or not.
- *  In either case, the delegate may choose to take extra actions, or handle the scaling itself.
- **/
--(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceDraggedEvent:(id)event atPoint:(CGPoint)point;
-
-/**	@brief (Optional) Notifies that plot space intercepted a device cancelled event.
- *	@param space The plot space.
- *  @param event The native event (e.g., UIEvent on iPhone)
- *	@return Whether the plot space should handle the event or not.
- *  In either case, the delegate may choose to take extra actions, or handle the scaling itself.
- **/
--(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceCancelledEvent:(id)event;
-
-/**	@brief (Optional) Notifies that plot space intercepted a device up event.
- *	@param space The plot space.
- *  @param event The native event (e.g., UIEvent on iPhone)
- *  @param point The point in the host view.
- *	@return Whether the plot space should handle the event or not.
- *  In either case, the delegate may choose to take extra actions, or handle the scaling itself.
- **/
--(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceUpEvent:(id)event atPoint:(CGPoint)point;
+/// @name Scrolling
+/// @{
 
 /**	@brief (Optional) Notifies that plot space is going to scroll.
  *	@param space The plot space.
- *  @param proposedDisplacementVector The proposed amount by which the plot space will shift
+ *  @param proposedDisplacementVector The proposed amount by which the plot space will shift.
  *	@return The displacement actually applied.
  **/
 -(CGPoint)plotSpace:(CPTPlotSpace *)space willDisplaceBy:(CGPoint)proposedDisplacementVector;
+
+/// @}
+
+/// @name Plot Range Changes
+/// @{
 
 /**	@brief (Optional) Notifies that plot space is going to change a plot range.
  *	@param space The plot space.
@@ -96,16 +71,56 @@ extern NSString *const CPTPlotSpaceCoordinateMappingDidChangeNotification;
 
 /// @}
 
+/// @name User Interaction
+/// @{
+
+/**	@brief (Optional) Notifies that plot space intercepted a device down event.
+ *	@param space The plot space.
+ *  @param event The native event (e.g., UIEvent on iPhone)
+ *  @param point The point in the host view.
+ *	@return Whether the plot space should handle the event or not.
+ *  In either case, the delegate may choose to take extra actions, or handle the scaling itself.
+ **/
+-(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceDownEvent:(CPTNativeEvent *)event atPoint:(CGPoint)point;
+
+/**	@brief (Optional) Notifies that plot space intercepted a device dragged event.
+ *	@param space The plot space.
+ *  @param event The native event (e.g., UIEvent on iPhone)
+ *  @param point The point in the host view.
+ *	@return Whether the plot space should handle the event or not.
+ *  In either case, the delegate may choose to take extra actions, or handle the scaling itself.
+ **/
+-(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceDraggedEvent:(CPTNativeEvent *)event atPoint:(CGPoint)point;
+
+/**	@brief (Optional) Notifies that plot space intercepted a device cancelled event.
+ *	@param space The plot space.
+ *  @param event The native event (e.g., UIEvent on iPhone)
+ *	@return Whether the plot space should handle the event or not.
+ *  In either case, the delegate may choose to take extra actions, or handle the scaling itself.
+ **/
+-(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceCancelledEvent:(CPTNativeEvent *)event;
+
+/**	@brief (Optional) Notifies that plot space intercepted a device up event.
+ *	@param space The plot space.
+ *  @param event The native event (e.g., UIEvent on iPhone)
+ *  @param point The point in the host view.
+ *	@return Whether the plot space should handle the event or not.
+ *  In either case, the delegate may choose to take extra actions, or handle the scaling itself.
+ **/
+-(BOOL)plotSpace:(CPTPlotSpace *)space shouldHandlePointingDeviceUpEvent:(CPTNativeEvent *)event atPoint:(CGPoint)point;
+
+/// @}
+
 @end
 
 #pragma mark -
 
 @interface CPTPlotSpace : NSObject<CPTResponder, NSCoding> {
-	@private
-	__cpt_weak CPTGraph *graph;
-	id<NSCopying, NSCoding, NSObject> identifier;
-	__cpt_weak id<CPTPlotSpaceDelegate> delegate;
-	BOOL allowsUserInteraction;
+    @private
+    __cpt_weak CPTGraph *graph;
+    id<NSCopying, NSCoding, NSObject> identifier;
+    __cpt_weak id<CPTPlotSpaceDelegate> delegate;
+    BOOL allowsUserInteraction;
 }
 
 @property (nonatomic, readwrite, copy) id<NSCopying, NSCoding, NSObject> identifier;
@@ -128,6 +143,10 @@ extern NSString *const CPTPlotSpaceCoordinateMappingDidChangeNotification;
 -(CGPoint)plotAreaViewPointForDoublePrecisionPlotPoint:(double *)plotPoint;
 -(void)plotPoint:(NSDecimal *)plotPoint forPlotAreaViewPoint:(CGPoint)point;
 -(void)doublePrecisionPlotPoint:(double *)plotPoint forPlotAreaViewPoint:(CGPoint)point;
+
+-(CGPoint)plotAreaViewPointForEvent:(CPTNativeEvent *)event;
+-(void)plotPoint:(NSDecimal *)plotPoint forEvent:(CPTNativeEvent *)event;
+-(void)doublePrecisionPlotPoint:(double *)plotPoint forEvent:(CPTNativeEvent *)event;
 ///	@}
 
 /// @name Coordinate Range

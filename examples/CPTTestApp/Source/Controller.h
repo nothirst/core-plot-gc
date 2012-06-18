@@ -3,16 +3,16 @@
 #import <CorePlot/CorePlot.h>
 
 @interface Controller : NSArrayController<CPTPlotDataSource, CPTRotationDelegate, CPTPlotSpaceDelegate, CPTBarPlotDelegate> {
-	IBOutlet CPTGraphHostingView *hostView;
-	IBOutlet NSWindow *plotSymbolWindow;
-	IBOutlet NSWindow *axisDemoWindow;
-	IBOutlet NSWindow *selectionDemoWindow;
-	CPTXYGraph *graph;
-	RotationView *overlayRotationView;
-	CPTPlotSpaceAnnotation *symbolTextAnnotation;
-	CGFloat xShift;
-	CGFloat yShift;
-	CGFloat labelRotation;
+    IBOutlet CPTGraphHostingView *hostView;
+    IBOutlet NSWindow *plotSymbolWindow;
+    IBOutlet NSWindow *axisDemoWindow;
+    IBOutlet NSWindow *selectionDemoWindow;
+    CPTXYGraph *graph;
+    RotationView *overlayRotationView;
+    CPTPlotSpaceAnnotation *symbolTextAnnotation;
+    CGFloat xShift;
+    CGFloat yShift;
+    CGFloat labelRotation;
 }
 
 @property (nonatomic) CGFloat xShift;
@@ -27,6 +27,10 @@
 // PDF / image export
 -(IBAction)exportToPDF:(id)sender;
 -(IBAction)exportToPNG:(id)sender;
+
+// Printing
+-(IBAction)printDocument:(id)sender;
+-(void)printOperationDidRun:(NSPrintOperation *)printOperation success:(BOOL)success contextInfo:(void *)contextInfo;
 
 // Layer exploding for illustration
 -(IBAction)explodeLayers:(id)sender;

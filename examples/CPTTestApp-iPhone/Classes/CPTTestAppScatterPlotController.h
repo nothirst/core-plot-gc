@@ -8,11 +8,11 @@
 #import "CorePlot-CocoaTouch.h"
 #import <UIKit/UIKit.h>
 
-@interface CPTTestAppScatterPlotController : UIViewController<CPTPlotDataSource>
+@interface CPTTestAppScatterPlotController : UIViewController<CPTPlotDataSource, CPTAxisDelegate>
 {
-	CPTXYGraph *graph;
+    CPTXYGraph *graph;
 
-	NSMutableArray *dataForPlot;
+    NSMutableArray *dataForPlot;
 }
 
 @property (readwrite, retain, nonatomic) NSMutableArray *dataForPlot;
