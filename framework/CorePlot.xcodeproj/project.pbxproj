@@ -1528,9 +1528,9 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LINKER_DISPLAYS_MANGLED_NAMES = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "6269AB6B-3146-4612-9ADB-FA62E219259A";
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = macosx;
 				SEPARATE_STRIP = YES;
@@ -1545,6 +1545,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "Developer ID Application: No Thirst Software LLC";
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1560,7 +1561,8 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@loader_path/../Frameworks";
 				PRODUCT_NAME = CorePlot;
-				"VALID_ARCHS[sdk=*]" = "i386 x86_64";
+				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = MAS;
@@ -1607,6 +1609,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "Developer ID Application: No Thirst Software LLC";
 				DEAD_CODE_STRIPPING = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1623,6 +1626,8 @@
 				INSTALL_PATH = "@loader_path/../Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = CorePlot;
+				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -1631,6 +1636,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "Developer ID Application: No Thirst Software LLC";
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1646,7 +1652,8 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@loader_path/../Frameworks";
 				PRODUCT_NAME = CorePlot;
-				"VALID_ARCHS[sdk=*]" = "i386 x86_64";
+				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = x86_64;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -1655,7 +1662,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: No Thirst Software LLC";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -1680,9 +1687,10 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LINKER_DISPLAYS_MANGLED_NAMES = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
+				PROVISIONING_PROFILE = "6269AB6B-3146-4612-9ADB-FA62E219259A";
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = macosx;
 				SEPARATE_STRIP = YES;
@@ -1721,9 +1729,9 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LINKER_DISPLAYS_MANGLED_NAMES = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_LDFLAGS = "";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "6269AB6B-3146-4612-9ADB-FA62E219259A";
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = macosx;
 				SEPARATE_STRIP = YES;
