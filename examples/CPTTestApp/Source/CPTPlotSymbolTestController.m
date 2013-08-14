@@ -1,19 +1,23 @@
 #import "CPTPlotSymbolTestController.h"
 
+@interface CPTPlotSymbolTestController()
+
+@property (nonatomic, readwrite, retain) IBOutlet CPTGraphHostingView *hostView;
+
+@end
+
+#pragma mark -
+
 @implementation CPTPlotSymbolTestController
 
--(void)dealloc
-{
-    [graph release];
-    [super dealloc];
-}
+@synthesize hostView;
 
 -(void)awakeFromNib
 {
     [super awakeFromNib];
 
     // Create graph
-    graph                = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:NSRectToCGRect(hostView.bounds)];
+    graph                = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame : NSRectToCGRect(hostView.bounds)];
     hostView.hostedGraph = graph;
 
     // Remove axes
@@ -28,6 +32,7 @@
     grayColor                = CGColorCreateGenericGray(0.2, 0.3);
     graph.plotAreaFrame.fill = [CPTFill fillWithColor:[CPTColor colorWithCGColor:grayColor]];
     CGColorRelease(grayColor);
+    graph.plotAreaFrame.masksToBorder = NO;
 
     // Setup plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
@@ -41,11 +46,11 @@
 
     // Create a series of plots that uses the data source method
     for ( NSUInteger i = CPTPlotSymbolTypeNone; i <= CPTPlotSymbolTypeCustom; i++ ) {
-        CPTScatterPlot *dataSourceLinePlot = [[(CPTScatterPlot *)[CPTScatterPlot alloc] initWithFrame:graph.bounds] autorelease];
+        CPTScatterPlot *dataSourceLinePlot = [(CPTScatterPlot *)[CPTScatterPlot alloc] initWithFrame : graph.bounds];
         dataSourceLinePlot.identifier = [NSString stringWithFormat:@"%lu", (unsigned long)i];
         dataSourceLinePlot.shadow     = lineShadow;
 
-        CPTMutableLineStyle *lineStyle = [[dataSourceLinePlot.dataLineStyle mutableCopy] autorelease];
+        CPTMutableLineStyle *lineStyle = [dataSourceLinePlot.dataLineStyle mutableCopy];
         lineStyle.lineWidth              = 1.f;
         lineStyle.lineColor              = [CPTColor redColor];
         dataSourceLinePlot.dataLineStyle = lineStyle;
@@ -70,7 +75,7 @@
 
     switch ( fieldEnum ) {
         case CPTScatterPlotFieldX:
-            num = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%ud", index]];
+            num = [NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%lud", (unsigned long)index]];
             break;
 
         case CPTScatterPlotFieldY:
@@ -94,8 +99,8 @@
     symbolShadow.shadowBlurRadius = 3.0;
     symbolShadow.shadowColor      = [CPTColor blackColor];
 
-    CPTPlotSymbol *symbol = [[[CPTPlotSymbol alloc] init] autorelease];
-    symbol.symbolType = [(NSString *)plot.identifier intValue];
+    CPTPlotSymbol *symbol = [[CPTPlotSymbol alloc] init];
+    symbol.symbolType = (CPTPlotSymbolType)[(NSString *)plot.identifier intValue];
     symbol.fill       = [CPTFill fillWithGradient:gradientFill];
     symbol.shadow     = symbolShadow;
 

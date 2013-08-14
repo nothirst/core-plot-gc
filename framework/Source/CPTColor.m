@@ -1,21 +1,27 @@
 #import "CPTColor.h"
 
 #import "CPTColorSpace.h"
-#import "CPTPlatformSpecificFunctions.h"
+#import "CPTDefinitions.h"
 #import "NSCoderExtensions.h"
 
 /** @brief An immutable color.
  *
- *  An immutable object wrapper class around CGColorRef.
- *	It provides convenience methods to create the same predefined colors
- *	defined by NSColor and UIColor.
+ *  An immutable object wrapper class around @ref CGColorRef.
+ *  It provides convenience methods to create the same predefined colors defined by
+ *  @if MacOnly NSColor. @endif
+ *  @if iOSOnly UIColor. @endif
  **/
 @implementation CPTColor
 
-/**	@property cgColor
- *	@brief The CGColorRef to wrap around.
+/** @property CGColorRef cgColor
+ *  @brief The @ref CGColorRef to wrap around.
  **/
 @synthesize cgColor;
+
+/** @property BOOL opaque
+ *  @brief If @YES, the color is completely opaque.
+ */
+@dynamic opaque;
 
 #pragma mark -
 #pragma mark Factory Methods
@@ -30,7 +36,7 @@
 
     if ( nil == color ) {
         CGColorRef clear  = NULL;
-        CGFloat values[4] = { 0.0, 0.0, 0.0, 0.0 };
+        CGFloat values[4] = { CPTFloat(0.0), CPTFloat(0.0), CPTFloat(0.0), CPTFloat(0.0) };
         clear = CGColorCreate([CPTColorSpace genericRGBSpace].cgColorSpace, values);
         color = [[CPTColor alloc] initWithCGColor:clear];
         CGColorRelease(clear);
@@ -47,21 +53,21 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[self colorWithGenericGray:1.0] retain];
+        color = [[self colorWithGenericGray:CPTFloat(1.0)] retain];
     }
     return color;
 }
 
-/** @brief Returns a shared instance of CPTColor initialized with a fully opaque 2/3 gray color.
+/** @brief Returns a shared instance of CPTColor initialized with a fully opaque 67% gray color.
  *
- *  @return A shared CPTColor object initialized with a fully opaque 2/3 gray color.
+ *  @return A shared CPTColor object initialized with a fully opaque 67% gray color.
  **/
 +(CPTColor *)lightGrayColor
 {
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[self colorWithGenericGray:2.0 / 3.0] retain];
+        color = [[self colorWithGenericGray:(CGFloat)(2.0 / 3.0)] retain];
     }
     return color;
 }
@@ -75,21 +81,21 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[self colorWithGenericGray:0.5] retain];
+        color = [[self colorWithGenericGray:CPTFloat(0.5)] retain];
     }
     return color;
 }
 
-/** @brief Returns a shared instance of CPTColor initialized with a fully opaque 1/3 gray color.
+/** @brief Returns a shared instance of CPTColor initialized with a fully opaque 33% gray color.
  *
- *  @return A shared CPTColor object initialized with a fully opaque 1/3 gray color.
+ *  @return A shared CPTColor object initialized with a fully opaque 33% gray color.
  **/
 +(CPTColor *)darkGrayColor
 {
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[self colorWithGenericGray:1.0 / 3.0] retain];
+        color = [[self colorWithGenericGray:(CGFloat)(1.0 / 3.0)] retain];
     }
     return color;
 }
@@ -103,7 +109,7 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[self colorWithGenericGray:0.0] retain];
+        color = [[self colorWithGenericGray:CPTFloat(0.0)] retain];
     }
     return color;
 }
@@ -117,7 +123,7 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[CPTColor alloc] initWithComponentRed:1.0 green:0.0 blue:0.0 alpha:1.0];
+        color = [[CPTColor alloc] initWithComponentRed:CPTFloat(1.0) green:CPTFloat(0.0) blue:CPTFloat(0.0) alpha:CPTFloat(1.0)];
     }
     return color;
 }
@@ -131,7 +137,7 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[CPTColor alloc] initWithComponentRed:0.0 green:1.0 blue:0.0 alpha:1.0];
+        color = [[CPTColor alloc] initWithComponentRed:CPTFloat(0.0) green:CPTFloat(1.0) blue:CPTFloat(0.0) alpha:CPTFloat(1.0)];
     }
     return color;
 }
@@ -145,7 +151,7 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[CPTColor alloc] initWithComponentRed:0.0 green:0.0 blue:1.0 alpha:1.0];
+        color = [[CPTColor alloc] initWithComponentRed:CPTFloat(0.0) green:CPTFloat(0.0) blue:CPTFloat(1.0) alpha:CPTFloat(1.0)];
     }
     return color;
 }
@@ -159,7 +165,7 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[CPTColor alloc] initWithComponentRed:0.0 green:1.0 blue:1.0 alpha:1.0];
+        color = [[CPTColor alloc] initWithComponentRed:CPTFloat(0.0) green:CPTFloat(1.0) blue:CPTFloat(1.0) alpha:CPTFloat(1.0)];
     }
     return color;
 }
@@ -173,7 +179,7 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[CPTColor alloc] initWithComponentRed:1.0 green:1.0 blue:0.0 alpha:1.0];
+        color = [[CPTColor alloc] initWithComponentRed:CPTFloat(1.0) green:CPTFloat(1.0) blue:CPTFloat(0.0) alpha:CPTFloat(1.0)];
     }
     return color;
 }
@@ -187,7 +193,7 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[CPTColor alloc] initWithComponentRed:1.0 green:0.0 blue:1.0 alpha:1.0];
+        color = [[CPTColor alloc] initWithComponentRed:CPTFloat(1.0) green:CPTFloat(0.0) blue:CPTFloat(1.0) alpha:CPTFloat(1.0)];
     }
     return color;
 }
@@ -201,7 +207,7 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[CPTColor alloc] initWithComponentRed:1.0 green:0.5 blue:0.0 alpha:1.0];
+        color = [[CPTColor alloc] initWithComponentRed:CPTFloat(1.0) green:CPTFloat(0.5) blue:CPTFloat(0.0) alpha:CPTFloat(1.0)];
     }
     return color;
 }
@@ -215,7 +221,7 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[CPTColor alloc] initWithComponentRed:0.5 green:0.0 blue:0.5 alpha:1.0];
+        color = [[CPTColor alloc] initWithComponentRed:CPTFloat(0.5) green:CPTFloat(0.0) blue:CPTFloat(0.5) alpha:CPTFloat(1.0)];
     }
     return color;
 }
@@ -229,14 +235,14 @@
     static CPTColor *color = nil;
 
     if ( nil == color ) {
-        color = [[CPTColor alloc] initWithComponentRed:0.6 green:0.4 blue:0.2 alpha:1.0];
+        color = [[CPTColor alloc] initWithComponentRed:CPTFloat(0.6) green:CPTFloat(0.4) blue:CPTFloat(0.2) alpha:CPTFloat(1.0)];
     }
     return color;
 }
 
-/** @brief Creates and returns a new CPTColor instance initialized with the provided CGColorRef.
+/** @brief Creates and returns a new CPTColor instance initialized with the provided @ref CGColorRef.
  *  @param newCGColor The color to wrap.
- *  @return A new CPTColor instance initialized with the provided CGColorRef.
+ *  @return A new CPTColor instance initialized with the provided @ref CGColorRef.
  **/
 +(CPTColor *)colorWithCGColor:(CGColorRef)newCGColor
 {
@@ -244,10 +250,10 @@
 }
 
 /** @brief Creates and returns a new CPTColor instance initialized with the provided RGBA color components.
- *  @param red The red component (0 ≤ red ≤ 1).
- *  @param green The green component (0 ≤ green ≤ 1).
- *  @param blue The blue component (0 ≤ blue ≤ 1).
- *  @param alpha The alpha component (0 ≤ alpha ≤ 1).
+ *  @param red The red component (@num{0} ≤ @par{red} ≤ @num{1}).
+ *  @param green The green component (@num{0} ≤ @par{green} ≤ @num{1}).
+ *  @param blue The blue component (@num{0} ≤ @par{blue} ≤ @num{1}).
+ *  @param alpha The alpha component (@num{0} ≤ @par{alpha} ≤ @num{1}).
  *  @return A new CPTColor instance initialized with the provided RGBA color components.
  **/
 +(CPTColor *)colorWithComponentRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha
@@ -256,12 +262,12 @@
 }
 
 /** @brief Creates and returns a new CPTColor instance initialized with the provided gray level.
- *  @param gray The gray level (0 ≤ gray ≤ 1).
+ *  @param gray The gray level (@num{0} ≤ @par{gray} ≤ @num{1}).
  *  @return A new CPTColor instance initialized with the provided gray level.
  **/
 +(CPTColor *)colorWithGenericGray:(CGFloat)gray
 {
-    CGFloat values[4]   = { gray, gray, gray, 1.0 };
+    CGFloat values[4]   = { gray, gray, gray, CPTFloat(1.0) };
     CGColorRef colorRef = CGColorCreate([CPTColorSpace genericRGBSpace].cgColorSpace, values);
     CPTColor *color     = [[CPTColor alloc] initWithCGColor:colorRef];
 
@@ -270,11 +276,11 @@
 }
 
 #pragma mark -
-#pragma mark Initialize/Deallocate
+#pragma mark Init/Dealloc
 
-/** @brief Initializes a newly allocated CPTColor object with the provided CGColorRef.
+/** @brief Initializes a newly allocated CPTColor object with the provided @ref CGColorRef.
  *
- *	@param newCGColor The color to wrap.
+ *  @param newCGColor The color to wrap.
  *  @return The initialized CPTColor object.
  **/
 -(id)initWithCGColor:(CGColorRef)newCGColor
@@ -288,10 +294,10 @@
 
 /** @brief Initializes a newly allocated CPTColor object with the provided RGBA color components.
  *
- *  @param red The red component (0 ≤ red ≤ 1).
- *  @param green The green component (0 ≤ green ≤ 1).
- *  @param blue The blue component (0 ≤ blue ≤ 1).
- *  @param alpha The alpha component (0 ≤ alpha ≤ 1).
+ *  @param red The red component (@num{0} ≤ @par{red} ≤ @num{1}).
+ *  @param green The green component (@num{0} ≤ @par{green} ≤ @num{1}).
+ *  @param blue The blue component (@num{0} ≤ @par{blue} ≤ @num{1}).
+ *  @param alpha The alpha component (@num{0} ≤ @par{alpha} ≤ @num{1}).
  *  @return The initialized CPTColor object.
  **/
 -(id)initWithComponentRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha
@@ -308,6 +314,8 @@
     return self;
 }
 
+/// @cond
+
 -(void)dealloc
 {
     CGColorRelease(cgColor);
@@ -320,12 +328,14 @@
     [super finalize];
 }
 
+/// @endcond
+
 #pragma mark -
 #pragma mark Creating colors from other colors
 
 /** @brief Creates and returns a new CPTColor instance having color components identical to the current object
- *	but having the provided alpha component.
- *  @param alpha The alpha component (0 ≤ alpha ≤ 1).
+ *  but having the provided alpha component.
+ *  @param alpha The alpha component (@num{0} ≤ @par{alpha} ≤ @num{1}).
  *  @return A new CPTColor instance having the provided alpha component.
  **/
 -(CPTColor *)colorWithAlphaComponent:(CGFloat)alpha
@@ -338,7 +348,17 @@
 }
 
 #pragma mark -
-#pragma mark NSCoding methods
+#pragma mark Opacity
+
+-(BOOL)isOpaque
+{
+    return CGColorGetAlpha(self.cgColor) >= CPTFloat(1.0);
+}
+
+#pragma mark -
+#pragma mark NSCoding Methods
+
+/// @cond
 
 -(void)encodeWithCoder:(NSCoder *)coder
 {
@@ -347,7 +367,7 @@
     [coder encodeCGColorSpace:CGColorGetColorSpace(theColor) forKey:@"CPTColor.colorSpace"];
 
     size_t numberOfComponents = CGColorGetNumberOfComponents(theColor);
-    [coder encodeInteger:numberOfComponents forKey:@"CPTColor.numberOfComponents"];
+    [coder encodeInt64:(int64_t)numberOfComponents forKey:@"CPTColor.numberOfComponents"];
 
     const CGFloat *colorComponents = CGColorGetComponents(theColor);
 
@@ -363,7 +383,7 @@
     if ( (self = [super init]) ) {
         CGColorSpaceRef colorSpace = [coder newCGColorSpaceDecodeForKey:@"CPTColor.colorSpace"];
 
-        size_t numberOfComponents = [coder decodeIntegerForKey:@"CPTColor.numberOfComponents"];
+        size_t numberOfComponents = (size_t)[coder decodeInt64ForKey : @"CPTColor.numberOfComponents"];
 
         CGFloat *colorComponents = malloc( numberOfComponents * sizeof(CGFloat) );
 
@@ -380,8 +400,12 @@
     return self;
 }
 
+/// @endcond
+
 #pragma mark -
-#pragma mark NSCopying methods
+#pragma mark NSCopying Methods
+
+/// @cond
 
 -(id)copyWithZone:(NSZone *)zone
 {
@@ -395,9 +419,19 @@
     return colorCopy;
 }
 
+/// @endcond
+
 #pragma mark -
 #pragma mark Color comparison
 
+/// @name Comparison
+/// @{
+
+/** @brief Returns a boolean value that indicates whether the received is equal to the given object.
+ *  Colors are equal if they have equal @ref cgColor properties.
+ *  @param object The object to be compared with the receiver.
+ *  @return @YES if @par{object} is equal to the receiver, @NO otherwise.
+ **/
 -(BOOL)isEqual:(id)object
 {
     if ( self == object ) {
@@ -411,11 +445,15 @@
     }
 }
 
+/// @}
+
+/// @cond
+
 -(NSUInteger)hash
 {
     // Equal objects must hash the same.
-    CGFloat theHash    = 0.0;
-    CGFloat multiplier = 256.0;
+    CGFloat theHash    = CPTFloat(0.0);
+    CGFloat multiplier = CPTFloat(256.0);
 
     CGColorRef theColor            = self.cgColor;
     size_t numberOfComponents      = CGColorGetNumberOfComponents(theColor);
@@ -423,10 +461,12 @@
 
     for ( NSUInteger i = 0; i < numberOfComponents; i++ ) {
         theHash    += multiplier * colorComponents[i];
-        multiplier *= 256.0;
+        multiplier *= CPTFloat(256.0);
     }
 
     return (NSUInteger)theHash;
 }
+
+/// @endcond
 
 @end

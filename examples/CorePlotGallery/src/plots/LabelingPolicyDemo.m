@@ -19,13 +19,14 @@ static const CGFloat titleOffset     = 25.0;
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title = @"Axis Labeling Policies";
+        self.title   = @"Axis Labeling Policies";
+        self.section = kDemoPlots;
     }
 
     return self;
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
 #if TARGET_OS_IPHONE
     CGRect bounds = layerHostingView.bounds;
@@ -48,6 +49,7 @@ static const CGFloat titleOffset     = 25.0;
     graph.plotAreaFrame.paddingBottom = 25.0;
     graph.plotAreaFrame.paddingLeft   = 25.0;
     graph.plotAreaFrame.paddingRight  = 25.0;
+    graph.plotAreaFrame.masksToBorder = NO;
 
     // Setup plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
@@ -103,7 +105,7 @@ static const CGFloat titleOffset     = 25.0;
     axisNone.minorTickLocations          = minorTickLocations;
     NSMutableSet *newAxisLabels = [NSMutableSet set];
     for ( NSUInteger i = 0; i <= 5; i++ ) {
-        CPTAxisLabel *newLabel = [[CPTAxisLabel alloc] initWithText:[NSString stringWithFormat:@"Label %u", i]
+        CPTAxisLabel *newLabel = [[CPTAxisLabel alloc] initWithText:[NSString stringWithFormat:@"Label %lu", (unsigned long)i]
                                                           textStyle:axisNone.labelTextStyle];
         newLabel.tickLocation = CPTDecimalFromUnsignedInteger(i * 20);
         newLabel.offset       = axisNone.labelOffset + axisNone.majorTickLength / 2.0;

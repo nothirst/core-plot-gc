@@ -1,13 +1,12 @@
 #import "CPTAxisTitle.h"
 
-#import "CPTExceptions.h"
 #import "CPTLayer.h"
 #import "CPTUtilities.h"
 #import <tgmath.h>
 
-/**	@brief An axis title.
+/** @brief An axis title.
  *
- *	The title can be text-based or can be the content of any CPTLayer provided by the user.
+ *  The title can be text-based or can be the content of any CPTLayer provided by the user.
  **/
 @implementation CPTAxisTitle
 
@@ -31,59 +30,19 @@
     return self;
 }
 
-///	@}
-
-#pragma mark -
-#pragma mark Layout
-
-/// @name Layout
-/// @{
-
--(void)positionRelativeToViewPoint:(CGPoint)point forCoordinate:(CPTCoordinate)coordinate inDirection:(CPTSign)direction
-{
-    CGPoint newPosition   = point;
-    CGFloat *value        = ( coordinate == CPTCoordinateX ? &(newPosition.x) : &(newPosition.y) );
-    CGFloat titleRotation = self.rotation;
-
-    if ( isnan(titleRotation) ) {
-        titleRotation = (coordinate == CPTCoordinateX ? M_PI_2 : 0.0);
-    }
-    CGPoint anchor = CGPointZero;
-
-    // Position the anchor point along the closest edge.
-    switch ( direction ) {
-        case CPTSignNone:
-        case CPTSignNegative:
-            *value -= self.offset;
-            anchor  = ( coordinate == CPTCoordinateX ? CGPointMake(0.5, 0.0) : CGPointMake(0.5, 1.0) );
-            break;
-
-        case CPTSignPositive:
-            *value += self.offset;
-            anchor  = ( coordinate == CPTCoordinateX ? CGPointMake(0.5, 1.0) : CGPointMake(0.5, 0.0) );
-            break;
-
-        default:
-            [NSException raise:CPTException format:@"Invalid sign in positionRelativeToViewPoint:inDirection:"];
-            break;
-    }
-
-    // Pixel-align the title layer to prevent blurriness
-    CPTLayer *content = self.contentLayer;
-
-    content.anchorPoint = anchor;
-    content.position    = newPosition;
-    content.transform   = CATransform3DMakeRotation(titleRotation, 0.0, 0.0, 1.0);
-    [content pixelAlign];
-    [content setNeedsDisplay];
-}
-
-///	@}
+/// @}
 
 #pragma mark -
 #pragma mark Label comparison
 
-// Axis labels are equal if they have the same location
+/// @name Comparison
+/// @{
+
+/** @brief Returns a boolean value that indicates whether the received is equal to the given object.
+ *  Axis titles are equal if they have the same @ref tickLocation, @ref rotation, and @ref contentLayer.
+ *  @param object The object to be compared with the receiver.
+ *  @return @YES if @par{object} is equal to the receiver, @NO otherwise.
+ **/
 -(BOOL)isEqual:(id)object
 {
     if ( self == object ) {
@@ -105,6 +64,10 @@
     }
 }
 
+/// @}
+
+/// @cond
+
 -(NSUInteger)hash
 {
     NSUInteger hashValue = 0;
@@ -120,5 +83,7 @@
 
     return hashValue;
 }
+
+/// @endcond
 
 @end

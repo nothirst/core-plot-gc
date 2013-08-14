@@ -19,7 +19,9 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
     if ( (self = [super init]) ) {
         graph    = nil;
         plotData = nil;
-        title    = @"OHLC Plot";
+
+        self.title   = @"OHLC Plot";
+        self.section = kFinancialPlots;
     }
 
     return self;
@@ -50,7 +52,7 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
     }
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
     // If you make sure your dates are calculated at noon, you shouldn't have to
     // worry about daylight savings. If you use midnight, you will have to adjust
@@ -64,7 +66,7 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
 #endif
 
     [graph release];
-    graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:bounds];
+    graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame : bounds];
     [self addGraph:graph toHostingView:layerHostingView];
     [self applyTheme:theme toGraph:graph withDefault:[CPTTheme themeNamed:kCPTStocksTheme]];
 
@@ -79,6 +81,7 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
     graph.plotAreaFrame.paddingRight    = 10.0;
     graph.plotAreaFrame.paddingBottom   = 30.0;
     graph.plotAreaFrame.paddingLeft     = 35.0;
+    graph.plotAreaFrame.masksToBorder   = NO;
 
     // Axes
     CPTXYAxisSet *xyAxisSet = (id)graph.axisSet;
@@ -102,7 +105,7 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
     yAxis.orthogonalCoordinateDecimal = CPTDecimalFromDouble(-0.5 * oneDay);
 
     // Line plot with gradient fill
-    CPTScatterPlot *dataSourceLinePlot = [[(CPTScatterPlot *)[CPTScatterPlot alloc] initWithFrame:graph.bounds] autorelease];
+    CPTScatterPlot *dataSourceLinePlot = [[(CPTScatterPlot *)[CPTScatterPlot alloc] initWithFrame : graph.bounds] autorelease];
     dataSourceLinePlot.identifier    = @"Data Source Plot";
     dataSourceLinePlot.title         = @"Close Values";
     dataSourceLinePlot.dataLineStyle = nil;
@@ -127,7 +130,7 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
     CPTMutableLineStyle *whiteLineStyle = [CPTMutableLineStyle lineStyle];
     whiteLineStyle.lineColor = [CPTColor whiteColor];
     whiteLineStyle.lineWidth = 2.0;
-    CPTTradingRangePlot *ohlcPlot = [[(CPTTradingRangePlot *)[CPTTradingRangePlot alloc] initWithFrame:graph.bounds] autorelease];
+    CPTTradingRangePlot *ohlcPlot = [[(CPTTradingRangePlot *)[CPTTradingRangePlot alloc] initWithFrame : graph.bounds] autorelease];
     ohlcPlot.identifier = @"OHLC";
     ohlcPlot.lineStyle  = whiteLineStyle;
     CPTMutableTextStyle *whiteTextStyle = [CPTMutableTextStyle textStyle];

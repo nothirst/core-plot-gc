@@ -10,7 +10,9 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
 -(void)setupScatterPlots;
 -(void)initializeData;
 
-@property (nonatomic, readwrite, retain) NSMutableArray *dataForPlot;
+@property (nonatomic, readwrite, retain) IBOutlet CPTGraphHostingView *hostView;
+
+@property (nonatomic, readwrite, strong) NSMutableArray *dataForPlot;
 @property (nonatomic, readwrite) NSUInteger selectedIndex;
 
 @end
@@ -19,21 +21,16 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
 
 @implementation SelectionDemoController
 
+@synthesize hostView;
+
 @synthesize dataForPlot;
 @synthesize selectedIndex;
-
--(void)dealloc
-{
-    [graph release];
-    [dataForPlot release];
-    [super dealloc];
-}
 
 -(void)awakeFromNib
 {
     [super awakeFromNib];
 
-    selectedIndex = NSUIntegerMax;
+    self.selectedIndex = NSUIntegerMax;
 
     [self initializeData];
     [self setupGraph];
@@ -47,7 +44,7 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
 -(void)setupGraph
 {
     // Create graph and apply a dark theme
-    graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:NSRectToCGRect(hostView.bounds)];
+    graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame : NSRectToCGRect(hostView.bounds)];
     CPTTheme *theme = [CPTTheme themeNamed:kCPTSlateTheme];
     [graph applyTheme:theme];
     hostView.hostedGraph = graph;
@@ -115,12 +112,12 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
 -(void)setupScatterPlots
 {
     // Create a plot that uses the data source method
-    CPTScatterPlot *dataSourceLinePlot = [[[CPTScatterPlot alloc] init] autorelease];
+    CPTScatterPlot *dataSourceLinePlot = [[CPTScatterPlot alloc] init];
 
     dataSourceLinePlot.identifier     = MAIN_PLOT;
     dataSourceLinePlot.cachePrecision = CPTPlotCachePrecisionDouble;
 
-    CPTMutableLineStyle *lineStyle = [[dataSourceLinePlot.dataLineStyle mutableCopy] autorelease];
+    CPTMutableLineStyle *lineStyle = [dataSourceLinePlot.dataLineStyle mutableCopy];
     lineStyle.lineWidth              = 2.0;
     lineStyle.lineColor              = [CPTColor greenColor];
     dataSourceLinePlot.dataLineStyle = lineStyle;
@@ -134,11 +131,11 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
     dataSourceLinePlot.plotSymbolMarginForHitDetection = 5.0;
 
     // Create a plot for the selection marker
-    CPTScatterPlot *selectionPlot = [[[CPTScatterPlot alloc] init] autorelease];
+    CPTScatterPlot *selectionPlot = [[CPTScatterPlot alloc] init];
     selectionPlot.identifier     = SELECTION_PLOT;
     selectionPlot.cachePrecision = CPTPlotCachePrecisionDouble;
 
-    lineStyle                   = [[dataSourceLinePlot.dataLineStyle mutableCopy] autorelease];
+    lineStyle                   = [dataSourceLinePlot.dataLineStyle mutableCopy];
     lineStyle.lineWidth         = 3.0;
     lineStyle.lineColor         = [CPTColor redColor];
     selectionPlot.dataLineStyle = lineStyle;
@@ -150,10 +147,10 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
     // Compress ranges so we can scroll
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
     [plotSpace scaleToFitPlots:[NSArray arrayWithObject:dataSourceLinePlot]];
-    CPTMutablePlotRange *xRange = [[plotSpace.xRange mutableCopy] autorelease];
+    CPTMutablePlotRange *xRange = [plotSpace.xRange mutableCopy];
     [xRange expandRangeByFactor:CPTDecimalFromDouble(0.75)];
     plotSpace.xRange = xRange;
-    CPTMutablePlotRange *yRange = [[plotSpace.yRange mutableCopy] autorelease];
+    CPTMutablePlotRange *yRange = [plotSpace.yRange mutableCopy];
     [yRange expandRangeByFactor:CPTDecimalFromDouble(0.75)];
     plotSpace.yRange = yRange;
 
@@ -182,10 +179,10 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
 {
     NSUInteger count = 0;
 
-    if ( [(NSString *)plot.identifier isEqualToString:MAIN_PLOT] ) {
+    if ( [(NSString *)plot.identifier isEqualToString : MAIN_PLOT] ) {
         count = [self.dataForPlot count];
     }
-    else if ( [(NSString *)plot.identifier isEqualToString:SELECTION_PLOT] ) {
+    else if ( [(NSString *)plot.identifier isEqualToString : SELECTION_PLOT] ) {
         if ( self.selectedIndex < NSUIntegerMax ) {
             count = 5;
         }
@@ -198,11 +195,11 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
 {
     NSNumber *num = nil;
 
-    if ( [(NSString *)plot.identifier isEqualToString:MAIN_PLOT] ) {
+    if ( [(NSString *)plot.identifier isEqualToString : MAIN_PLOT] ) {
         NSString *key = (fieldEnum == CPTScatterPlotFieldX ? @"x" : @"y");
         num = [[self.dataForPlot objectAtIndex:index] valueForKey:key];
     }
-    else if ( [(NSString *)plot.identifier isEqualToString:SELECTION_PLOT] ) {
+    else if ( [(NSString *)plot.identifier isEqualToString : SELECTION_PLOT] ) {
         CPTXYPlotSpace *thePlotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
 
         switch ( fieldEnum ) {
@@ -262,7 +259,7 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
 
     CPTPlotSymbol *symbol = (id)[NSNull null];
 
-    if ( [(NSString *)plot.identifier isEqualToString:SELECTION_PLOT] && (index == 2) ) {
+    if ( [(NSString *)plot.identifier isEqualToString : SELECTION_PLOT] && (index == 2) ) {
         if ( !redDot ) {
             redDot            = [[CPTPlotSymbol alloc] init];
             redDot.symbolType = CPTPlotSymbolTypeEllipse;
@@ -292,7 +289,6 @@ static NSString *const SELECTION_PLOT = @"Selection Plot";
     self.selectedIndex = NSUIntegerMax;
     return YES;
 }
-
 #endif
 
 #pragma mark -

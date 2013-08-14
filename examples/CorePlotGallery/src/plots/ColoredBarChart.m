@@ -10,7 +10,8 @@
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title = @"Colored Bar Chart";
+        self.title   = @"Colored Bar Chart";
+        self.section = kBarPlots;
     }
 
     return self;
@@ -27,7 +28,7 @@
     }
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     CGRect bounds = layerHostingView.bounds;
@@ -35,7 +36,7 @@
     CGRect bounds = NSRectToCGRect(layerHostingView.bounds);
 #endif
 
-    CPTGraph *graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:bounds];
+    CPTGraph *graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame : bounds];
     [self addGraph:graph toHostingView:layerHostingView];
     [self applyTheme:theme toGraph:graph withDefault:[CPTTheme themeNamed:kCPTDarkGradientTheme]];
 
@@ -45,6 +46,7 @@
     graph.plotAreaFrame.paddingTop    += 25.0;
     graph.plotAreaFrame.paddingRight  += 20.0;
     graph.plotAreaFrame.paddingBottom += 20.0;
+    graph.plotAreaFrame.masksToBorder  = NO;
 
     // Create grid line styles
     CPTMutableLineStyle *majorGridLineStyle = [CPTMutableLineStyle lineStyle];
@@ -159,7 +161,7 @@
         case CPTBarPlotFieldBarLocation:
             nums = [NSMutableArray arrayWithCapacity:indexRange.length];
             for ( NSUInteger i = indexRange.location; i < NSMaxRange(indexRange); i++ ) {
-                [(NSMutableArray *) nums addObject:[NSDecimalNumber numberWithUnsignedInteger:i]];
+                [(NSMutableArray *)nums addObject :[NSDecimalNumber numberWithUnsignedInteger:i]];
             }
             break;
 

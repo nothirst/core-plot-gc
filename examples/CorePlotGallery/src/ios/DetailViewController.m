@@ -83,7 +83,7 @@
         [detailItem release];
 
         detailItem = [newDetailItem retain];
-        [detailItem renderInView:hostingView withTheme:[self currentTheme]];
+        [detailItem renderInView:hostingView withTheme:[self currentTheme] animated:YES];
     }
 
     if ( popoverController != nil ) {
@@ -107,9 +107,9 @@
     self.popoverController = pc;
 }
 
--(void)  splitViewController:(UISplitViewController *)svc
-      willShowViewController:(UIViewController *)aViewController
-   invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+-(void)   splitViewController:(UISplitViewController *)svc
+       willShowViewController:(UIViewController *)aViewController
+    invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
 {
     NSMutableArray *items = [[toolbar items] mutableCopy];
 
@@ -129,7 +129,10 @@
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    [detailItem renderInView:hostingView withTheme:[self currentTheme]];
+    if ( UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad ) {
+        self.hostingView.frame = self.view.bounds;
+    }
+    [detailItem renderInView:hostingView withTheme:[self currentTheme] animated:YES];
 }
 
 #pragma mark -
@@ -153,10 +156,10 @@
 {
     CPTTheme *theme;
 
-    if ( currentThemeName == kThemeTableViewControllerNoTheme ) {
+    if ( [currentThemeName isEqualToString:kThemeTableViewControllerNoTheme] ) {
         theme = (id)[NSNull null];
     }
-    else if ( currentThemeName == kThemeTableViewControllerDefaultTheme ) {
+    else if ( [currentThemeName isEqualToString:kThemeTableViewControllerDefaultTheme] ) {
         theme = nil;
     }
     else {
@@ -211,7 +214,7 @@
         themeTableViewController = nil;
     }
 
-    [detailItem renderInView:hostingView withTheme:[self currentTheme]];
+    [detailItem renderInView:hostingView withTheme:[self currentTheme] animated:YES];
 }
 
 @end

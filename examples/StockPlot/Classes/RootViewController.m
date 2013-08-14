@@ -25,7 +25,6 @@
     [self addSymbol:@"GOOG"];
     [self addSymbol:@"YHOO"];
     [self addSymbol:@"MSFT"];
-    [self addSymbol:@"^DJI"];
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -81,6 +80,7 @@
 
         [self.graph setDataPuller:aStock];
         [self.navigationController pushViewController:self.graph animated:YES];
+        self.graph.view.frame = self.view.bounds;
     }
 }
 
@@ -147,15 +147,15 @@
     if ( [dp loadingData] ) {
         if ( ![accessory isMemberOfClass:[UIActivityIndicatorView class]] ) {
             accessory = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            [(UIActivityIndicatorView *) accessory setHidesWhenStopped:NO];
+            [(UIActivityIndicatorView *)accessory setHidesWhenStopped : NO];
             [cell setAccessoryView:accessory];
             [accessory release];
         }
-        [(UIActivityIndicatorView *) accessory startAnimating];
+        [(UIActivityIndicatorView *)accessory startAnimating];
     }
     else {
         if ( [accessory isMemberOfClass:[UIActivityIndicatorView class]] ) {
-            [(UIActivityIndicatorView *) accessory stopAnimating];
+            [(UIActivityIndicatorView *)accessory stopAnimating];
         }
         if ( [dp staleData] ) {
             if ( ![accessory isMemberOfClass:[UIImageView class]] ) {
@@ -194,10 +194,12 @@
 // Override to allow orientations other than the default portrait orientation.
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return interfaceOrientation == UIInterfaceOrientationPortrait ||
-           interfaceOrientation == UIInterfaceOrientationLandscapeLeft ||
-           interfaceOrientation == UIInterfaceOrientationLandscapeRight;
+    return YES;
+}
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation;
+{
+    graph.view.frame = self.view.bounds;
 }
 
 #pragma mark -

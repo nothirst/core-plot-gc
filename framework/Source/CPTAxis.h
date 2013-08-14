@@ -1,9 +1,8 @@
 #import "CPTDefinitions.h"
 #import "CPTLayer.h"
 #import "CPTTextStyle.h"
-#import <Foundation/Foundation.h>
 
-///	@file
+/// @file
 
 @class CPTAxis;
 @class CPTAxisSet;
@@ -18,7 +17,7 @@
 @class CPTShadow;
 
 /**
- *	@brief Enumeration of labeling policies
+ *  @brief Enumeration of labeling policies
  **/
 typedef enum _CPTAxisLabelingPolicy {
     CPTAxisLabelingPolicyNone,              ///< No labels provided; user sets labels and tick locations.
@@ -32,7 +31,7 @@ CPTAxisLabelingPolicy;
 #pragma mark -
 
 /**
- *	@brief Axis labeling delegate.
+ *  @brief Axis labeling delegate.
  **/
 @protocol CPTAxisDelegate<NSObject>
 
@@ -41,37 +40,37 @@ CPTAxisLabelingPolicy;
 /// @name Labels
 /// @{
 
-/**	@brief (Optional) Determines if the axis should relabel itself now.
- *	@param axis The axis.
- *	@return YES if the axis should relabel now.
+/** @brief @optional Determines if the axis should relabel itself now.
+ *  @param axis The axis.
+ *  @return @YES if the axis should relabel now.
  **/
 -(BOOL)axisShouldRelabel:(CPTAxis *)axis;
 
-/**	@brief (Optional) The method is called after the axis is relabeled to allow the delegate to perform any
- *	necessary cleanup or further labeling actions.
- *	@param axis The axis.
+/** @brief @optional The method is called after the axis is relabeled to allow the delegate to perform any
+ *  necessary cleanup or further labeling actions.
+ *  @param axis The axis.
  **/
 -(void)axisDidRelabel:(CPTAxis *)axis;
 
-/**	@brief (Optional) This method gives the delegate a chance to create custom labels for each tick.
- *  It can be used with any labeling policy. Returning NO will cause the axis not
- *  to update the labels. It is then the delegates responsiblity to do this.
- *	@param axis The axis.
+/** @brief @optional This method gives the delegate a chance to create custom labels for each tick.
+ *  It can be used with any labeling policy. Returning @NO will cause the axis not
+ *  to update the labels. It is then the delegate&rsquo;s responsibility to do this.
+ *  @param axis The axis.
  *  @param locations The locations of the major ticks.
- *  @return YES if the axis class should proceed with automatic labeling.
+ *  @return @YES if the axis class should proceed with automatic labeling.
  **/
 -(BOOL)axis:(CPTAxis *)axis shouldUpdateAxisLabelsAtLocations:(NSSet *)locations;
 
-/**	@brief (Optional) This method gives the delegate a chance to create custom labels for each minor tick.
- *  It can be used with any labeling policy. Returning NO will cause the axis not
- *  to update the labels. It is then the delegates responsiblity to do this.
- *	@param axis The axis.
+/** @brief @optional This method gives the delegate a chance to create custom labels for each minor tick.
+ *  It can be used with any labeling policy. Returning @NO will cause the axis not
+ *  to update the labels. It is then the delegate&rsquo;s responsibility to do this.
+ *  @param axis The axis.
  *  @param locations The locations of the minor ticks.
- *  @return YES if the axis class should proceed with automatic labeling.
+ *  @return @YES if the axis class should proceed with automatic labeling.
  **/
 -(BOOL)axis:(CPTAxis *)axis shouldUpdateMinorAxisLabelsAtLocations:(NSSet *)locations;
 
-///	@}
+/// @}
 
 @end
 
@@ -105,15 +104,18 @@ CPTAxisLabelingPolicy;
     CPTAxisLabelingPolicy labelingPolicy;
     CPTTextStyle *labelTextStyle;
     CPTTextStyle *minorTickLabelTextStyle;
+    CPTSign tickLabelDirection;
+    CPTSign minorTickLabelDirection;
     CPTTextStyle *titleTextStyle;
-    NSNumberFormatter *labelFormatter;
-    NSNumberFormatter *minorTickLabelFormatter;
+    NSFormatter *labelFormatter;
+    NSFormatter *minorTickLabelFormatter;
     BOOL labelFormatterChanged;
     BOOL minorLabelFormatterChanged;
     NSSet *axisLabels;
     NSSet *minorTickAxisLabels;
     CPTAxisTitle *axisTitle;
     NSString *title;
+    NSAttributedString *attributedTitle;
     CGFloat titleOffset;
     CGFloat titleRotation;
     NSDecimal titleLocation;
@@ -127,6 +129,7 @@ CPTAxisLabelingPolicy;
     NSMutableArray *mutableBackgroundLimitBands;
     BOOL separateLayers;
     CPTShadow *labelShadow;
+    CPTShadow *minorTickLabelShadow;
     __cpt_weak CPTPlotArea *plotArea;
     __cpt_weak CPTGridLines *minorGridLines;
     __cpt_weak CPTGridLines *majorGridLines;
@@ -142,7 +145,7 @@ CPTAxisLabelingPolicy;
 @property (nonatomic, readwrite, copy) CPTPlotRange *visibleAxisRange;
 @property (nonatomic, readwrite, copy) CPTLineCap *axisLineCapMin;
 @property (nonatomic, readwrite, copy) CPTLineCap *axisLineCapMax;
-///	@}
+/// @}
 
 /// @name Title
 /// @{
@@ -150,10 +153,11 @@ CPTAxisLabelingPolicy;
 @property (nonatomic, readwrite, retain) CPTAxisTitle *axisTitle;
 @property (nonatomic, readwrite, assign) CGFloat titleOffset;
 @property (nonatomic, readwrite, copy) NSString *title;
+@property (nonatomic, readwrite, copy) NSAttributedString *attributedTitle;
 @property (nonatomic, readwrite, assign) CGFloat titleRotation;
 @property (nonatomic, readwrite, assign) NSDecimal titleLocation;
 @property (nonatomic, readonly, assign) NSDecimal defaultTitleLocation;
-///	@}
+/// @}
 
 /// @name Labels
 /// @{
@@ -166,14 +170,17 @@ CPTAxisLabelingPolicy;
 @property (nonatomic, readwrite, assign) CPTAlignment minorTickLabelAlignment;
 @property (nonatomic, readwrite, copy) CPTTextStyle *labelTextStyle;
 @property (nonatomic, readwrite, copy) CPTTextStyle *minorTickLabelTextStyle;
-@property (nonatomic, readwrite, retain) NSNumberFormatter *labelFormatter;
-@property (nonatomic, readwrite, retain) NSNumberFormatter *minorTickLabelFormatter;
+@property (nonatomic, readwrite, assign) CPTSign tickLabelDirection;
+@property (nonatomic, readwrite, assign) CPTSign minorTickLabelDirection;
+@property (nonatomic, readwrite, retain) NSFormatter *labelFormatter;
+@property (nonatomic, readwrite, retain) NSFormatter *minorTickLabelFormatter;
 @property (nonatomic, readwrite, retain) NSSet *axisLabels;
 @property (nonatomic, readwrite, retain) NSSet *minorTickAxisLabels;
 @property (nonatomic, readonly, assign) BOOL needsRelabel;
 @property (nonatomic, readwrite, retain) NSArray *labelExclusionRanges;
 @property (nonatomic, readwrite, retain) CPTShadow *labelShadow;
-///	@}
+@property (nonatomic, readwrite, retain) CPTShadow *minorTickLabelShadow;
+/// @}
 
 /// @name Major Ticks
 /// @{
@@ -182,7 +189,7 @@ CPTAxisLabelingPolicy;
 @property (nonatomic, readwrite, copy) CPTLineStyle *majorTickLineStyle;
 @property (nonatomic, readwrite, retain) NSSet *majorTickLocations;
 @property (nonatomic, readwrite, assign) NSUInteger preferredNumberOfMajorTicks;
-///	@}
+/// @}
 
 /// @name Minor Ticks
 /// @{
@@ -190,25 +197,25 @@ CPTAxisLabelingPolicy;
 @property (nonatomic, readwrite, assign) CGFloat minorTickLength;
 @property (nonatomic, readwrite, copy) CPTLineStyle *minorTickLineStyle;
 @property (nonatomic, readwrite, retain) NSSet *minorTickLocations;
-///	@}
+/// @}
 
 /// @name Grid Lines
 /// @{
 @property (nonatomic, readwrite, copy) CPTLineStyle *majorGridLineStyle;
 @property (nonatomic, readwrite, copy) CPTLineStyle *minorGridLineStyle;
 @property (nonatomic, readwrite, copy) CPTPlotRange *gridLinesRange;
-///	@}
+/// @}
 
 /// @name Background Bands
 /// @{
 @property (nonatomic, readwrite, copy) NSArray *alternatingBandFills;
 @property (nonatomic, readonly, retain) NSArray *backgroundLimitBands;
-///	@}
+/// @}
 
 /// @name Plot Space
 /// @{
 @property (nonatomic, readwrite, retain) CPTPlotSpace *plotSpace;
-///	@}
+/// @}
 
 /// @name Layers
 /// @{
@@ -217,7 +224,12 @@ CPTAxisLabelingPolicy;
 @property (nonatomic, readonly, cpt_weak_property) __cpt_weak CPTGridLines *minorGridLines;
 @property (nonatomic, readonly, cpt_weak_property) __cpt_weak CPTGridLines *majorGridLines;
 @property (nonatomic, readonly, retain) CPTAxisSet *axisSet;
-///	@}
+/// @}
+
+/// @name Title
+/// @{
+-(void)updateAxisTitle;
+/// @}
 
 /// @name Labels
 /// @{
@@ -225,43 +237,43 @@ CPTAxisLabelingPolicy;
 -(void)setNeedsRelabel;
 -(void)updateMajorTickLabels;
 -(void)updateMinorTickLabels;
-///	@}
+/// @}
 
 /// @name Ticks
 /// @{
 -(NSSet *)filteredMajorTickLocations:(NSSet *)allLocations;
 -(NSSet *)filteredMinorTickLocations:(NSSet *)allLocations;
-///	@}
+/// @}
 
 /// @name Background Bands
 /// @{
 -(void)addBackgroundLimitBand:(CPTLimitBand *)limitBand;
 -(void)removeBackgroundLimitBand:(CPTLimitBand *)limitBand;
-///	@}
+/// @}
 
 @end
 
 #pragma mark -
 
-/**	@category CPTAxis(AbstractMethods)
- *	@brief CPTAxis abstract methods—must be overridden by subclasses
+/** @category CPTAxis(AbstractMethods)
+ *  @brief CPTAxis abstract methods—must be overridden by subclasses
  **/
 @interface CPTAxis(AbstractMethods)
 
 /// @name Coordinate Space Conversions
 /// @{
 -(CGPoint)viewPointForCoordinateDecimalNumber:(NSDecimal)coordinateDecimalNumber;
-///	@}
+/// @}
 
 /// @name Grid Lines
 /// @{
 -(void)drawGridLinesInContext:(CGContextRef)context isMajor:(BOOL)major;
-///	@}
+/// @}
 
 /// @name Background Bands
 /// @{
 -(void)drawBackgroundBandsInContext:(CGContextRef)context;
 -(void)drawBackgroundLimitsInContext:(CGContextRef)context;
-///	@}
+/// @}
 
 @end

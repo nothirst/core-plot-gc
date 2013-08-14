@@ -1,6 +1,5 @@
 #import "CPTPlotRangeTests.h"
 
-#import "CPTExceptions.h"
 #import "CPTMutablePlotRange.h"
 #import "CPTUtilities.h"
 
@@ -396,7 +395,7 @@
 }
 
 #pragma mark -
-#pragma mark NSCoding
+#pragma mark NSCoding Methods
 
 -(void)testKeyedArchivingRoundTrip
 {

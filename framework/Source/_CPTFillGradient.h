@@ -1,5 +1,4 @@
 #import "CPTFill.h"
-#import <Foundation/Foundation.h>
 
 @class CPTGradient;
 
@@ -11,12 +10,12 @@
 /// @name Initialization
 /// @{
 -(id)initWithGradient:(CPTGradient *)aGradient;
-///	@}
+/// @}
 
 /// @name Drawing
 /// @{
--(void)fillRect:(CGRect)theRect inContext:(CGContextRef)theContext;
--(void)fillPathInContext:(CGContextRef)theContext;
-///	@}
+-(void)fillRect:(CGRect)rect inContext:(CGContextRef)context;
+-(void)fillPathInContext:(CGContextRef)context;
+/// @}
 
 @end

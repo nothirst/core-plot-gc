@@ -1,7 +1,7 @@
 #import "CPTColor.h"
+#import "CPTDefinitions.h"
 #import "CPTTextStyle.h"
 #import "CPTTextStyleTests.h"
-#import <QuartzCore/QuartzCore.h>
 
 @implementation CPTTextStyleTests
 
@@ -10,12 +10,12 @@
     CPTTextStyle *textStyle = [CPTTextStyle textStyle];
 
     STAssertEqualObjects(@"Helvetica", textStyle.fontName, @"Default font name is not Helvetica");
-    STAssertEquals( (CGFloat)12.0, textStyle.fontSize, @"Default font size is not 12.0" );
+    STAssertEquals(CPTFloat(12.0), textStyle.fontSize, @"Default font size is not 12.0");
     STAssertEqualObjects([CPTColor blackColor], textStyle.color, @"Default color is not [CPTColor blackColor]");
 }
 
 #pragma mark -
-#pragma mark NSCoding
+#pragma mark NSCoding Methods
 
 -(void)testKeyedArchivingRoundTrip
 {

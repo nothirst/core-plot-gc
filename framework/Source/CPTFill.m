@@ -8,15 +8,15 @@
 
 /** @brief Draws area fills.
  *
- *	CPTFill instances can be used to fill drawing areas with colors (including patterns),
- *	gradients, and images. Drawing methods are provided to fill rectangular areas and
- *	arbitrary drawing paths.
+ *  CPTFill instances can be used to fill drawing areas with colors (including patterns),
+ *  gradients, and images. Drawing methods are provided to fill rectangular areas and
+ *  arbitrary drawing paths.
  **/
 
 @implementation CPTFill
 
 #pragma mark -
-#pragma mark init/dealloc
+#pragma mark Init/Dealloc
 
 /** @brief Creates and returns a new CPTFill instance initialized with a given color.
  *  @param aColor The color.
@@ -24,7 +24,7 @@
  **/
 +(CPTFill *)fillWithColor:(CPTColor *)aColor
 {
-    return [[(_CPTFillColor *)[_CPTFillColor alloc] initWithColor:aColor] autorelease];
+    return [[(_CPTFillColor *)[_CPTFillColor alloc] initWithColor : aColor] autorelease];
 }
 
 /** @brief Creates and returns a new CPTFill instance initialized with a given gradient.
@@ -42,7 +42,7 @@
  **/
 +(CPTFill *)fillWithImage:(CPTImage *)anImage
 {
-    return [[(_CPTFillImage *)[_CPTFillImage alloc] initWithImage:anImage] autorelease];
+    return [[(_CPTFillImage *)[_CPTFillImage alloc] initWithImage : anImage] autorelease];
 }
 
 /** @brief Initializes a newly allocated CPTFill object with the provided color.
@@ -53,7 +53,7 @@
 {
     [self release];
 
-    self = [(_CPTFillColor *)[_CPTFillColor alloc] initWithColor:aColor];
+    self = [(_CPTFillColor *)[_CPTFillColor alloc] initWithColor : aColor];
 
     return self;
 }
@@ -79,13 +79,15 @@
 {
     [self release];
 
-    self = [(_CPTFillImage *)[_CPTFillImage alloc] initWithImage:anImage];
+    self = [(_CPTFillImage *)[_CPTFillImage alloc] initWithImage : anImage];
 
     return self;
 }
 
 #pragma mark -
-#pragma mark NSCopying methods
+#pragma mark NSCopying Methods
+
+/// @cond
 
 -(id)copyWithZone:(NSZone *)zone
 {
@@ -93,8 +95,12 @@
     return nil;
 }
 
+/// @endcond
+
 #pragma mark -
-#pragma mark NSCoding methods
+#pragma mark NSCoding Methods
+
+/// @cond
 
 -(void)encodeWithCoder:(NSCoder *)coder
 {
@@ -122,28 +128,44 @@
     return self;
 }
 
+/// @endcond
+
 @end
 
 #pragma mark -
 
 @implementation CPTFill(AbstractMethods)
 
+/** @property BOOL opaque
+ *  @brief If @YES, the fill is completely opaque.
+ */
+@dynamic opaque;
+
+#pragma mark -
+#pragma mark Opacity
+
+-(BOOL)isOpaque
+{
+    // do nothing--subclasses override to describe the fill opacity
+    return NO;
+}
+
 #pragma mark -
 #pragma mark Drawing
 
 /** @brief Draws the gradient into the given graphics context inside the provided rectangle.
- *  @param theRect The rectangle to draw into.
- *  @param theContext The graphics context to draw into.
+ *  @param rect The rectangle to draw into.
+ *  @param context The graphics context to draw into.
  **/
--(void)fillRect:(CGRect)theRect inContext:(CGContextRef)theContext
+-(void)fillRect:(CGRect)rect inContext:(CGContextRef)context
 {
     // do nothing--subclasses override to do drawing here
 }
 
 /** @brief Draws the gradient into the given graphics context clipped to the current drawing path.
- *  @param theContext The graphics context to draw into.
+ *  @param context The graphics context to draw into.
  **/
--(void)fillPathInContext:(CGContextRef)theContext
+-(void)fillPathInContext:(CGContextRef)context
 {
     // do nothing--subclasses override to do drawing here
 }

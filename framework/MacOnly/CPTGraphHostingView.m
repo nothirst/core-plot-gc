@@ -2,7 +2,7 @@
 
 #import "CPTGraph.h"
 
-///	@cond
+/// @cond
 // for MacOS 10.6 SDK compatibility
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 #else
@@ -11,44 +11,44 @@
 
 @property (readonly) CGFloat backingScaleFactor;
 
+-(void)viewDidChangeBackingProperties;
+
 @end
 #endif
 #endif
 
-///	@endcond
+/// @endcond
 
 #pragma mark -
 
 /**
- *	@brief A container view for displaying a CPTGraph.
+ *  @brief A container view for displaying a CPTGraph.
  **/
 @implementation CPTGraphHostingView
 
-/**	@property hostedGraph
- *	@brief The CPTGraph hosted inside this view.
+/** @property CPTGraph *hostedGraph
+ *  @brief The CPTGraph hosted inside this view.
  **/
 @synthesize hostedGraph;
 
-/**	@property printRect
- *	@brief The bounding rectangle used when printing this view.
+/** @property NSRect printRect
+ *  @brief The bounding rectangle used when printing this view.
  **/
 @synthesize printRect;
 
-///	@cond
+/// @cond
 
 -(id)initWithFrame:(NSRect)frame
 {
     if ( (self = [super initWithFrame:frame]) ) {
         hostedGraph = nil;
         printRect   = NSZeroRect;
-        CPTLayer *mainLayer = [(CPTLayer *)[CPTLayer alloc] initWithFrame:NSRectToCGRect(frame)];
+        CPTLayer *mainLayer = [(CPTLayer *)[CPTLayer alloc] initWithFrame : NSRectToCGRect(frame)];
         self.layer = mainLayer;
         [mainLayer release];
     }
     return self;
 }
-
-///	@endcond
 
 -(void)dealloc
 {
@@ -57,8 +57,12 @@
     [super dealloc];
 }
 
+/// @endcond
+
 #pragma mark -
-#pragma mark NSCoding methods
+#pragma mark NSCoding Methods
+
+/// @cond
 
 -(void)encodeWithCoder:(NSCoder *)coder
 {
@@ -71,7 +75,7 @@
 -(id)initWithCoder:(NSCoder *)coder
 {
     if ( (self = [super initWithCoder:coder]) ) {
-        CPTLayer *mainLayer = [(CPTLayer *)[CPTLayer alloc] initWithFrame:NSRectToCGRect(self.frame)];
+        CPTLayer *mainLayer = [(CPTLayer *)[CPTLayer alloc] initWithFrame : NSRectToCGRect(self.frame)];
         self.layer = mainLayer;
         [mainLayer release];
 
@@ -82,24 +86,19 @@
     return self;
 }
 
+/// @endcond
+
 #pragma mark -
 #pragma mark Drawing
 
-///	@cond
+/// @cond
 
 -(void)drawRect:(NSRect)dirtyRect
 {
     if ( self.hostedGraph ) {
-        NSWindow *myWindow = self.window;
-        // backingScaleFactor property is available in MacOS 10.7 and later
-        if ( [myWindow respondsToSelector:@selector(backingScaleFactor)] ) {
-            self.layer.contentsScale = myWindow.backingScaleFactor;
-        }
-        else {
-            self.layer.contentsScale = 1.0;
-        }
-
         if ( ![NSGraphicsContext currentContextDrawingToScreen] ) {
+            [self viewDidChangeBackingProperties];
+
             NSGraphicsContext *graphicsContext = [NSGraphicsContext currentContext];
 
             [graphicsContext saveGraphicsState];
@@ -108,14 +107,14 @@
             CGRect sourceRect      = NSRectToCGRect(self.frame);
 
             // scale the view isotropically so that it fits on the printed page
-            CGFloat widthScale  = (sourceRect.size.width != 0.0) ? destinationRect.size.width / sourceRect.size.width : 1.0;
-            CGFloat heightScale = (sourceRect.size.height != 0.0) ? destinationRect.size.height / sourceRect.size.height : 1.0;
+            CGFloat widthScale  = ( sourceRect.size.width != CPTFloat(0.0) ) ? destinationRect.size.width / sourceRect.size.width : CPTFloat(1.0);
+            CGFloat heightScale = ( sourceRect.size.height != CPTFloat(0.0) ) ? destinationRect.size.height / sourceRect.size.height : CPTFloat(1.0);
             CGFloat scale       = MIN(widthScale, heightScale);
 
             // position the view so that its centered on the printed page
             CGPoint offset = destinationRect.origin;
-            offset.x += ( ( destinationRect.size.width - (sourceRect.size.width * scale) ) / 2.0 );
-            offset.y += ( ( destinationRect.size.height - (sourceRect.size.height * scale) ) / 2.0 );
+            offset.x += ( ( destinationRect.size.width - (sourceRect.size.width * scale) ) / CPTFloat(2.0) );
+            offset.y += ( ( destinationRect.size.height - (sourceRect.size.height * scale) ) / CPTFloat(2.0) );
 
             NSAffineTransform *transform = [NSAffineTransform transform];
             [transform translateXBy:offset.x yBy:offset.y];
@@ -145,12 +144,12 @@
     return self.printRect;
 }
 
-///	@endcond
+/// @endcond
 
 #pragma mark -
 #pragma mark Mouse handling
 
-///	@cond
+/// @cond
 
 -(BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
@@ -190,12 +189,33 @@
     }
 }
 
-///	@endcond
+/// @endcond
+
+#pragma mark -
+#pragma mark HiDPI display support
+
+/// @cond
+
+-(void)viewDidChangeBackingProperties
+{
+    CPTLayer *myLayer  = (CPTLayer *)self.layer;
+    NSWindow *myWindow = self.window;
+
+    // backingScaleFactor property is available in MacOS 10.7 and later
+    if ( [myWindow respondsToSelector:@selector(backingScaleFactor)] ) {
+        myLayer.contentsScale = myWindow.backingScaleFactor;
+    }
+    else {
+        myLayer.contentsScale = CPTFloat(1.0);
+    }
+}
+
+/// @endcond
 
 #pragma mark -
 #pragma mark Accessors
 
-///	@cond
+/// @cond
 
 -(void)setHostedGraph:(CPTGraph *)newGraph
 {
@@ -207,24 +227,16 @@
         hostedGraph.hostingView = nil;
         [hostedGraph release];
         hostedGraph = [newGraph retain];
+
         if ( hostedGraph ) {
             hostedGraph.hostingView = self;
-            CPTLayer *myLayer = (CPTLayer *)self.layer;
 
-            NSWindow *myWindow = self.window;
-            // backingScaleFactor property is available in MacOS 10.7 and later
-            if ( [myWindow respondsToSelector:@selector(backingScaleFactor)] ) {
-                myLayer.contentsScale = myWindow.backingScaleFactor;
-            }
-            else {
-                myLayer.contentsScale = 1.0;
-            }
-
-            [myLayer addSublayer:hostedGraph];
+            [self viewDidChangeBackingProperties];
+            [self.layer addSublayer:hostedGraph];
         }
     }
 }
 
-///	@endcond
+/// @endcond
 
 @end

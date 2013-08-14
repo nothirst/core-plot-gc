@@ -40,11 +40,14 @@
 		C360E1DA13B18B24007994B6 /* AxisDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = C360E1D913B18B24007994B6 /* AxisDemo.m */; };
 		C360E1EE13B18CCC007994B6 /* CandlestickPlot.m in Sources */ = {isa = PBXBuildFile; fileRef = C360E1ED13B18CCC007994B6 /* CandlestickPlot.m */; };
 		C367249F13E103AC0070F47A /* LineCapDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = C367249E13E103AC0070F47A /* LineCapDemo.m */; };
+		C3858771163D8B8B00DBF63D /* UINavigationController+LegacyRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C385876E163D8B8B00DBF63D /* UINavigationController+LegacyRotation.m */; };
+		C3858772163D8B8B00DBF63D /* UIViewController+LegacyRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C3858770163D8B8B00DBF63D /* UIViewController+LegacyRotation.m */; };
 		C39C4E3B13BFE19200CD9194 /* PlotSpaceDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = C39C4E3A13BFE19200CD9194 /* PlotSpaceDemo.m */; };
 		C39C4E3E13BFE19E00CD9194 /* LabelingPolicyDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = C39C4E3D13BFE19E00CD9194 /* LabelingPolicyDemo.m */; };
 		C3A14C1513AEE7CC00D103EA /* RangePlot.m in Sources */ = {isa = PBXBuildFile; fileRef = C3A14C1413AEE7CC00D103EA /* RangePlot.m */; };
 		C3A31A5914DF783500734AB7 /* ColoredBarChart.m in Sources */ = {isa = PBXBuildFile; fileRef = C3A31A5814DF783500734AB7 /* ColoredBarChart.m */; };
 		C3AC1411150EDEF300631001 /* CurvedScatterPlot.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBCB98914753D6F000C8951 /* CurvedScatterPlot.m */; };
+		C3BB7D371633428900BC9515 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3BB7D361633428900BC9515 /* Default-568h@2x.png */; };
 		C3F34F2A12AB25AE008FBDC3 /* DonutChart.m in Sources */ = {isa = PBXBuildFile; fileRef = C3F34F2912AB25AE008FBDC3 /* DonutChart.m */; };
 /* End PBXBuildFile section */
 
@@ -124,6 +127,10 @@
 		C360E1ED13B18CCC007994B6 /* CandlestickPlot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CandlestickPlot.m; path = src/plots/CandlestickPlot.m; sourceTree = "<group>"; };
 		C367249D13E103AC0070F47A /* LineCapDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineCapDemo.h; path = src/plots/LineCapDemo.h; sourceTree = "<group>"; };
 		C367249E13E103AC0070F47A /* LineCapDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LineCapDemo.m; path = src/plots/LineCapDemo.m; sourceTree = "<group>"; };
+		C385876D163D8B8B00DBF63D /* UINavigationController+LegacyRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationController+LegacyRotation.h"; path = "../iOS Rotation Utilities/UINavigationController+LegacyRotation.h"; sourceTree = "<group>"; };
+		C385876E163D8B8B00DBF63D /* UINavigationController+LegacyRotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationController+LegacyRotation.m"; path = "../iOS Rotation Utilities/UINavigationController+LegacyRotation.m"; sourceTree = "<group>"; };
+		C385876F163D8B8B00DBF63D /* UIViewController+LegacyRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+LegacyRotation.h"; path = "../iOS Rotation Utilities/UIViewController+LegacyRotation.h"; sourceTree = "<group>"; };
+		C3858770163D8B8B00DBF63D /* UIViewController+LegacyRotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+LegacyRotation.m"; path = "../iOS Rotation Utilities/UIViewController+LegacyRotation.m"; sourceTree = "<group>"; };
 		C39C4E3913BFE19200CD9194 /* PlotSpaceDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlotSpaceDemo.h; path = src/plots/PlotSpaceDemo.h; sourceTree = "<group>"; };
 		C39C4E3A13BFE19200CD9194 /* PlotSpaceDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlotSpaceDemo.m; path = src/plots/PlotSpaceDemo.m; sourceTree = "<group>"; };
 		C39C4E3C13BFE19E00CD9194 /* LabelingPolicyDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LabelingPolicyDemo.h; path = src/plots/LabelingPolicyDemo.h; sourceTree = "<group>"; };
@@ -132,6 +139,7 @@
 		C3A14C1413AEE7CC00D103EA /* RangePlot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RangePlot.m; path = src/plots/RangePlot.m; sourceTree = "<group>"; };
 		C3A31A5714DF783500734AB7 /* ColoredBarChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColoredBarChart.h; path = src/plots/ColoredBarChart.h; sourceTree = "<group>"; };
 		C3A31A5814DF783500734AB7 /* ColoredBarChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ColoredBarChart.m; path = src/plots/ColoredBarChart.m; sourceTree = "<group>"; };
+		C3BB7D361633428900BC9515 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		C3F34F2812AB25AE008FBDC3 /* DonutChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DonutChart.h; path = src/plots/DonutChart.h; sourceTree = "<group>"; };
 		C3F34F2912AB25AE008FBDC3 /* DonutChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DonutChart.m; path = src/plots/DonutChart.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -198,12 +206,17 @@
 				4F7541F0126B59A200313026 /* RootViewController.h */,
 				4F7541F1126B59A200313026 /* RootViewController.m */,
 				4F22FEB512340B6B006BF615 /* Icon.png */,
+				C3BB7D361633428900BC9515 /* Default-568h@2x.png */,
 				28A0AAE50D9B0CCF005BE974 /* Plot_Gallery_Prefix.pch */,
 				8D1107310486CEB800E47090 /* Plot_Gallery-Info.plist */,
 				4F22FE6612340671006BF615 /* main.m */,
 				4F22FE77123406DF006BF615 /* ThemeTableViewController.h */,
 				4F22FE78123406DF006BF615 /* ThemeTableViewController.m */,
 				4F22FE79123406DF006BF615 /* ThemeTableViewController.xib */,
+				C385876D163D8B8B00DBF63D /* UINavigationController+LegacyRotation.h */,
+				C385876E163D8B8B00DBF63D /* UINavigationController+LegacyRotation.m */,
+				C385876F163D8B8B00DBF63D /* UIViewController+LegacyRotation.h */,
+				C3858770163D8B8B00DBF63D /* UIViewController+LegacyRotation.m */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
@@ -321,7 +334,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Plot_Gallery_iOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -371,6 +384,7 @@
 				4F7541D5126B583D00313026 /* RootViewController.xib in Resources */,
 				4F754279126D0BEE00313026 /* DetailView-iPad.xib in Resources */,
 				4F754284126D0C5F00313026 /* DetailView.xib in Resources */,
+				C3BB7D371633428900BC9515 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,6 +422,8 @@
 				C35597A21437E09300B41DA7 /* ControlChart.m in Sources */,
 				C3A31A5914DF783500734AB7 /* ColoredBarChart.m in Sources */,
 				C3AC1411150EDEF300631001 /* CurvedScatterPlot.m in Sources */,
+				C3858771163D8B8B00DBF63D /* UINavigationController+LegacyRotation.m in Sources */,
+				C3858772163D8B8B00DBF63D /* UIViewController+LegacyRotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

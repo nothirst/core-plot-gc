@@ -1,6 +1,3 @@
-#import <Foundation/Foundation.h>
-#import <QuartzCore/QuartzCore.h>
-
 @class CPTColor;
 
 @interface CPTShadow : NSObject<NSCoding, NSCopying, NSMutableCopying> {
@@ -17,11 +14,11 @@
 /// @name Factory Methods
 /// @{
 +(id)shadow;
-///	@}
+/// @}
 
 /// @name Drawing
 /// @{
--(void)setShadowInContext:(CGContextRef)theContext;
-///	@}
+-(void)setShadowInContext:(CGContextRef)context;
+/// @}
 
 @end

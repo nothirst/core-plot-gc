@@ -1,12 +1,12 @@
 #import "CPTLineCap.h"
 
+#import "CPTDefinitions.h"
 #import "CPTFill.h"
 #import "CPTLineStyle.h"
 #import "NSCoderExtensions.h"
-#import <Foundation/Foundation.h>
 #import <tgmath.h>
 
-///	@cond
+/// @cond
 @interface CPTLineCap()
 
 @property (nonatomic, readwrite, assign) CGPathRef cachedLineCapPath;
@@ -15,57 +15,72 @@
 
 @end
 
-///	@endcond
+/// @endcond
 
 #pragma mark -
 
 /**
- *	@brief End cap decorations for lines.
+ *  @brief End cap decorations for lines.
  */
 @implementation CPTLineCap
 
-/**	@property size
+/** @property CGSize size;
  *  @brief The symbol size when the line is drawn in a vertical direction.
  **/
 @synthesize size;
 
-/** @property lineCapType
+/** @property CPTLineCapType lineCapType
  *  @brief The line cap type.
  **/
 @synthesize lineCapType;
 
-/** @property lineStyle
+/** @property CPTLineStyle *lineStyle
  *  @brief The line style for the border of the line cap.
- *	If <code>nil</code>, the border is not drawn.
+ *  If @nil, the border is not drawn.
  **/
 @synthesize lineStyle;
 
-/** @property fill
+/** @property CPTFill *fill
  *  @brief The fill for the interior of the line cap.
- *	If <code>nil</code>, the symbol is not filled.
+ *  If @nil, the symbol is not filled.
  **/
 @synthesize fill;
 
-/** @property customLineCapPath
+/** @property CGPathRef customLineCapPath
  *  @brief The drawing path for a custom line cap. It will be scaled to size before being drawn.
  **/
 @synthesize customLineCapPath;
 
-/** @property usesEvenOddClipRule
- *  @brief If YES, the even-odd rule is used to draw the line cap, otherwise the nonzero winding number rule is used.
- *	@see <a href="http://developer.apple.com/documentation/GraphicsImaging/Conceptual/drawingwithquartz2d/dq_paths/dq_paths.html#//apple_ref/doc/uid/TP30001066-CH211-TPXREF106">Filling a Path</a> in the Quartz 2D Programming Guide.
+/** @property BOOL usesEvenOddClipRule
+ *  @brief If @YES, the even-odd rule is used to draw the line cap, otherwise the non-zero winding number rule is used.
+ *  @see <a href="http://developer.apple.com/documentation/GraphicsImaging/Conceptual/drawingwithquartz2d/dq_paths/dq_paths.html#//apple_ref/doc/uid/TP30001066-CH211-TPXREF106">Filling a Path</a> in the Quartz 2D Programming Guide.
  **/
 @synthesize usesEvenOddClipRule;
 
 @dynamic cachedLineCapPath;
 
 #pragma mark -
-#pragma mark Init/dealloc
+#pragma mark Init/Dealloc
 
+/// @name Initialization
+/// @{
+
+/** @brief Initializes a newly allocated CPTLineCap object.
+ *
+ *  The initialized object will have the following properties:
+ *  - @ref size = (@num{5.0}, @num{5.0})
+ *  - @ref lineCapType = #CPTLineCapTypeNone
+ *  - @ref lineStyle = a new default line style
+ *  - @ref fill = @nil
+ *  - @ref customLineCapPath = @NULL
+ *  - @ref usesEvenOddClipRule = @NO
+ *
+ *  @return The initialized object.
+ **/
 -(id)init
 {
     if ( (self = [super init]) ) {
-        size                = CGSizeMake(5.0, 5.0);
+        size                = CPTSizeMake(5.0, 5.0);
         lineCapType         = CPTLineCapTypeNone;
         lineStyle           = [[CPTLineStyle alloc] init];
         fill                = nil;
@@ -75,6 +90,10 @@
     }
     return self;
 }
+
+/// @}
+
+/// @cond
 
 -(void)dealloc
 {
@@ -93,13 +112,17 @@
     [super finalize];
 }
 
+/// @endcond
+
 #pragma mark -
-#pragma mark NSCoding methods
+#pragma mark NSCoding Methods
+
+/// @cond
 
 -(void)encodeWithCoder:(NSCoder *)coder
 {
     [coder encodeCPTSize:self.size forKey:@"CPTLineCap.size"];
-    [coder encodeInteger:self.lineCapType forKey:@"CPTLineCap.lineCapType"];
+    [coder encodeInt:self.lineCapType forKey:@"CPTLineCap.lineCapType"];
     [coder encodeObject:self.lineStyle forKey:@"CPTLineCap.lineStyle"];
     [coder encodeObject:self.fill forKey:@"CPTLineCap.fill"];
     [coder encodeCGPath:self.customLineCapPath forKey:@"CPTLineCap.customLineCapPath"];
@@ -113,7 +136,7 @@
 {
     if ( (self = [super init]) ) {
         size                = [coder decodeCPTSizeForKey:@"CPTLineCap.size"];
-        lineCapType         = [coder decodeIntegerForKey:@"CPTLineCap.lineCapType"];
+        lineCapType         = (CPTLineCapType)[coder decodeIntForKey : @"CPTLineCap.lineCapType"];
         lineStyle           = [[coder decodeObjectForKey:@"CPTLineCap.lineStyle"] retain];
         fill                = [[coder decodeObjectForKey:@"CPTLineCap.fill"] retain];
         customLineCapPath   = [coder newCGPathDecodeForKey:@"CPTLineCap.customLineCapPath"];
@@ -124,10 +147,12 @@
     return self;
 }
 
+/// @endcond
+
 #pragma mark -
 #pragma mark Accessors
 
-///	@cond
+/// @cond
 
 -(void)setSize:(CGSize)newSize
 {
@@ -170,7 +195,7 @@
     }
 }
 
-///	@endcond
+/// @endcond
 
 #pragma mark -
 #pragma mark Factory methods
@@ -320,7 +345,7 @@
 }
 
 /** @brief Creates and returns a new CPTLineCap instance initialized with a line cap type of #CPTLineCapTypeCustom.
- *	@param aPath The bounding path for the custom line cap.
+ *  @param aPath The bounding path for the custom line cap.
  *  @return A new CPTLineCap instance initialized with a line cap type of #CPTLineCapTypeCustom.
  **/
 +(CPTLineCap *)customLineCapWithPath:(CGPathRef)aPath
@@ -334,7 +359,9 @@
 }
 
 #pragma mark -
-#pragma mark NSCopying methods
+#pragma mark NSCopying Methods
+
+/// @cond
 
 -(id)copyWithZone:(NSZone *)zone
 {
@@ -355,15 +382,17 @@
     return copy;
 }
 
+/// @endcond
+
 #pragma mark -
 #pragma mark Drawing
 
 /** @brief Draws the line cap into the given graphics context centered at the provided point.
- *  @param theContext The graphics context to draw into.
+ *  @param context The graphics context to draw into.
  *  @param center The center point of the line cap.
  *  @param direction The direction the line is pointing.
  **/
--(void)renderAsVectorInContext:(CGContextRef)theContext atPoint:(CGPoint)center inDirection:(CGPoint)direction
+-(void)renderAsVectorInContext:(CGContextRef)context atPoint:(CGPoint)center inDirection:(CGPoint)direction
 {
     CGPathRef theLineCapPath = self.cachedLineCapPath;
 
@@ -396,39 +425,39 @@
         }
 
         if ( theLineStyle || theFill ) {
-            CGContextSaveGState(theContext);
-            CGContextTranslateCTM(theContext, center.x, center.y);
-            CGContextRotateCTM(theContext, atan2(direction.y, direction.x) - (CGFloat)M_PI_2); // standard symbol points up
+            CGContextSaveGState(context);
+            CGContextTranslateCTM(context, center.x, center.y);
+            CGContextRotateCTM( context, atan2(direction.y, direction.x) - CPTFloat(M_PI_2) ); // standard symbol points up
 
             if ( theFill ) {
                 // use fillRect instead of fillPath so that images and gradients are properly centered in the symbol
                 CGSize symbolSize = self.size;
-                CGSize halfSize   = CGSizeMake(symbolSize.width / (CGFloat)2.0, symbolSize.height / (CGFloat)2.0);
-                CGRect bounds     = CGRectMake(-halfSize.width, -halfSize.height, symbolSize.width, symbolSize.height);
+                CGSize halfSize   = CPTSizeMake( symbolSize.width / CPTFloat(2.0), symbolSize.height / CPTFloat(2.0) );
+                CGRect bounds     = CPTRectMake(-halfSize.width, -halfSize.height, symbolSize.width, symbolSize.height);
 
-                CGContextSaveGState(theContext);
+                CGContextSaveGState(context);
                 if ( !CGPathIsEmpty(theLineCapPath) ) {
-                    CGContextBeginPath(theContext);
-                    CGContextAddPath(theContext, theLineCapPath);
+                    CGContextBeginPath(context);
+                    CGContextAddPath(context, theLineCapPath);
                     if ( self.usesEvenOddClipRule ) {
-                        CGContextEOClip(theContext);
+                        CGContextEOClip(context);
                     }
                     else {
-                        CGContextClip(theContext);
+                        CGContextClip(context);
                     }
                 }
-                [theFill fillRect:bounds inContext:theContext];
-                CGContextRestoreGState(theContext);
+                [theFill fillRect:bounds inContext:context];
+                CGContextRestoreGState(context);
             }
 
             if ( theLineStyle ) {
-                [theLineStyle setLineStyleInContext:theContext];
-                CGContextBeginPath(theContext);
-                CGContextAddPath(theContext, theLineCapPath);
-                [theLineStyle strokePathInContext:theContext];
+                [theLineStyle setLineStyleInContext:context];
+                CGContextBeginPath(context);
+                CGContextAddPath(context, theLineCapPath);
+                [theLineStyle strokePathInContext:context];
             }
 
-            CGContextRestoreGState(theContext);
+            CGContextRestoreGState(context);
         }
     }
 }
@@ -436,18 +465,18 @@
 #pragma mark -
 #pragma mark Private methods
 
-///	@cond
+/// @cond
 
-/**	@internal
- *	@brief Creates and returns a drawing path for the current line cap type.
- *	The path is standardized for a line direction of "up".
- *	@return A path describing the outline of the current line cap type.
+/** @internal
+ *  @brief Creates and returns a drawing path for the current line cap type.
+ *  The path is standardized for a line direction of @quote{up}.
+ *  @return A path describing the outline of the current line cap type.
  **/
 -(CGPathRef)newLineCapPath
 {
     CGFloat dx, dy;
     CGSize lineCapSize = self.size;
-    CGSize halfSize    = CGSizeMake(lineCapSize.width / (CGFloat)2.0, lineCapSize.height / (CGFloat)2.0);
+    CGSize halfSize    = CPTSizeMake( lineCapSize.width / CPTFloat(2.0), lineCapSize.height / CPTFloat(2.0) );
 
     CGMutablePathRef lineCapPath = CGPathCreateMutable();
 
@@ -458,66 +487,66 @@
 
         case CPTLineCapTypeOpenArrow:
             CGPathMoveToPoint(lineCapPath, NULL, -halfSize.width, -halfSize.height);
-            CGPathAddLineToPoint(lineCapPath, NULL, 0.0, 0.0);
+            CGPathAddLineToPoint( lineCapPath, NULL, CPTFloat(0.0), CPTFloat(0.0) );
             CGPathAddLineToPoint(lineCapPath, NULL, halfSize.width, -halfSize.height);
             break;
 
         case CPTLineCapTypeSolidArrow:
             CGPathMoveToPoint(lineCapPath, NULL, -halfSize.width, -halfSize.height);
-            CGPathAddLineToPoint(lineCapPath, NULL, 0.0, 0.0);
+            CGPathAddLineToPoint( lineCapPath, NULL, CPTFloat(0.0), CPTFloat(0.0) );
             CGPathAddLineToPoint(lineCapPath, NULL, halfSize.width, -halfSize.height);
             CGPathCloseSubpath(lineCapPath);
             break;
 
         case CPTLineCapTypeSweptArrow:
             CGPathMoveToPoint(lineCapPath, NULL, -halfSize.width, -halfSize.height);
-            CGPathAddLineToPoint(lineCapPath, NULL, 0.0, 0.0);
+            CGPathAddLineToPoint( lineCapPath, NULL, CPTFloat(0.0), CPTFloat(0.0) );
             CGPathAddLineToPoint(lineCapPath, NULL, halfSize.width, -halfSize.height);
-            CGPathAddLineToPoint(lineCapPath, NULL, 0.0, -lineCapSize.height * (CGFloat)0.375);
+            CGPathAddLineToPoint( lineCapPath, NULL, CPTFloat(0.0), -lineCapSize.height * CPTFloat(0.375) );
             CGPathCloseSubpath(lineCapPath);
             break;
 
         case CPTLineCapTypeRectangle:
-            CGPathAddRect( lineCapPath, NULL, CGRectMake(-halfSize.width, -halfSize.height, halfSize.width * (CGFloat)2.0, halfSize.height * (CGFloat)2.0) );
+            CGPathAddRect( lineCapPath, NULL, CPTRectMake( -halfSize.width, -halfSize.height, halfSize.width * CPTFloat(2.0), halfSize.height * CPTFloat(2.0) ) );
             break;
 
         case CPTLineCapTypeEllipse:
-            CGPathAddEllipseInRect( lineCapPath, NULL, CGRectMake(-halfSize.width, -halfSize.height, halfSize.width * (CGFloat)2.0, halfSize.height * (CGFloat)2.0) );
+            CGPathAddEllipseInRect( lineCapPath, NULL, CPTRectMake( -halfSize.width, -halfSize.height, halfSize.width * CPTFloat(2.0), halfSize.height * CPTFloat(2.0) ) );
             break;
 
         case CPTLineCapTypeDiamond:
-            CGPathMoveToPoint(lineCapPath, NULL, 0.0, halfSize.height);
-            CGPathAddLineToPoint(lineCapPath, NULL, halfSize.width, 0.0);
-            CGPathAddLineToPoint(lineCapPath, NULL, 0.0, -halfSize.height);
-            CGPathAddLineToPoint(lineCapPath, NULL, -halfSize.width, 0.0);
+            CGPathMoveToPoint(lineCapPath, NULL, CPTFloat(0.0), halfSize.height);
+            CGPathAddLineToPoint( lineCapPath, NULL, halfSize.width, CPTFloat(0.0) );
+            CGPathAddLineToPoint(lineCapPath, NULL, CPTFloat(0.0), -halfSize.height);
+            CGPathAddLineToPoint( lineCapPath, NULL, -halfSize.width, CPTFloat(0.0) );
             CGPathCloseSubpath(lineCapPath);
             break;
 
         case CPTLineCapTypePentagon:
-            CGPathMoveToPoint(lineCapPath, NULL, 0.0, halfSize.height);
-            CGPathAddLineToPoint(lineCapPath, NULL, halfSize.width * (CGFloat)0.95105651630, halfSize.height * (CGFloat)0.30901699437);
-            CGPathAddLineToPoint(lineCapPath, NULL, halfSize.width * (CGFloat)0.58778525229, -halfSize.height * (CGFloat)0.80901699437);
-            CGPathAddLineToPoint(lineCapPath, NULL, -halfSize.width * (CGFloat)0.58778525229, -halfSize.height * (CGFloat)0.80901699437);
-            CGPathAddLineToPoint(lineCapPath, NULL, -halfSize.width * (CGFloat)0.95105651630, halfSize.height * (CGFloat)0.30901699437);
+            CGPathMoveToPoint(lineCapPath, NULL, CPTFloat(0.0), halfSize.height);
+            CGPathAddLineToPoint( lineCapPath, NULL, halfSize.width * CPTFloat(0.95105651630), halfSize.height * CPTFloat(0.30901699437) );
+            CGPathAddLineToPoint( lineCapPath, NULL, halfSize.width * CPTFloat(0.58778525229), -halfSize.height * CPTFloat(0.80901699437) );
+            CGPathAddLineToPoint( lineCapPath, NULL, -halfSize.width * CPTFloat(0.58778525229), -halfSize.height * CPTFloat(0.80901699437) );
+            CGPathAddLineToPoint( lineCapPath, NULL, -halfSize.width * CPTFloat(0.95105651630), halfSize.height * CPTFloat(0.30901699437) );
             CGPathCloseSubpath(lineCapPath);
             break;
 
         case CPTLineCapTypeHexagon:
-            dx = halfSize.width * (CGFloat)0.86602540378; // sqrt(3.0) / 2.0;
-            dy = halfSize.height / (CGFloat)2.0;
+            dx = halfSize.width * CPTFloat(0.86602540378); // sqrt(3.0) / 2.0;
+            dy = halfSize.height / CPTFloat(2.0);
 
-            CGPathMoveToPoint(lineCapPath, NULL, 0.0, halfSize.height);
+            CGPathMoveToPoint(lineCapPath, NULL, CPTFloat(0.0), halfSize.height);
             CGPathAddLineToPoint(lineCapPath, NULL, dx, dy);
             CGPathAddLineToPoint(lineCapPath, NULL, dx, -dy);
-            CGPathAddLineToPoint(lineCapPath, NULL, 0.0, -halfSize.height);
+            CGPathAddLineToPoint(lineCapPath, NULL, CPTFloat(0.0), -halfSize.height);
             CGPathAddLineToPoint(lineCapPath, NULL, -dx, -dy);
             CGPathAddLineToPoint(lineCapPath, NULL, -dx, dy);
             CGPathCloseSubpath(lineCapPath);
             break;
 
         case CPTLineCapTypeBar:
-            CGPathMoveToPoint(lineCapPath, NULL, halfSize.width, 0.0);
-            CGPathAddLineToPoint(lineCapPath, NULL, -halfSize.width, 0.0);
+            CGPathMoveToPoint( lineCapPath, NULL, halfSize.width, CPTFloat(0.0) );
+            CGPathAddLineToPoint( lineCapPath, NULL, -halfSize.width, CPTFloat(0.0) );
             break;
 
         case CPTLineCapTypeCross:
@@ -528,11 +557,11 @@
             break;
 
         case CPTLineCapTypeSnow:
-            dx = halfSize.width * (CGFloat)0.86602540378; // sqrt(3.0) / 2.0;
-            dy = halfSize.height / (CGFloat)2.0;
+            dx = halfSize.width * CPTFloat(0.86602540378); // sqrt(3.0) / 2.0;
+            dy = halfSize.height / CPTFloat(2.0);
 
-            CGPathMoveToPoint(lineCapPath, NULL, 0.0, halfSize.height);
-            CGPathAddLineToPoint(lineCapPath, NULL, 0.0, -halfSize.height);
+            CGPathMoveToPoint(lineCapPath, NULL, CPTFloat(0.0), halfSize.height);
+            CGPathAddLineToPoint(lineCapPath, NULL, CPTFloat(0.0), -halfSize.height);
             CGPathMoveToPoint(lineCapPath, NULL, dx, -dy);
             CGPathAddLineToPoint(lineCapPath, NULL, -dx, dy);
             CGPathMoveToPoint(lineCapPath, NULL, -dx, -dy);
@@ -543,13 +572,11 @@
         {
             CGPathRef customPath = self.customLineCapPath;
             if ( customPath ) {
-                CGRect oldBounds                 = CGRectNull;
-                CGAffineTransform scaleTransform = CGAffineTransformIdentity;
+                CGRect oldBounds = CGPathGetBoundingBox(customPath);
+                CGFloat dx1      = lineCapSize.width / oldBounds.size.width;
+                CGFloat dy1      = lineCapSize.height / oldBounds.size.height;
 
-                oldBounds = CGPathGetBoundingBox(customPath);
-                CGFloat dx1 = lineCapSize.width / oldBounds.size.width;
-                CGFloat dy1 = lineCapSize.height / oldBounds.size.height;
-                scaleTransform = CGAffineTransformScale(CGAffineTransformIdentity, dx1, dy1);
+                CGAffineTransform scaleTransform = CGAffineTransformScale(CGAffineTransformIdentity, dx1, dy1);
                 scaleTransform = CGAffineTransformConcat( scaleTransform,
                                                           CGAffineTransformMakeTranslation(-halfSize.width, -halfSize.height) );
                 CGPathAddPath(lineCapPath, &scaleTransform, customPath);
@@ -560,6 +587,6 @@
     return lineCapPath;
 }
 
-///	@endcond
+/// @endcond
 
 @end

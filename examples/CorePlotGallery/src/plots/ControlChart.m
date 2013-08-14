@@ -5,7 +5,7 @@ NSString *const kCenterLine  = @"Center Line";
 NSString *const kControlLine = @"Control Line";
 NSString *const kWarningLine = @"Warning Line";
 
-const NSUInteger numberOfPoints = 11;
+static const NSUInteger numberOfPoints = 11;
 
 @implementation ControlChart
 
@@ -17,7 +17,8 @@ const NSUInteger numberOfPoints = 11;
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title = @"Control Chart";
+        self.title   = @"Control Chart";
+        self.section = kLinePlots;
     }
 
     return self;
@@ -50,7 +51,7 @@ const NSUInteger numberOfPoints = 11;
     }
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     CGRect bounds = layerHostingView.bounds;
@@ -69,6 +70,7 @@ const NSUInteger numberOfPoints = 11;
     graph.plotAreaFrame.paddingRight  = 15.0;
     graph.plotAreaFrame.paddingBottom = 35.0;
     graph.plotAreaFrame.paddingLeft   = 35.0;
+    graph.plotAreaFrame.masksToBorder = NO;
 
     // Grid line styles
     CPTMutableLineStyle *majorGridLineStyle = [CPTMutableLineStyle lineStyle];

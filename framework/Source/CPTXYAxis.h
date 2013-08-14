@@ -1,5 +1,4 @@
 #import "CPTAxis.h"
-#import <Foundation/Foundation.h>
 
 @class CPTConstraints;
 
@@ -13,6 +12,6 @@
 /// @{
 @property (nonatomic, readwrite) NSDecimal orthogonalCoordinateDecimal;
 @property (nonatomic, readwrite, retain) CPTConstraints *axisConstraints;
-///	@}
+/// @}
 
 @end

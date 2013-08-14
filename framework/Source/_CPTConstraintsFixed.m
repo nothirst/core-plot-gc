@@ -1,9 +1,8 @@
 #import "_CPTConstraintsFixed.h"
 
-#import "CPTExceptions.h"
 #import "NSCoderExtensions.h"
 
-///	@cond
+/// @cond
 @interface _CPTConstraintsFixed()
 
 @property (nonatomic, readwrite) CGFloat offset;
@@ -11,13 +10,13 @@
 
 @end
 
-///	@endcond
+/// @endcond
 
 #pragma mark -
 
-/**	@brief Implements a one-dimensional constrained position within a given numeric range.
+/** @brief Implements a one-dimensional constrained position within a given numeric range.
  *
- *	Supports fixed distance from either end of the range and a proportional fraction of the range.
+ *  Supports fixed distance from either end of the range and a proportional fraction of the range.
  **/
 @implementation _CPTConstraintsFixed
 
@@ -70,12 +69,12 @@
 #pragma mark -
 #pragma mark Positioning
 
-/**	@brief Compute the position given a range of values.
- *	@param lowerBound The lower bound; must be less than or equal to the upperBound.
- *	@param upperBound The upper bound; must be greater than or equal to the lowerBound.
- *	@return The calculated position.
+/** @brief Compute the position given a range of values.
+ *  @param lowerBound The lower bound; must be less than or equal to the upperBound.
+ *  @param upperBound The upper bound; must be greater than or equal to the lowerBound.
+ *  @return The calculated position.
  **/
--(CGFloat)positionForLowerBound:(CGFloat)lowerBound upperBound:(CGFloat)upperBound;
+-(CGFloat)positionForLowerBound:(CGFloat)lowerBound upperBound:(CGFloat)upperBound
 {
     NSAssert(lowerBound <= upperBound, @"lowerBound must be less than or equal to upperBound");
 
@@ -92,7 +91,9 @@
 }
 
 #pragma mark -
-#pragma mark NSCopying methods
+#pragma mark NSCopying Methods
+
+/// @cond
 
 -(id)copyWithZone:(NSZone *)zone
 {
@@ -104,8 +105,12 @@
     return copy;
 }
 
+/// @endcond
+
 #pragma mark -
-#pragma mark NSCoding methods
+#pragma mark NSCoding Methods
+
+/// @cond
 
 -(Class)classForCoder
 {
@@ -126,5 +131,7 @@
     }
     return self;
 }
+
+/// @endcond
 
 @end

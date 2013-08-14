@@ -4,21 +4,20 @@
 #import "CPTGraph.h"
 #import "CPTLineStyle.h"
 #import "CPTPlotArea.h"
-#import "CPTPlotSpace.h"
 
 /**
- *	@brief A container layer for the set of axes for a graph.
+ *  @brief A container layer for the set of axes for a graph.
  **/
 @implementation CPTAxisSet
 
-/**	@property axes
- *	@brief The axes in the axis set.
+/** @property NSArray *axes
+ *  @brief The axes in the axis set.
  **/
 @synthesize axes;
 
-/** @property borderLineStyle
- *	@brief The line style for the layer border.
- *	If <code>nil</code>, the border is not drawn.
+/** @property CPTLineStyle *borderLineStyle
+ *  @brief The line style for the layer border.
+ *  If @nil, the border is not drawn.
  **/
 @synthesize borderLineStyle;
 
@@ -30,12 +29,12 @@
 
 /** @brief Initializes a newly allocated CPTAxisSet object with the provided frame rectangle.
  *
- *	This is the designated initializer. The initialized layer will have the following properties:
- *	- @link CPTAxisSet::axes axes @endlink = empty array
- *	- @link CPTAxisSet::borderLineStyle borderLineStyle @endlink = <code>nil</code>
- *	- <code>needsDisplayOnBoundsChange</code> = <code>YES</code>
+ *  This is the designated initializer. The initialized layer will have the following properties:
+ *  - @ref axes = empty array
+ *  - @ref borderLineStyle = @nil
+ *  - @ref needsDisplayOnBoundsChange = @YES
  *
- *	@param newFrame The frame rectangle.
+ *  @param newFrame The frame rectangle.
  *  @return The initialized CPTAxisSet object.
  **/
 -(id)initWithFrame:(CGRect)newFrame
@@ -49,7 +48,9 @@
     return self;
 }
 
-///	@}
+/// @}
+
+/// @cond
 
 -(id)initWithLayer:(id)layer
 {
@@ -69,8 +70,12 @@
     [super dealloc];
 }
 
+/// @endcond
+
 #pragma mark -
-#pragma mark NSCoding methods
+#pragma mark NSCoding Methods
+
+/// @cond
 
 -(void)encodeWithCoder:(NSCoder *)coder
 {
@@ -89,11 +94,13 @@
     return self;
 }
 
+/// @endcond
+
 #pragma mark -
 #pragma mark Labeling
 
 /**
- *	@brief Updates the axis labels for each axis in the axis set.
+ *  @brief Updates the axis labels for each axis in the axis set.
  **/
 -(void)relabelAxes
 {
@@ -104,9 +111,42 @@
 }
 
 #pragma mark -
+#pragma mark Axes
+
+/**
+ *  @brief Returns the first, second, third, etc. axis with the given coordinate value.
+ *
+ *  For example, to find the second x-axis, use a @par{coordinate} of #CPTCoordinateX
+ *  and @par{idx} of @num{1}.
+ *
+ *  @param coordinate The axis coordinate.
+ *  @param idx The zero-based index.
+ *  @return The axis matching the given coordinate and index, or @nil if no match is found.
+ **/
+-(CPTAxis *)axisForCoordinate:(CPTCoordinate)coordinate atIndex:(NSUInteger)idx
+{
+    CPTAxis *foundAxis = nil;
+    NSUInteger count   = 0;
+
+    for ( CPTAxis *axis in self.axes ) {
+        if ( axis.coordinate == coordinate ) {
+            if ( count == idx ) {
+                foundAxis = axis;
+                break;
+            }
+            else {
+                count++;
+            }
+        }
+    }
+
+    return foundAxis;
+}
+
+#pragma mark -
 #pragma mark Accessors
 
-///	@cond
+/// @cond
 
 -(void)setAxes:(NSArray *)newAxes
 {
@@ -137,6 +177,6 @@
     }
 }
 
-///	@endcond
+/// @endcond
 
 @end

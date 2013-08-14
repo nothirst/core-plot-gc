@@ -1,4 +1,3 @@
-#import "CPTExceptions.h"
 #import "CPTPlotRange.h"
 #import "CPTUtilities.h"
 #import "CPTXYGraph.h"
@@ -19,7 +18,7 @@
 
 -(void)setUp
 {
-    self.graph = [[(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:CGRectMake(0.0, 0.0, 100.0, 50.0)] autorelease];
+    self.graph = [[(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame : CGRectMake(0.0, 0.0, 100.0, 50.0)] autorelease];
 
     self.graph.paddingLeft   = 0.0;
     self.graph.paddingRight  = 0.0;
@@ -133,7 +132,7 @@
     viewPoint = [plotSpace plotAreaViewPointForPlotPoint:plotPoint];
 
     STAssertEqualsWithAccuracy(viewPoint.x, (CGFloat)50.0, (CGFloat)0.01, @"");
-    STAssertEqualsWithAccuracy(viewPoint.y, (CGFloat) - 25.0, (CGFloat)0.01, @"");
+    STAssertEqualsWithAccuracy(viewPoint.y, -CPTFloat(25.0), (CGFloat)0.01, @"");
 }
 
 -(void)testViewPointForDoublePrecisionPlotPointLog
@@ -165,7 +164,7 @@
     viewPoint = [plotSpace plotAreaViewPointForDoublePrecisionPlotPoint:plotPoint];
 
     STAssertEqualsWithAccuracy(viewPoint.x, (CGFloat)50.0, (CGFloat)0.01, @"");
-    STAssertEqualsWithAccuracy(viewPoint.y, (CGFloat) - 25.0, (CGFloat)0.01, @"");
+    STAssertEqualsWithAccuracy(viewPoint.y, -CPTFloat(25.0), (CGFloat)0.01, @"");
 }
 
 #pragma mark -
@@ -292,7 +291,7 @@
     CPTPlotRange *expectedRange = existingRange;
 
     CPTPlotRange *constrainedRange = [plotSpace constrainRange:existingRange toGlobalRange:globalRange];
-    NSString *errMessage           = [NSString stringWithFormat:@"constrainedRange was %@, expected %@", constrainedRange, expectedRange, nil];
+    NSString *errMessage           = [NSString stringWithFormat:@"constrainedRange was %@, expected %@", constrainedRange, expectedRange];
 
     STAssertTrue([constrainedRange isEqualToRange:expectedRange], errMessage);
 }
@@ -308,7 +307,7 @@
     CPTPlotRange *expectedRange = globalRange;
 
     CPTPlotRange *constrainedRange = [plotSpace constrainRange:existingRange toGlobalRange:globalRange];
-    NSString *errMessage           = [NSString stringWithFormat:@"constrainedRange was %@, expected %@", constrainedRange, expectedRange, nil];
+    NSString *errMessage           = [NSString stringWithFormat:@"constrainedRange was %@, expected %@", constrainedRange, expectedRange];
 
     STAssertTrue([constrainedRange isEqualToRange:expectedRange], errMessage);
 }
@@ -325,7 +324,7 @@
                                                                length:CPTDecimalFromDouble(8.0)];
 
     CPTPlotRange *constrainedRange = [plotSpace constrainRange:existingRange toGlobalRange:globalRange];
-    NSString *errMessage           = [NSString stringWithFormat:@"constrainedRange was %@, expected %@", constrainedRange, expectedRange, nil];
+    NSString *errMessage           = [NSString stringWithFormat:@"constrainedRange was %@, expected %@", constrainedRange, expectedRange];
 
     STAssertTrue([constrainedRange isEqualToRange:expectedRange], errMessage);
 }
@@ -342,7 +341,7 @@
                                                                length:CPTDecimalFromDouble(8.0)];
 
     CPTPlotRange *constrainedRange = [plotSpace constrainRange:existingRange toGlobalRange:globalRange];
-    NSString *errMessage           = [NSString stringWithFormat:@"constrainedRange was %@, expected %@", constrainedRange, expectedRange, nil];
+    NSString *errMessage           = [NSString stringWithFormat:@"constrainedRange was %@, expected %@", constrainedRange, expectedRange];
 
     STAssertTrue([constrainedRange isEqualToRange:expectedRange], errMessage);
 }
@@ -370,10 +369,10 @@
     CPTPlotRange *expectedRangeY = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(15.0)
                                                                 length:CPTDecimalFromDouble(-20.0)];
 
-    NSString *errMessage = [NSString stringWithFormat:@"xRange was %@, expected %@", plotSpace.xRange, expectedRangeX, nil];
+    NSString *errMessage = [NSString stringWithFormat:@"xRange was %@, expected %@", plotSpace.xRange, expectedRangeX];
     STAssertTrue([plotSpace.xRange isEqualToRange:expectedRangeX], errMessage);
 
-    errMessage = [NSString stringWithFormat:@"yRange was %@, expected %@", plotSpace.yRange, expectedRangeY, nil];
+    errMessage = [NSString stringWithFormat:@"yRange was %@, expected %@", plotSpace.yRange, expectedRangeY];
     STAssertTrue([plotSpace.yRange isEqualToRange:expectedRangeY], errMessage);
 }
 
@@ -397,15 +396,15 @@
     CPTPlotRange *expectedRangeY = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(7.5)
                                                                 length:CPTDecimalFromDouble(-5.0)];
 
-    NSString *errMessage = [NSString stringWithFormat:@"xRange was %@, expected %@", plotSpace.xRange, expectedRangeX, nil];
+    NSString *errMessage = [NSString stringWithFormat:@"xRange was %@, expected %@", plotSpace.xRange, expectedRangeX];
     STAssertTrue([plotSpace.xRange isEqualToRange:expectedRangeX], errMessage);
 
-    errMessage = [NSString stringWithFormat:@"yRange was %@, expected %@", plotSpace.yRange, expectedRangeY, nil];
+    errMessage = [NSString stringWithFormat:@"yRange was %@, expected %@", plotSpace.yRange, expectedRangeY];
     STAssertTrue([plotSpace.yRange isEqualToRange:expectedRangeY], errMessage);
 }
 
 #pragma mark -
-#pragma mark NSCoding
+#pragma mark NSCoding Methods
 
 -(void)testKeyedArchivingRoundTrip
 {
@@ -418,16 +417,16 @@
 
     CPTXYPlotSpace *newPlotSpace = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:plotSpace]];
 
-    NSString *errMessage = [NSString stringWithFormat:@"xRange was %@, expected %@", plotSpace.xRange, newPlotSpace.xRange, nil];
+    NSString *errMessage = [NSString stringWithFormat:@"xRange was %@, expected %@", plotSpace.xRange, newPlotSpace.xRange];
     STAssertTrue([plotSpace.xRange isEqualToRange:newPlotSpace.xRange], errMessage);
 
-    errMessage = [NSString stringWithFormat:@"yRange was %@, expected %@", plotSpace.yRange, newPlotSpace.yRange, nil];
+    errMessage = [NSString stringWithFormat:@"yRange was %@, expected %@", plotSpace.yRange, newPlotSpace.yRange];
     STAssertTrue([plotSpace.yRange isEqualToRange:newPlotSpace.yRange], errMessage);
 
-    errMessage = [NSString stringWithFormat:@"globalXRange was %@, expected %@", plotSpace.globalXRange, newPlotSpace.globalXRange, nil];
+    errMessage = [NSString stringWithFormat:@"globalXRange was %@, expected %@", plotSpace.globalXRange, newPlotSpace.globalXRange];
     STAssertTrue([plotSpace.globalXRange isEqualToRange:newPlotSpace.globalXRange], errMessage);
 
-    errMessage = [NSString stringWithFormat:@"globalYRange was %@, expected %@", plotSpace.globalYRange, newPlotSpace.globalYRange, nil];
+    errMessage = [NSString stringWithFormat:@"globalYRange was %@, expected %@", plotSpace.globalYRange, newPlotSpace.globalYRange];
     STAssertTrue([plotSpace.globalYRange isEqualToRange:newPlotSpace.globalYRange], errMessage);
 
     STAssertEquals(plotSpace.xScaleType, newPlotSpace.xScaleType, @"xScaleType not equal");

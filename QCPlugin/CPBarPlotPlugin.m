@@ -104,44 +104,44 @@
     // Create input ports for the new plot
 
     [self addInputPortWithType:QCPortTypeStructure
-                        forKey:[NSString stringWithFormat:@"plotNumbers%i", index]
+                        forKey:[NSString stringWithFormat:@"plotNumbers%lu", (unsigned long)index]
                 withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                     [NSString stringWithFormat:@"Values %i", index + 1], QCPortAttributeNameKey,
-                     QCPortTypeStructure, QCPortAttributeTypeKey,
-                     nil]];
+                                [NSString stringWithFormat:@"Values %lu", (unsigned long)(index + 1)], QCPortAttributeNameKey,
+                                QCPortTypeStructure, QCPortAttributeTypeKey,
+                                nil]];
 
     CGColorRef lineColor = [self newDefaultColorForPlot:index alpha:1.0];
     [self addInputPortWithType:QCPortTypeColor
-                        forKey:[NSString stringWithFormat:@"plotDataLineColor%i", index]
+                        forKey:[NSString stringWithFormat:@"plotDataLineColor%lu", (unsigned long)index]
                 withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                     [NSString stringWithFormat:@"Plot Line Color %i", index + 1], QCPortAttributeNameKey,
-                     QCPortTypeColor, QCPortAttributeTypeKey,
-                     lineColor, QCPortAttributeDefaultValueKey,
-                     nil]];
+                                [NSString stringWithFormat:@"Plot Line Color %lu", (unsigned long)(index + 1)], QCPortAttributeNameKey,
+                                QCPortTypeColor, QCPortAttributeTypeKey,
+                                lineColor, QCPortAttributeDefaultValueKey,
+                                nil]];
     CGColorRelease(lineColor);
 
     CGColorRef fillColor = [self newDefaultColorForPlot:index alpha:0.25];
     [self addInputPortWithType:QCPortTypeColor
-                        forKey:[NSString stringWithFormat:@"plotFillColor%i", index]
+                        forKey:[NSString stringWithFormat:@"plotFillColor%lu", (unsigned long)index]
                 withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                     [NSString stringWithFormat:@"Plot Fill Color %i", index + 1], QCPortAttributeNameKey,
-                     QCPortTypeColor, QCPortAttributeTypeKey,
-                     fillColor, QCPortAttributeDefaultValueKey,
-                     nil]];
+                                [NSString stringWithFormat:@"Plot Fill Color %lu", (unsigned long)(index + 1)], QCPortAttributeNameKey,
+                                QCPortTypeColor, QCPortAttributeTypeKey,
+                                fillColor, QCPortAttributeDefaultValueKey,
+                                nil]];
     CGColorRelease(fillColor);
 
     [self addInputPortWithType:QCPortTypeNumber
-                        forKey:[NSString stringWithFormat:@"plotDataLineWidth%i", index]
+                        forKey:[NSString stringWithFormat:@"plotDataLineWidth%lu", (unsigned long)index]
                 withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                     [NSString stringWithFormat:@"Plot Line Width %i", index + 1], QCPortAttributeNameKey,
-                     QCPortTypeNumber, QCPortAttributeTypeKey,
-                     [NSNumber numberWithInt:1.0], QCPortAttributeDefaultValueKey,
-                     [NSNumber numberWithFloat:0.0], QCPortAttributeMinimumValueKey,
-                     nil]];
+                                [NSString stringWithFormat:@"Plot Line Width %lu", (unsigned long)(index + 1)], QCPortAttributeNameKey,
+                                QCPortTypeNumber, QCPortAttributeTypeKey,
+                                [NSNumber numberWithInt:1.0], QCPortAttributeDefaultValueKey,
+                                [NSNumber numberWithFloat:0.0], QCPortAttributeMinimumValueKey,
+                                nil]];
 
     // Add the new plot to the graph
     CPTBarPlot *barPlot = [CPTBarPlot tubularBarPlotWithColor:[CPTColor greenColor] horizontalBars:NO];
-    barPlot.identifier = [NSString stringWithFormat:@"Bar Plot %i", index + 1];
+    barPlot.identifier = [NSString stringWithFormat:@"Bar Plot %lu", (unsigned long)(index + 1)];
     barPlot.dataSource = self;
     [graph addPlot:barPlot];
 }
@@ -171,14 +171,14 @@
     for ( CPTBarPlot *plot in [graph allPlots] ) {
         int index                      = [[graph allPlots] indexOfObject:plot];
         CPTMutableLineStyle *lineStyle = [CPTMutableLineStyle lineStyle];
-        lineStyle.lineColor    = [CPTColor colorWithCGColor:(CGColorRef)[self dataLineColor:index]];
+        lineStyle.lineColor    = [CPTColor colorWithCGColor:(CGColorRef)[self dataLineColor : index]];
         lineStyle.lineWidth    = [self dataLineWidth:index];
         plot.lineStyle         = lineStyle;
         plot.baseValue         = CPTDecimalFromDouble(self.inputBaseValue);
         plot.barWidth          = CPTDecimalFromDouble(barWidth);
         plot.barOffset         = CPTDecimalFromDouble(self.inputBarOffset);
         plot.barsAreHorizontal = self.inputHorizontalBars;
-        plot.fill              = [CPTFill fillWithColor:[CPTColor colorWithCGColor:(CGColorRef)[self areaFillColor:index]]];
+        plot.fill              = [CPTFill fillWithColor:[CPTColor colorWithCGColor:(CGColorRef)[self areaFillColor : index]]];
 
         [plot reloadData];
     }
@@ -192,7 +192,7 @@
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
     NSUInteger plotIndex = [[graph allPlots] indexOfObject:plot];
-    NSString *key        = [NSString stringWithFormat:@"plotNumbers%i", plotIndex];
+    NSString *key        = [NSString stringWithFormat:@"plotNumbers%lu", (unsigned long)plotIndex];
 
     if ( ![self valueForInputKey:key] ) {
         return 0;
@@ -204,13 +204,14 @@
 -(NSArray *)numbersForPlot:(CPTBarPlot *)plot field:(NSUInteger)fieldEnum recordIndexRange:(NSRange)indexRange
 {
     NSUInteger plotIndex = [[graph allPlots] indexOfObject:plot];
-    NSString *key        = [NSString stringWithFormat:@"plotNumbers%i", plotIndex];
+    NSString *key        = [NSString stringWithFormat:@"plotNumbers%lu", (unsigned long)plotIndex];
 
     if ( ![self valueForInputKey:key] ) {
         return nil;
     }
 
     NSDictionary *dict    = [self valueForInputKey:key];
+    NSUInteger keyCount   = [[dict allKeys] count];
     NSMutableArray *array = [NSMutableArray array];
 
     if ( fieldEnum == CPTBarPlotFieldBarLocation ) {
@@ -218,14 +219,14 @@
         float xpos;
         float plotCount = [[graph allPlots] count];
 
-        for ( int i = 0; i < [[dict allKeys] count]; i++ ) {
+        for ( NSUInteger i = 0; i < keyCount; i++ ) {
             xpos = (float)i + (float)plotIndex / (plotCount);
             [array addObject:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f", xpos]]];
         }
     }
     else {
-        for ( int i = 0; i < [[dict allKeys] count]; i++ ) {
-            [array addObject:[NSDecimalNumber decimalNumberWithString:[[dict valueForKey:[NSString stringWithFormat:@"%i", i]] stringValue]]];
+        for ( NSUInteger i = 0; i < keyCount; i++ ) {
+            [array addObject:[NSDecimalNumber decimalNumberWithString:[[dict valueForKey:[NSString stringWithFormat:@"%lu", (unsigned long)i]] stringValue]]];
         }
     }
 

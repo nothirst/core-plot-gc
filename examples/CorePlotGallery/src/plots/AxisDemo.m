@@ -18,13 +18,14 @@
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title = @"Axis Demo";
+        self.title   = @"Axis Demo";
+        self.section = kDemoPlots;
     }
 
     return self;
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
 #if TARGET_OS_IPHONE
     CGRect bounds = layerHostingView.bounds;
@@ -49,6 +50,7 @@
     graph.plotAreaFrame.paddingLeft   = 50.0;
     graph.plotAreaFrame.paddingRight  = 50.0;
     graph.plotAreaFrame.cornerRadius  = 10.0;
+    graph.plotAreaFrame.masksToBorder = NO;
 
     graph.plotAreaFrame.axisSet.borderLineStyle = [CPTLineStyle lineStyle];
 
@@ -131,14 +133,16 @@
     y2.separateLayers              = NO;
     y2.preferredNumberOfMajorTicks = 6;
     y2.minorTicksPerInterval       = 9;
-    y2.tickDirection               = CPTSignPositive;
+    y2.tickDirection               = CPTSignNone;
+    y2.tickLabelDirection          = CPTSignPositive;
+    y2.labelTextStyle              = y.labelTextStyle;
     y2.axisLineStyle               = axisLineStyle;
-    y2.majorTickLength             = 6.0;
+    y2.majorTickLength             = 12.0;
     y2.majorTickLineStyle          = axisLineStyle;
-    y2.minorTickLength             = 4.0;
+    y2.minorTickLength             = 8.0;
     y2.title                       = @"Y2 Axis";
     y2.titleTextStyle              = axisTitleTextStyle;
-    y2.titleOffset                 = 30.0;
+    y2.titleOffset                 = -50.0;
 
     // Add the y2 axis to the axis set
     graph.axisSet.axes = [NSArray arrayWithObjects:x, y, y2, nil];

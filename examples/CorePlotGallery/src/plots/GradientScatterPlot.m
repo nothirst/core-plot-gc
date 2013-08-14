@@ -18,7 +18,8 @@
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title = @"Gradient Scatter Plot";
+        self.title   = @"Gradient Scatter Plot";
+        self.section = kLinePlots;
     }
 
     return self;
@@ -26,8 +27,8 @@
 
 -(void)killGraph
 {
-    if ( [graphs count] ) {
-        CPTGraph *graph = [graphs objectAtIndex:0];
+    if ( [self.graphs count] ) {
+        CPTGraph *graph = [self.graphs objectAtIndex:0];
 
         if ( symbolTextAnnotation ) {
             [graph.plotAreaFrame.plotArea removeAnnotation:symbolTextAnnotation];
@@ -52,7 +53,7 @@
     }
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     CGRect bounds = layerHostingView.bounds;
@@ -114,8 +115,9 @@
     dataSourceLinePlot.identifier = @"Data Source Plot";
 
     CPTMutableLineStyle *lineStyle = [[dataSourceLinePlot.dataLineStyle mutableCopy] autorelease];
-    lineStyle.lineWidth              = 3.0;
-    lineStyle.lineColor              = [CPTColor greenColor];
+    lineStyle.lineWidth              = 5.0;
+    lineStyle.lineJoin               = kCGLineJoinRound;
+    lineStyle.lineGradient           = [CPTGradient gradientWithBeginningColor:[CPTColor greenColor] endingColor:[CPTColor whiteColor]];
     dataSourceLinePlot.dataLineStyle = lineStyle;
     dataSourceLinePlot.dataSource    = self;
     [graph addPlot:dataSourceLinePlot];
@@ -144,12 +146,15 @@
     plotSpace.globalYRange = globalYRange;
 
     // Add plot symbols
-    CPTMutableLineStyle *symbolLineStyle = [CPTMutableLineStyle lineStyle];
-    symbolLineStyle.lineColor = [CPTColor blackColor];
+    CPTGradient *symbolGradient = [CPTGradient gradientWithBeginningColor:[CPTColor colorWithComponentRed:0.75 green:0.75 blue:1.0 alpha:1.0]
+                                                              endingColor:[CPTColor blueColor]];
+    symbolGradient.gradientType = CPTGradientTypeRadial;
+    symbolGradient.startAnchor  = CPTPointMake(0.25, 0.75);
+
     CPTPlotSymbol *plotSymbol = [CPTPlotSymbol ellipsePlotSymbol];
-    plotSymbol.fill               = [CPTFill fillWithColor:[CPTColor blueColor]];
-    plotSymbol.lineStyle          = symbolLineStyle;
-    plotSymbol.size               = CGSizeMake(10.0, 10.0);
+    plotSymbol.fill               = [CPTFill fillWithGradient:symbolGradient];
+    plotSymbol.lineStyle          = nil;
+    plotSymbol.size               = CGSizeMake(12.0, 12.0);
     dataSourceLinePlot.plotSymbol = plotSymbol;
 
     // Set plot delegate, to know when symbols have been touched
@@ -205,7 +210,7 @@
 
 -(void)scatterPlot:(CPTScatterPlot *)plot plotSymbolWasSelectedAtRecordIndex:(NSUInteger)index
 {
-    CPTGraph *graph = [graphs objectAtIndex:0];
+    CPTGraph *graph = [self.graphs objectAtIndex:0];
 
     if ( symbolTextAnnotation ) {
         [graph.plotAreaFrame.plotArea removeAnnotation:symbolTextAnnotation];

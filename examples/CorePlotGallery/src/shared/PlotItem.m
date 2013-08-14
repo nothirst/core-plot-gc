@@ -16,10 +16,17 @@
 #import <Quartz/Quartz.h>
 #endif
 
+NSString *const kDemoPlots      = @"Demos";
+NSString *const kPieCharts      = @"Pie Charts";
+NSString *const kLinePlots      = @"Line Plots";
+NSString *const kBarPlots       = @"Bar Plots";
+NSString *const kFinancialPlots = @"Financial Plots";
+
 @implementation PlotItem
 
 @synthesize defaultLayerHostingView;
 @synthesize graphs;
+@synthesize section;
 @synthesize title;
 
 +(void)registerPlotItem:(id)item
@@ -41,7 +48,10 @@
 -(id)init
 {
     if ( (self = [super init]) ) {
-        graphs = [[NSMutableArray alloc] init];
+        defaultLayerHostingView = nil;
+        graphs                  = [[NSMutableArray alloc] init];
+        section                 = nil;
+        title                   = nil;
     }
 
     return self;
@@ -76,11 +86,16 @@
     cachedImage = nil;
 
     [graphs removeAllObjects];
+
+    [[CPTAnimation sharedInstance] removeAllAnimationOperations];
 }
 
 -(void)dealloc
 {
     [self killGraph];
+    [title release];
+    [section release];
+
     [super dealloc];
 }
 
@@ -91,29 +106,35 @@
 
 -(NSComparisonResult)titleCompare:(PlotItem *)other
 {
-    return [title caseInsensitiveCompare:other.title];
+    NSComparisonResult comparisonResult = [self.section caseInsensitiveCompare:other.section];
+
+    if ( comparisonResult == NSOrderedSame ) {
+        comparisonResult = [self.title caseInsensitiveCompare:other.title];
+    }
+
+    return comparisonResult;
 }
 
 -(void)setTitleDefaultsForGraph:(CPTGraph *)graph withBounds:(CGRect)bounds
 {
-    graph.title = title;
+    graph.title = self.title;
     CPTMutableTextStyle *textStyle = [CPTMutableTextStyle textStyle];
     textStyle.color                = [CPTColor grayColor];
     textStyle.fontName             = @"Helvetica-Bold";
-    textStyle.fontSize             = round(bounds.size.height / (CGFloat)20.0);
+    textStyle.fontSize             = round( bounds.size.height / CPTFloat(20.0) );
     graph.titleTextStyle           = textStyle;
-    graph.titleDisplacement        = CGPointMake( 0.0f, round(bounds.size.height / (CGFloat)18.0) ); // Ensure that title displacement falls on an integral pixel
+    graph.titleDisplacement        = CPTPointMake( 0.0, textStyle.fontSize * CPTFloat(1.5) );
     graph.titlePlotAreaFrameAnchor = CPTRectAnchorTop;
 }
 
 -(void)setPaddingDefaultsForGraph:(CPTGraph *)graph withBounds:(CGRect)bounds
 {
-    CGFloat boundsPadding = round(bounds.size.width / (CGFloat)20.0); // Ensure that padding falls on an integral pixel
+    CGFloat boundsPadding = round( bounds.size.width / CPTFloat(20.0) ); // Ensure that padding falls on an integral pixel
 
     graph.paddingLeft = boundsPadding;
 
     if ( graph.titleDisplacement.y > 0.0 ) {
-        graph.paddingTop = graph.titleDisplacement.y * 2;
+        graph.paddingTop = graph.titleTextStyle.fontSize * 2.0;
     }
     else {
         graph.paddingTop = boundsPadding;
@@ -133,7 +154,7 @@
         [imageView setOpaque:YES];
         [imageView setUserInteractionEnabled:NO];
 
-        [self renderInView:imageView withTheme:nil];
+        [self renderInView:imageView withTheme:nil animated:NO];
 
         CGSize boundsSize = imageView.bounds.size;
 
@@ -185,7 +206,7 @@
         NSView *imageView = [[NSView alloc] initWithFrame:NSRectFromCGRect(imageFrame)];
         [imageView setWantsLayer:YES];
 
-        [self renderInView:imageView withTheme:nil];
+        [self renderInView:imageView withTheme:nil animated:NO];
 
         CGSize boundsSize = imageFrame.size;
 
@@ -219,7 +240,6 @@
 
     return cachedImage;
 }
-
 #endif
 
 -(void)applyTheme:(CPTTheme *)theme toGraph:(CPTGraph *)graph withDefault:(CPTTheme *)defaultTheme
@@ -237,32 +257,32 @@
 -(void)setFrameSize:(NSSize)size
 {
 }
-
 #endif
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
--(void)renderInView:(UIView *)hostingView withTheme:(CPTTheme *)theme
+-(void)renderInView:(UIView *)hostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 #else
--(void)renderInView:(NSView *)hostingView withTheme:(CPTTheme *)theme
+-(void)renderInView:(NSView *)hostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 #endif
 {
     [self killGraph];
 
-    defaultLayerHostingView = [(CPTGraphHostingView *)[CPTGraphHostingView alloc] initWithFrame:hostingView.bounds];
+    defaultLayerHostingView = [(CPTGraphHostingView *)[CPTGraphHostingView alloc] initWithFrame : hostingView.bounds];
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     defaultLayerHostingView.collapsesLayers = NO;
+    [defaultLayerHostingView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 #else
-    [defaultLayerHostingView setAutoresizesSubviews:YES];
     [defaultLayerHostingView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 #endif
+    [defaultLayerHostingView setAutoresizesSubviews:YES];
 
     [hostingView addSubview:defaultLayerHostingView];
     [self generateData];
-    [self renderInLayer:defaultLayerHostingView withTheme:theme];
+    [self renderInLayer:defaultLayerHostingView withTheme:theme animated:animated];
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
     NSLog(@"PlotItem:renderInLayer: Override me");
 }
@@ -282,7 +302,7 @@
 
 -(NSString *)imageUID
 {
-    return title;
+    return self.title;
 }
 
 -(NSString *)imageRepresentationType
@@ -297,7 +317,7 @@
 
 -(NSString *)imageTitle
 {
-    return title;
+    return self.title;
 }
 
 /*
@@ -306,7 +326,6 @@
  *  return graph.title;
  * }
  */
-
 #endif
 
 @end

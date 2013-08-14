@@ -4,24 +4,24 @@
 #import "CPTScatterPlot.h"
 #import "CPTUtilities.h"
 
-const CGFloat CPTDataSourceTestCasePlotOffset = 0.5;
+static const CGFloat CPTDataSourceTestCasePlotOffset = 0.5;
 
-///	@cond
+/// @cond
 @interface CPTDataSourceTestCase()
 
 -(CPTMutablePlotRange *)plotRangeForData:(NSArray *)dataArray;
 
 @end
 
-///	@endcond
+/// @endcond
 
 @implementation CPTDataSourceTestCase
 
 @synthesize xData;
 @synthesize yData;
 @synthesize nRecords;
-@synthesize xRange;
-@synthesize yRange;
+@dynamic xRange;
+@dynamic yRange;
 @synthesize plots;
 
 -(void)dealloc

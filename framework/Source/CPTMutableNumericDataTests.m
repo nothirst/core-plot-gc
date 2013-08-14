@@ -1,7 +1,7 @@
+#import "CPTMutableNumericDataTests.h"
+
 #import "CPTExceptions.h"
 #import "CPTMutableNumericData+TypeConversion.h"
-#import "CPTMutableNumericData.h"
-#import "CPTMutableNumericDataTests.h"
 #import "CPTNumericData+TypeConversion.h"
 
 @implementation CPTMutableNumericDataTests
@@ -27,7 +27,7 @@
                 [NSNumber numberWithUnsignedInt:2],
                 [NSNumber numberWithUnsignedInt:2],
                 [NSNumber numberWithUnsignedInt:2],
-                (id)nil
+                nil
                ];
 
     NSUInteger nElems         = 2 * 2 * 2;
@@ -64,7 +64,7 @@
     id shape = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:2],
                 [NSNumber numberWithUnsignedInt:2],
                 [NSNumber numberWithUnsignedInt:2],
-                (id)nil];
+                nil];
     NSUInteger nElems = 5;
 
     STAssertThrowsSpecificNamed([[CPTMutableNumericData alloc] initWithData:[NSMutableData dataWithLength:nElems * sizeof(NSUInteger)]
@@ -96,7 +96,7 @@
     NSInteger *intData   = (NSInteger *)[data mutableBytes];
 
     for ( NSUInteger i = 0; i < nElements; i++ ) {
-        intData[i] = i;
+        intData[i] = (NSInteger)i;
     }
 
     CPTMutableNumericData *nd = [[CPTMutableNumericData alloc] initWithData:data
@@ -159,7 +159,7 @@
     data   = [NSMutableData dataWithLength:nElems * sizeof(char)];
     char *charSamples = (char *)[data mutableBytes];
     for ( NSUInteger i = 0; i < nElems; i++ ) {
-        charSamples[i] = sin(i);
+        charSamples[i] = (char)sin(i);
     }
 
     nd = [[CPTMutableNumericData alloc] initWithData:data
@@ -270,6 +270,9 @@
 
     // should be mutable--if not, this will error
     ndCopy.dataType = CPTDataType( CPTFloatingPointDataType, sizeof(double), NSHostByteOrder() );
+
+    [nd release];
+    [ndCopy release];
 }
 
 @end

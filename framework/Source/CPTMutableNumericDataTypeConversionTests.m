@@ -1,6 +1,6 @@
-#import "CPTMutableNumericData+TypeConversion.h"
-#import "CPTMutableNumericData.h"
 #import "CPTMutableNumericDataTypeConversionTests.h"
+
+#import "CPTMutableNumericData+TypeConversion.h"
 #import "CPTUtilities.h"
 
 static const NSUInteger numberOfSamples = 5;
@@ -80,7 +80,7 @@ static const double precision           = 1.0e-6;
     NSInteger *samples  = (NSInteger *)[data mutableBytes];
 
     for ( NSUInteger i = 0; i < numberOfSamples; i++ ) {
-        samples[i] = sin(i) * 1000.0;
+        samples[i] = (NSInteger)(sin(i) * 1000.0);
     }
 
     CPTMutableNumericData *numericData = [[CPTMutableNumericData alloc] initWithData:data

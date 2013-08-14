@@ -21,7 +21,8 @@
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title = @"Composite Plot";
+        self.title   = @"Composite Plot";
+        self.section = kDemoPlots;
     }
 
     return self;
@@ -54,13 +55,12 @@
     [barChartView needsDisplay];
     [pieChartView needsDisplay];
 }
-
 #endif
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
--(void)renderInView:(UIView *)hostingView withTheme:(CPTTheme *)theme
+-(void)renderInView:(UIView *)hostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 #else
--(void)renderInView:(NSView *)hostingView withTheme:(CPTTheme *)theme
+-(void)renderInView:(NSView *)hostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 #endif
 {
     [self killGraph];
@@ -450,7 +450,7 @@
         num = [[dataForPlot objectAtIndex:index] valueForKey:key];
 
         // Green plot gets shifted above the blue
-        if ( [(NSString *)plot.identifier isEqualToString:@"Green Plot"] ) {
+        if ( [(NSString *)plot.identifier isEqualToString : @"Green Plot"] ) {
             if ( fieldEnum == CPTScatterPlotFieldY ) {
                 num = (NSDecimalNumber *)[NSDecimalNumber numberWithDouble:[num doubleValue] + 1.0];
             }
@@ -477,12 +477,12 @@
             break;
 
         case 1:
-            newLayer = [[[CPTTextLayer alloc] initWithText:[NSString stringWithFormat:@"%lu", index]
+            newLayer = [[[CPTTextLayer alloc] initWithText:[NSString stringWithFormat:@"%lu", (unsigned long)index]
                                                      style:[CPTTextStyle textStyle]] autorelease];
             break;
 
         default:
-            newLayer = [[[CPTTextLayer alloc] initWithText:[NSString stringWithFormat:@"%lu", index]
+            newLayer = [[[CPTTextLayer alloc] initWithText:[NSString stringWithFormat:@"%lu", (unsigned long)index]
                                                      style:whiteText] autorelease];
             break;
     }
@@ -514,7 +514,6 @@
         pieChartView.frame    = CGRectMake(684.0f, 408.0f, 320.0f, 320.0f);
     }
 }
-
 #endif
 
 @end

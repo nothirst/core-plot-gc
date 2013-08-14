@@ -1,6 +1,4 @@
-#import <Foundation/Foundation.h>
-
-///	@ingroup themeNames
+/// @ingroup themeNames
 /// @{
 extern NSString *const kCPTDarkGradientTheme; ///< A graph theme with dark gray gradient backgrounds and light gray lines.
 extern NSString *const kCPTPlainBlackTheme;   ///< A graph theme with black backgrounds and white lines.
@@ -36,8 +34,8 @@ extern NSString *const kCPTStocksTheme;       ///< A graph theme with a gradient
 
 @end
 
-/**	@category CPTTheme(AbstractMethods)
- *	@brief CPTTheme abstract methods—must be overridden by subclasses
+/** @category CPTTheme(AbstractMethods)
+ *  @brief CPTTheme abstract methods—must be overridden by subclasses
  **/
 @interface CPTTheme(AbstractMethods)
 

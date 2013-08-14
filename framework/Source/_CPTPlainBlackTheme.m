@@ -2,9 +2,7 @@
 
 #import "CPTBorderedLayer.h"
 #import "CPTColor.h"
-#import "CPTExceptions.h"
 #import "CPTFill.h"
-#import "CPTGradient.h"
 #import "CPTMutableLineStyle.h"
 #import "CPTMutableTextStyle.h"
 #import "CPTPlotAreaFrame.h"
@@ -12,12 +10,11 @@
 #import "CPTXYAxis.h"
 #import "CPTXYAxisSet.h"
 #import "CPTXYGraph.h"
-#import "CPTXYPlotSpace.h"
 
 NSString *const kCPTPlainBlackTheme = @"Plain Black";
 
 /**
- *	@brief Creates a CPTXYGraph instance formatted with black backgrounds and white lines.
+ *  @brief Creates a CPTXYGraph instance formatted with black backgrounds and white lines.
  **/
 @implementation _CPTPlainBlackTheme
 
@@ -33,7 +30,7 @@ NSString *const kCPTPlainBlackTheme = @"Plain Black";
 
 #pragma mark -
 
--(void)applyThemeToBackground:(CPTXYGraph *)graph
+-(void)applyThemeToBackground:(CPTGraph *)graph
 {
     graph.fill = [CPTFill fillWithColor:[CPTColor blackColor]];
 }
@@ -44,31 +41,32 @@ NSString *const kCPTPlainBlackTheme = @"Plain Black";
 
     CPTMutableLineStyle *borderLineStyle = [CPTMutableLineStyle lineStyle];
     borderLineStyle.lineColor = [CPTColor whiteColor];
-    borderLineStyle.lineWidth = 1.0;
+    borderLineStyle.lineWidth = CPTFloat(1.0);
 
     plotAreaFrame.borderLineStyle = borderLineStyle;
-    plotAreaFrame.cornerRadius    = 0.0;
+    plotAreaFrame.cornerRadius    = CPTFloat(0.0);
 }
 
--(void)applyThemeToAxisSet:(CPTXYAxisSet *)axisSet
+-(void)applyThemeToAxisSet:(CPTAxisSet *)axisSet
 {
+    CPTXYAxisSet *xyAxisSet             = (CPTXYAxisSet *)axisSet;
     CPTMutableLineStyle *majorLineStyle = [CPTMutableLineStyle lineStyle];
 
     majorLineStyle.lineCap   = kCGLineCapRound;
     majorLineStyle.lineColor = [CPTColor whiteColor];
-    majorLineStyle.lineWidth = 3.0;
+    majorLineStyle.lineWidth = CPTFloat(3.0);
 
     CPTMutableLineStyle *minorLineStyle = [CPTMutableLineStyle lineStyle];
     minorLineStyle.lineColor = [CPTColor whiteColor];
-    minorLineStyle.lineWidth = 3.0;
+    minorLineStyle.lineWidth = CPTFloat(3.0);
 
-    CPTXYAxis *x                        = axisSet.xAxis;
+    CPTXYAxis *x                        = xyAxisSet.xAxis;
     CPTMutableTextStyle *whiteTextStyle = [[[CPTMutableTextStyle alloc] init] autorelease];
     whiteTextStyle.color    = [CPTColor whiteColor];
-    whiteTextStyle.fontSize = 14.0;
+    whiteTextStyle.fontSize = CPTFloat(14.0);
     CPTMutableTextStyle *minorTickWhiteTextStyle = [[[CPTMutableTextStyle alloc] init] autorelease];
     minorTickWhiteTextStyle.color    = [CPTColor whiteColor];
-    minorTickWhiteTextStyle.fontSize = 12.0;
+    minorTickWhiteTextStyle.fontSize = CPTFloat(12.0);
 
     x.labelingPolicy              = CPTAxisLabelingPolicyFixedInterval;
     x.majorIntervalLength         = CPTDecimalFromDouble(0.5);
@@ -78,13 +76,13 @@ NSString *const kCPTPlainBlackTheme = @"Plain Black";
     x.majorTickLineStyle          = majorLineStyle;
     x.minorTickLineStyle          = minorLineStyle;
     x.axisLineStyle               = majorLineStyle;
-    x.majorTickLength             = 7.0;
-    x.minorTickLength             = 5.0;
+    x.majorTickLength             = CPTFloat(7.0);
+    x.minorTickLength             = CPTFloat(5.0);
     x.labelTextStyle              = whiteTextStyle;
     x.minorTickLabelTextStyle     = whiteTextStyle;
     x.titleTextStyle              = whiteTextStyle;
 
-    CPTXYAxis *y = axisSet.yAxis;
+    CPTXYAxis *y = xyAxisSet.yAxis;
     y.labelingPolicy              = CPTAxisLabelingPolicyFixedInterval;
     y.majorIntervalLength         = CPTDecimalFromDouble(0.5);
     y.minorTicksPerInterval       = 4;
@@ -93,15 +91,15 @@ NSString *const kCPTPlainBlackTheme = @"Plain Black";
     y.majorTickLineStyle          = majorLineStyle;
     y.minorTickLineStyle          = minorLineStyle;
     y.axisLineStyle               = majorLineStyle;
-    y.majorTickLength             = 7.0;
-    y.minorTickLength             = 5.0;
+    y.majorTickLength             = CPTFloat(7.0);
+    y.minorTickLength             = CPTFloat(5.0);
     y.labelTextStyle              = whiteTextStyle;
     y.minorTickLabelTextStyle     = minorTickWhiteTextStyle;
     y.titleTextStyle              = whiteTextStyle;
 }
 
 #pragma mark -
-#pragma mark NSCoding methods
+#pragma mark NSCoding Methods
 
 -(Class)classForCoder
 {

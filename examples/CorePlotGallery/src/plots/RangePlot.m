@@ -19,7 +19,9 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
     if ( (self = [super init]) ) {
         graph    = nil;
         plotData = nil;
-        title    = @"Range Plot";
+
+        self.title   = @"Range Plot";
+        self.section = kFinancialPlots;
     }
 
     return self;
@@ -52,7 +54,7 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
     }
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
     // If you make sure your dates are calculated at noon, you shouldn't have to
     // worry about daylight savings. If you use midnight, you will have to adjust
@@ -66,12 +68,13 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
 #endif
 
     [graph release];
-    graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:bounds];
+    graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame : bounds];
     [self addGraph:graph toHostingView:layerHostingView];
     [self applyTheme:theme toGraph:graph withDefault:[CPTTheme themeNamed:kCPTDarkGradientTheme]];
 
     [self setTitleDefaultsForGraph:graph withBounds:bounds];
     [self setPaddingDefaultsForGraph:graph withBounds:bounds];
+    graph.plotAreaFrame.masksToBorder = NO;
 
     // Instructions
     CPTMutableTextStyle *textStyle = [CPTMutableTextStyle textStyle];
@@ -95,7 +98,7 @@ static const NSTimeInterval oneDay = 24 * 60 * 60;
 
     // Setup fill and bar style
     CPTColor *transparentGreen = [[CPTColor greenColor] colorWithAlphaComponent:0.2];
-    areaFill = [(CPTFill *)[CPTFill alloc] initWithColor:transparentGreen];
+    areaFill = [(CPTFill *)[CPTFill alloc] initWithColor : transparentGreen];
 
     CPTMutableLineStyle *lineStyle = [CPTMutableLineStyle lineStyle];
     lineStyle.lineWidth = 1.0f;

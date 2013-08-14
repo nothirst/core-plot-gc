@@ -4,36 +4,48 @@
 #import "CPTPlotAreaFrame.h"
 #import "CPTPlotSpace.h"
 
-/**	@brief Positions a content layer relative to some anchor point in a plot space.
+/// @cond
+
+@interface CPTPlotSpaceAnnotation()
+
+-(void)setContentNeedsLayout;
+
+@end
+
+/// @endcond
+
+#pragma mark -
+
+/** @brief Positions a content layer relative to some anchor point in a plot space.
  *
- *	Plot space annotations are positioned relative to a plot space. This allows the
- *	annotation content layer to move with the plot when the plot space changes.
- *	This is useful for applications such as labels attached to specific data points on a plot.
+ *  Plot space annotations are positioned relative to a plot space. This allows the
+ *  annotation content layer to move with the plot when the plot space changes.
+ *  This is useful for applications such as labels attached to specific data points on a plot.
  **/
 @implementation CPTPlotSpaceAnnotation
 
-/** @property anchorPlotPoint
- *	@brief An array of NSDecimalNumber objects giving the anchor plot coordinates.
+/** @property NSArray *anchorPlotPoint
+ *  @brief An array of NSDecimalNumber objects giving the anchor plot coordinates.
  **/
 @synthesize anchorPlotPoint;
 
-/** @property plotSpace
- *	@brief The plot space which the anchor is defined in.
+/** @property CPTPlotSpace *plotSpace
+ *  @brief The plot space which the anchor is defined in.
  **/
 @synthesize plotSpace;
 
 #pragma mark -
 #pragma mark Init/Dealloc
 
-///	@name Initialization
-///	@{
+/// @name Initialization
+/// @{
 
 /** @brief Initializes a newly allocated CPTPlotSpaceAnnotation object.
  *
- *	This is the designated initializer. The initialized layer will be anchored to
- *	a point in plot coordinates.
+ *  This is the designated initializer. The initialized layer will be anchored to
+ *  a point in plot coordinates.
  *
- *	@param newPlotSpace The plot space which the anchor is defined in. Must be non-nil.
+ *  @param newPlotSpace The plot space which the anchor is defined in. Must be non-@nil.
  *  @param newPlotPoint An array of NSDecimalNumber objects giving the anchor plot coordinates.
  *  @return The initialized CPTPlotSpaceAnnotation object.
  **/
@@ -44,12 +56,24 @@
     if ( (self = [super init]) ) {
         plotSpace       = [newPlotSpace retain];
         anchorPlotPoint = [newPlotPoint copy];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(positionContentLayer) name:CPTPlotSpaceCoordinateMappingDidChangeNotification object:plotSpace];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(setContentNeedsLayout)
+                                                     name:CPTPlotSpaceCoordinateMappingDidChangeNotification
+                                                   object:plotSpace];
     }
     return self;
 }
 
-///	@}
+/// @}
+
+/// @cond
+
+// plotSpace is required; this will fail the assertion in -initWithPlotSpace:anchorPlotPoint:
+-(id)init
+{
+    return [self initWithPlotSpace:nil anchorPlotPoint:nil];
+}
 
 -(void)dealloc
 {
@@ -59,8 +83,12 @@
     [super dealloc];
 }
 
+/// @endcond
+
 #pragma mark -
-#pragma mark NSCoding methods
+#pragma mark NSCoding Methods
+
+/// @cond
 
 -(void)encodeWithCoder:(NSCoder *)coder
 {
@@ -79,10 +107,17 @@
     return self;
 }
 
+/// @endcond
+
 #pragma mark -
 #pragma mark Layout
 
-///	@cond
+/// @cond
+
+-(void)setContentNeedsLayout
+{
+    [self.contentLayer.superlayer setNeedsLayout];
+}
 
 -(void)positionContentLayer
 {
@@ -118,30 +153,29 @@
 
                 content.anchorPoint = self.contentAnchorPoint;
                 content.position    = newPosition;
-                content.transform   = CATransform3DMakeRotation(self.rotation, 0.0, 0.0, 1.0);
+                content.transform   = CATransform3DMakeRotation( self.rotation, CPTFloat(0.0), CPTFloat(0.0), CPTFloat(1.0) );
                 [content pixelAlign];
-                [content setNeedsDisplay];
             }
         }
     }
 }
 
-///	@endcond
+/// @endcond
 
 #pragma mark -
 #pragma mark Accessors
 
-///	@cond
+/// @cond
 
 -(void)setAnchorPlotPoint:(NSArray *)newPlotPoint
 {
     if ( anchorPlotPoint != newPlotPoint ) {
         [anchorPlotPoint release];
         anchorPlotPoint = [newPlotPoint copy];
-        [self positionContentLayer];
+        [self setContentNeedsLayout];
     }
 }
 
-///	@endcond
+/// @endcond
 
 @end

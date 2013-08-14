@@ -5,10 +5,10 @@
 
 #import "RealTimePlot.h"
 
-const double kFrameRate         = 5.0;  // frames per second
-const double kAlpha             = 0.25; // smoothing constant
-const NSUInteger kMaxDataPoints = 51;
-NSString *kPlotIdentifier       = @"Data Source Plot";
+static const double kFrameRate         = 5.0;  // frames per second
+static const double kAlpha             = 0.25; // smoothing constant
+static const NSUInteger kMaxDataPoints = 51;
+static NSString *const kPlotIdentifier = @"Data Source Plot";
 
 @implementation RealTimePlot
 
@@ -20,9 +20,11 @@ NSString *kPlotIdentifier       = @"Data Source Plot";
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title     = @"Real Time Plot";
         plotData  = [[NSMutableArray alloc] initWithCapacity:kMaxDataPoints];
         dataTimer = nil;
+
+        self.title   = @"Real Time Plot";
+        self.section = kLinePlots;
     }
 
     return self;
@@ -41,16 +43,9 @@ NSString *kPlotIdentifier       = @"Data Source Plot";
 {
     [plotData removeAllObjects];
     currentIndex = 0;
-    [dataTimer release];
-    dataTimer = [[NSTimer timerWithTimeInterval:1.0 / kFrameRate
-                                         target:self
-                                       selector:@selector(newData:)
-                                       userInfo:nil
-                                        repeats:YES] retain];
-    [[NSRunLoop mainRunLoop] addTimer:dataTimer forMode:NSDefaultRunLoopMode];
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     CGRect bounds = layerHostingView.bounds;
@@ -69,6 +64,7 @@ NSString *kPlotIdentifier       = @"Data Source Plot";
     graph.plotAreaFrame.paddingRight  = 15.0;
     graph.plotAreaFrame.paddingBottom = 55.0;
     graph.plotAreaFrame.paddingLeft   = 55.0;
+    graph.plotAreaFrame.masksToBorder = NO;
 
     // Grid line styles
     CPTMutableLineStyle *majorGridLineStyle = [CPTMutableLineStyle lineStyle];
@@ -127,6 +123,21 @@ NSString *kPlotIdentifier       = @"Data Source Plot";
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
     plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromUnsignedInteger(0) length:CPTDecimalFromUnsignedInteger(kMaxDataPoints - 1)];
     plotSpace.yRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromUnsignedInteger(0) length:CPTDecimalFromUnsignedInteger(1)];
+
+    [dataTimer invalidate];
+    [dataTimer release];
+
+    if ( animated ) {
+        dataTimer = [[NSTimer timerWithTimeInterval:1.0 / kFrameRate
+                                             target:self
+                                           selector:@selector(newData:)
+                                           userInfo:nil
+                                            repeats:YES] retain];
+        [[NSRunLoop mainRunLoop] addTimer:dataTimer forMode:NSDefaultRunLoopMode];
+    }
+    else {
+        dataTimer = nil;
+    }
 }
 
 -(void)dealloc
@@ -143,7 +154,7 @@ NSString *kPlotIdentifier       = @"Data Source Plot";
 
 -(void)newData:(NSTimer *)theTimer
 {
-    CPTGraph *theGraph = [graphs objectAtIndex:0];
+    CPTGraph *theGraph = [self.graphs objectAtIndex:0];
     CPTPlot *thePlot   = [theGraph plotWithIdentifier:kPlotIdentifier];
 
     if ( thePlot ) {

@@ -18,7 +18,8 @@
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title = @"Vertical Bar Chart";
+        self.title   = @"Vertical Bar Chart";
+        self.section = kBarPlots;
     }
 
     return self;
@@ -26,8 +27,8 @@
 
 -(void)killGraph
 {
-    if ( [graphs count] ) {
-        CPTGraph *graph = [graphs objectAtIndex:0];
+    if ( [self.graphs count] ) {
+        CPTGraph *graph = [self.graphs objectAtIndex:0];
 
         if ( symbolTextAnnotation ) {
             [graph.plotAreaFrame.plotArea removeAnnotation:symbolTextAnnotation];
@@ -45,7 +46,7 @@
 
 #define HORIZONTAL 0
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     CGRect bounds = layerHostingView.bounds;
@@ -53,12 +54,13 @@
     CGRect bounds = NSRectToCGRect(layerHostingView.bounds);
 #endif
 
-    CPTGraph *graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame:bounds];
+    CPTGraph *graph = [(CPTXYGraph *)[CPTXYGraph alloc] initWithFrame : bounds];
     [self addGraph:graph toHostingView:layerHostingView];
     [self applyTheme:theme toGraph:graph withDefault:[CPTTheme themeNamed:kCPTDarkGradientTheme]];
 
     [self setTitleDefaultsForGraph:graph withBounds:bounds];
     [self setPaddingDefaultsForGraph:graph withBounds:bounds];
+    graph.plotAreaFrame.masksToBorder = NO;
 #if HORIZONTAL
     graph.plotAreaFrame.paddingBottom += 30.0;
 #else
@@ -266,7 +268,7 @@
 
     NSLog(@"Bar for '%@' was selected at index %d. Value = %f", plot.identifier, (int)index, [value floatValue]);
 
-    CPTGraph *graph = [graphs objectAtIndex:0];
+    CPTGraph *graph = [self.graphs objectAtIndex:0];
 
     if ( symbolTextAnnotation ) {
         [graph.plotAreaFrame.plotArea removeAnnotation:symbolTextAnnotation];

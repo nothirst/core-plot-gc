@@ -21,12 +21,6 @@
 #pragma mark -
 #pragma mark Initialization and teardown
 
--(void)dealloc
-{
-    [graph release];
-    [super dealloc];
-}
-
 -(void)viewDidLoad
 {
     [super viewDidLoad];
@@ -35,10 +29,11 @@
     graph = [[CPTXYGraph alloc] initWithFrame:CGRectZero];
     CPTTheme *theme = [[TestXYTheme alloc] init];
     [graph applyTheme:theme];
-    [theme release];
 
     CPTGraphHostingView *hostingView = (CPTGraphHostingView *)self.view;
     hostingView.hostedGraph = graph;
+
+    graph.plotAreaFrame.masksToBorder = NO;
 
     // Setup plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
@@ -47,10 +42,10 @@
     plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(0.0) length:CPTDecimalFromFloat(NUM_POINTS)];
 
     // Create a blue plot area
-    CPTScatterPlot *boundLinePlot = [[[CPTScatterPlot alloc] init] autorelease];
+    CPTScatterPlot *boundLinePlot = [[CPTScatterPlot alloc] init];
     boundLinePlot.identifier = @"Blue Plot";
 
-    CPTMutableLineStyle *lineStyle = [[boundLinePlot.dataLineStyle mutableCopy] autorelease];
+    CPTMutableLineStyle *lineStyle = [boundLinePlot.dataLineStyle mutableCopy];
     lineStyle.lineWidth         = 1.0f;
     lineStyle.lineColor         = [CPTColor blueColor];
     boundLinePlot.dataLineStyle = lineStyle;
@@ -59,10 +54,10 @@
     [graph addPlot:boundLinePlot];
 
     // Create a green plot area
-    CPTScatterPlot *dataSourceLinePlot = [[[CPTScatterPlot alloc] init] autorelease];
+    CPTScatterPlot *dataSourceLinePlot = [[CPTScatterPlot alloc] init];
     dataSourceLinePlot.identifier = @"Green Plot";
 
-    lineStyle                        = [[dataSourceLinePlot.dataLineStyle mutableCopy] autorelease];
+    lineStyle                        = [dataSourceLinePlot.dataLineStyle mutableCopy];
     lineStyle.lineWidth              = 1.0f;
     lineStyle.lineColor              = [CPTColor greenColor];
     dataSourceLinePlot.dataLineStyle = lineStyle;
@@ -148,7 +143,6 @@
 
     return values + indexRange.location;
 }
-
 #endif
 
 #else
@@ -181,7 +175,6 @@
     }
     return returnArray;
 }
-
 #endif
 #endif
 

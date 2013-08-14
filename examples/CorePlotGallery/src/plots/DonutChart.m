@@ -13,7 +13,8 @@ NSString *const outerChartName = @"Outer";
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title = @"Donut Chart";
+        self.title   = @"Donut Chart";
+        self.section = kPieCharts;
     }
 
     return self;
@@ -41,7 +42,7 @@ NSString *const outerChartName = @"Outer";
     }
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     CGRect bounds = layerHostingView.bounds;
@@ -53,25 +54,11 @@ NSString *const outerChartName = @"Outer";
     [self addGraph:graph toHostingView:layerHostingView];
     [self applyTheme:theme toGraph:graph withDefault:[CPTTheme themeNamed:kCPTDarkGradientTheme]];
 
-    graph.title = title;
-    CPTMutableTextStyle *textStyle = [CPTMutableTextStyle textStyle];
-    textStyle.color                = [CPTColor grayColor];
-    textStyle.fontName             = @"Helvetica-Bold";
-    textStyle.fontSize             = bounds.size.height / 20.0f;
-    graph.titleTextStyle           = textStyle;
-    graph.titleDisplacement        = CGPointMake(0.0f, bounds.size.height / 18.0f);
-    graph.titlePlotAreaFrameAnchor = CPTRectAnchorTop;
+    [self setTitleDefaultsForGraph:graph withBounds:bounds];
+    [self setPaddingDefaultsForGraph:graph withBounds:bounds];
 
     graph.plotAreaFrame.masksToBorder = NO;
-
-    // Graph padding
-    float boundsPadding = bounds.size.width / 20.0f;
-    graph.paddingLeft   = boundsPadding;
-    graph.paddingTop    = graph.titleDisplacement.y * 2;
-    graph.paddingRight  = boundsPadding;
-    graph.paddingBottom = boundsPadding;
-
-    graph.axisSet = nil;
+    graph.axisSet                     = nil;
 
     CPTMutableLineStyle *whiteLineStyle = [CPTMutableLineStyle lineStyle];
     whiteLineStyle.lineColor = [CPTColor whiteColor];
@@ -82,26 +69,42 @@ NSString *const outerChartName = @"Outer";
     whiteShadow.shadowColor      = [[CPTColor whiteColor] colorWithAlphaComponent:0.25];
 
     // Add pie chart
+    const CGFloat outerRadius = MIN(0.7 * (layerHostingView.frame.size.height - 2 * graph.paddingLeft) / 2.0,
+                                    0.7 * (layerHostingView.frame.size.width - 2 * graph.paddingTop) / 2.0);
+    const CGFloat innerRadius = outerRadius / 2.0;
+
     CPTPieChart *piePlot = [[CPTPieChart alloc] init];
-    piePlot.dataSource = self;
-    piePlot.pieRadius  = MIN(0.7 * (layerHostingView.frame.size.height - 2 * graph.paddingLeft) / 2.0,
-                             0.7 * (layerHostingView.frame.size.width - 2 * graph.paddingTop) / 2.0);
-    CGFloat innerRadius = piePlot.pieRadius / 2.0;
+    piePlot.dataSource      = self;
+    piePlot.pieRadius       = outerRadius;
     piePlot.pieInnerRadius  = innerRadius + 5.0;
     piePlot.identifier      = outerChartName;
     piePlot.borderLineStyle = whiteLineStyle;
-    piePlot.startAngle      = M_PI_4;
-    piePlot.endAngle        = 3.0 * M_PI_4;
+    piePlot.startAngle      = animated ? M_PI_2 : M_PI_4;
+    piePlot.endAngle        = animated ? M_PI_2 : 3.0 * M_PI_4;
     piePlot.sliceDirection  = CPTPieDirectionCounterClockwise;
     piePlot.shadow          = whiteShadow;
     piePlot.delegate        = self;
     [graph addPlot:piePlot];
+
+    if ( animated ) {
+        [CPTAnimation animate:piePlot
+                     property:@"startAngle"
+                         from:M_PI_2
+                           to:M_PI_4
+                     duration:0.25];
+        [CPTAnimation animate:piePlot
+                     property:@"endAngle"
+                         from:M_PI_2
+                           to:3.0 * M_PI_4
+                     duration:0.25];
+    }
+
     [piePlot release];
 
     // Add another pie chart
     piePlot                 = [[CPTPieChart alloc] init];
     piePlot.dataSource      = self;
-    piePlot.pieRadius       = innerRadius - 5.0;
+    piePlot.pieRadius       = animated ? 0.0 : (innerRadius - 5.0);
     piePlot.identifier      = innerChartName;
     piePlot.borderLineStyle = whiteLineStyle;
     piePlot.startAngle      = M_PI_4;
@@ -109,6 +112,18 @@ NSString *const outerChartName = @"Outer";
     piePlot.shadow          = whiteShadow;
     piePlot.delegate        = self;
     [graph addPlot:piePlot];
+
+    if ( animated ) {
+        [CPTAnimation animate:piePlot
+                     property:@"pieRadius"
+                         from:0.0
+                           to:innerRadius - 5.0
+                     duration:0.5
+                    withDelay:0.25
+               animationCurve:CPTAnimationCurveBounceOut
+                     delegate:nil];
+    }
+
     [piePlot release];
 }
 
@@ -145,7 +160,7 @@ NSString *const outerChartName = @"Outer";
 
     CPTTextLayer *newLayer = nil;
 
-    if ( [(NSString *)plot.identifier isEqualToString:outerChartName] ) {
+    if ( [(NSString *)plot.identifier isEqualToString : outerChartName] ) {
         if ( !whiteText ) {
             whiteText       = [[CPTMutableTextStyle alloc] init];
             whiteText.color = [CPTColor whiteColor];
@@ -168,7 +183,7 @@ NSString *const outerChartName = @"Outer";
 {
     CGFloat result = 0.0;
 
-    if ( [(NSString *)pieChart.identifier isEqualToString:outerChartName] ) {
+    if ( [(NSString *)pieChart.identifier isEqualToString : outerChartName] ) {
         result = (index == 0 ? 15.0 : 0.0);
     }
     return result;

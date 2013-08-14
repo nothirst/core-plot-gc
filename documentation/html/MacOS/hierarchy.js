@@ -1,7 +1,7 @@
 var hierarchy =
 [
-    [ "<CAMediaTiming-p>", "http://developer.apple.com/documentation/GraphicsImaging/Reference/CAMediaTiming_protocol/Introduction/Introduction.html", [
-      [ "CALayer", "http://developer.apple.com/documentation/GraphicsImaging/Reference/CALayer_class/Introduction/Introduction.html", [
+    [ "<CAMediaTiming>", "https://developer.apple.com/library/mac/#documentation/GraphicsImaging/Reference/CAMediaTiming_protocol/Introduction/Introduction.html", [
+      [ "CALayer", "https://developer.apple.com/library/mac/#documentation/GraphicsImaging/Reference/CALayer_class/Introduction/Introduction.html", [
         [ "CPTLayer", "interface_c_p_t_layer.html", [
           [ "CPTAnnotationHostLayer", "interface_c_p_t_annotation_host_layer.html", [
             [ "CPTBorderedLayer", "interface_c_p_t_bordered_layer.html", [
@@ -34,12 +34,30 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
+    [ "CPTAnimation(CPTAnimationPeriodAdditions)", "category_c_p_t_animation_07_c_p_t_animation_period_additions_08.html", null ],
+    [ "CPTAnimationPeriod(AbstractMethods)", "category_c_p_t_animation_period_07_abstract_methods_08.html", null ],
+    [ "CPTAnnotation(AbstractMethods)", "category_c_p_t_annotation_07_abstract_methods_08.html", null ],
+    [ "CPTAxis(AbstractMethods)", "category_c_p_t_axis_07_abstract_methods_08.html", null ],
+    [ "CPTColor(CPTPlatformSpecificColorExtensions)", "category_c_p_t_color_07_c_p_t_platform_specific_color_extensions_08.html", null ],
+    [ "CPTConstraints(AbstractMethods)", "category_c_p_t_constraints_07_abstract_methods_08.html", null ],
     [ "CPTContextNode", "struct_c_p_t_context_node.html", null ],
+    [ "CPTFill(AbstractMethods)", "category_c_p_t_fill_07_abstract_methods_08.html", null ],
     [ "CPTGradientElement", "struct_c_p_t_gradient_element.html", null ],
+    [ "CPTGraph(AbstractFactoryMethods)", "category_c_p_t_graph_07_abstract_factory_methods_08.html", null ],
+    [ "CPTLayer(CPTPlatformSpecificLayerExtensions)", "category_c_p_t_layer_07_c_p_t_platform_specific_layer_extensions_08.html", null ],
+    [ "CPTMutableNumericData(TypeConversion)", "category_c_p_t_mutable_numeric_data_07_type_conversion_08.html", null ],
+    [ "CPTMutableTextStyle(CPTPlatformSpecificMutableTextStyleExtensions)", "category_c_p_t_mutable_text_style_07_c_p_t_platform_specific_mutable_text_style_extensions_08.html", null ],
+    [ "CPTNumericData(TypeConversion)", "category_c_p_t_numeric_data_07_type_conversion_08.html", null ],
     [ "CPTNumericDataType", "struct_c_p_t_numeric_data_type.html", null ],
+    [ "CPTPlot(AbstractMethods)", "category_c_p_t_plot_07_abstract_methods_08.html", null ],
+    [ "CPTPlotSpace(AbstractMethods)", "category_c_p_t_plot_space_07_abstract_methods_08.html", null ],
     [ "CPTRGBAColor", "struct_c_p_t_r_g_b_a_color.html", null ],
-    [ "<NSCoding-p>", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Protocols/NSCoding_Protocol/Reference/Reference.html", [
-      [ "CALayer", "http://developer.apple.com/documentation/GraphicsImaging/Reference/CALayer_class/Introduction/Introduction.html", null ],
+    [ "CPTTextStyle(CPTPlatformSpecificTextStyleExtensions)", "category_c_p_t_text_style_07_c_p_t_platform_specific_text_style_extensions_08.html", null ],
+    [ "CPTTheme(AbstractMethods)", "category_c_p_t_theme_07_abstract_methods_08.html", null ],
+    [ "NSAttributedString(CPTPlatformSpecificAttributedStringExtensions)", "category_n_s_attributed_string_07_c_p_t_platform_specific_attributed_string_extensions_08.html", null ],
+    [ "NSCoder(CPTExtensions)", "category_n_s_coder_07_c_p_t_extensions_08.html", null ],
+    [ "<NSCoding>", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Protocols/NSCoding_Protocol/Reference/Reference.html", [
+      [ "CALayer", "https://developer.apple.com/library/mac/#documentation/GraphicsImaging/Reference/CALayer_class/Introduction/Introduction.html", null ],
       [ "CPTAnnotation", "interface_c_p_t_annotation.html", [
         [ "CPTLayerAnnotation", "interface_c_p_t_layer_annotation.html", null ],
         [ "CPTPlotSpaceAnnotation", "interface_c_p_t_plot_space_annotation.html", null ]
@@ -76,19 +94,19 @@ var hierarchy =
         [ "CPTMutableTextStyle", "interface_c_p_t_mutable_text_style.html", null ]
       ] ],
       [ "CPTTheme", "interface_c_p_t_theme.html", null ],
-      [ "NSFormatter", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSFormatter_Class/Reference/Reference.html", [
-        [ "NSNumberFormatter", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSNumberFormatter_Class/Reference/Reference.html", [
+      [ "NSFormatter", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSFormatter_Class/Reference/Reference.html", [
+        [ "NSNumberFormatter", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSNumberFormatter_Class/Reference/Reference.html", [
           [ "CPTCalendarFormatter", "interface_c_p_t_calendar_formatter.html", null ],
           [ "CPTTimeFormatter", "interface_c_p_t_time_formatter.html", null ]
         ] ]
       ] ],
-      [ "NSResponder", "http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Classes/NSResponder_Class/Reference/Reference.html", [
-        [ "NSView", "http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Classes/NSView_Class/Reference/NSView.html", [
+      [ "NSResponder", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSResponder_Class/Reference/Reference.html", [
+        [ "NSView", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSView_Class/Reference/NSView.html", [
           [ "CPTGraphHostingView", "interface_c_p_t_graph_hosting_view.html", null ]
         ] ]
       ] ]
     ] ],
-    [ "<NSCopying-p>", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Protocols/NSCopying_Protocol/Reference/Reference.html", [
+    [ "<NSCopying>", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Protocols/NSCopying_Protocol/Reference/Reference.html", [
       [ "CPTColor", "interface_c_p_t_color.html", null ],
       [ "CPTConstraints", "interface_c_p_t_constraints.html", null ],
       [ "CPTFill", "interface_c_p_t_fill.html", null ],
@@ -102,11 +120,15 @@ var hierarchy =
       [ "CPTPlotSymbol", "interface_c_p_t_plot_symbol.html", null ],
       [ "CPTShadow", "interface_c_p_t_shadow.html", null ],
       [ "CPTTextStyle", "interface_c_p_t_text_style.html", null ],
-      [ "NSFormatter", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSFormatter_Class/Reference/Reference.html", null ]
+      [ "NSFormatter", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSFormatter_Class/Reference/Reference.html", null ]
     ] ],
-    [ "<NSKeyValueBindingCreation-p>", "http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Protocols/NSKeyValueBindingCreation_Protocol/Reference/Reference.html", [
-      [ "NSObject", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSObject_Class/Reference/Reference.html", [
-        [ "CALayer", "http://developer.apple.com/documentation/GraphicsImaging/Reference/CALayer_class/Introduction/Introduction.html", null ],
+    [ "NSDecimalNumber(CPTExtensions)", "category_n_s_decimal_number_07_c_p_t_extensions_08.html", null ],
+    [ "<NSKeyValueBindingCreation>", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Protocols/NSKeyValueBindingCreation_Protocol/Reference/Reference.html", [
+      [ "NSObject", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSObject_Class/Reference/Reference.html", [
+        [ "CALayer", "https://developer.apple.com/library/mac/#documentation/GraphicsImaging/Reference/CALayer_class/Introduction/Introduction.html", null ],
+        [ "CPTAnimation", "interface_c_p_t_animation.html", null ],
+        [ "CPTAnimationOperation", "interface_c_p_t_animation_operation.html", null ],
+        [ "CPTAnimationPeriod", "interface_c_p_t_animation_period.html", null ],
         [ "CPTAnnotation", "interface_c_p_t_annotation.html", null ],
         [ "CPTAxisLabel", "interface_c_p_t_axis_label.html", null ],
         [ "CPTColor", "interface_c_p_t_color.html", null ],
@@ -126,21 +148,23 @@ var hierarchy =
         [ "CPTShadow", "interface_c_p_t_shadow.html", null ],
         [ "CPTTextStyle", "interface_c_p_t_text_style.html", null ],
         [ "CPTTheme", "interface_c_p_t_theme.html", null ],
-        [ "NSFormatter", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSFormatter_Class/Reference/Reference.html", null ],
-        [ "NSResponder", "http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/Classes/NSResponder_Class/Reference/Reference.html", null ],
-        [ "NSValueTransformer", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSValueTransformer_Class/Reference/Reference.html", [
+        [ "NSFormatter", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSFormatter_Class/Reference/Reference.html", null ],
+        [ "NSResponder", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSResponder_Class/Reference/Reference.html", null ],
+        [ "NSValueTransformer", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSValueTransformer_Class/Reference/Reference.html", [
           [ "CPTDecimalNumberValueTransformer", "interface_c_p_t_decimal_number_value_transformer.html", null ]
         ] ]
       ] ]
     ] ],
-    [ "<NSMutableCopying-p>", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Protocols/NSMutableCopying_Protocol/Reference/Reference.html", [
+    [ "<NSMutableCopying>", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Protocols/NSMutableCopying_Protocol/Reference/Reference.html", [
       [ "CPTLineStyle", "interface_c_p_t_line_style.html", null ],
       [ "CPTNumericData", "interface_c_p_t_numeric_data.html", null ],
       [ "CPTPlotRange", "interface_c_p_t_plot_range.html", null ],
       [ "CPTShadow", "interface_c_p_t_shadow.html", null ],
       [ "CPTTextStyle", "interface_c_p_t_text_style.html", null ]
     ] ],
-    [ "<NSObject-p>", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Protocols/NSObject_Protocol/Reference/NSObject.html", [
+    [ "NSNumber(CPTExtensions)", "category_n_s_number_07_c_p_t_extensions_08.html", null ],
+    [ "<NSObject>", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Protocols/NSObject_Protocol/Reference/NSObject.html", [
+      [ "<CPTAnimationDelegate>", "protocol_c_p_t_animation_delegate-p.html", null ],
       [ "<CPTAxisDelegate>", "protocol_c_p_t_axis_delegate-p.html", null ],
       [ "<CPTLegendDelegate>", "protocol_c_p_t_legend_delegate-p.html", null ],
       [ "<CPTPlotDataSource>", "protocol_c_p_t_plot_data_source-p.html", [
@@ -162,6 +186,7 @@ var hierarchy =
         [ "CPTLayer", "interface_c_p_t_layer.html", null ],
         [ "CPTPlotSpace", "interface_c_p_t_plot_space.html", null ]
       ] ],
-      [ "NSObject", "http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSObject_Class/Reference/Reference.html", null ]
-    ] ]
+      [ "NSObject", "https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSObject_Class/Reference/Reference.html", null ]
+    ] ],
+    [ "NSString(CPTTextStyleExtensions)", "category_n_s_string_07_c_p_t_text_style_extensions_08.html", null ]
 ];

@@ -1,8 +1,9 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$_c_p_t_platform_specific_categories_8h.html" title="CPTPlatformSpecificCategories.h" alt="" coords="626,105,856,135"/>
-<area shape="rect" id="node5" href="$_c_p_t_color_8h.html" title="CPTColor.h" alt="" coords="522,265,616,295"/>
-<area shape="rect" id="node11" href="$_c_p_t_layer_8h.html" title="CPTLayer.h" alt="" coords="439,185,531,215"/>
-<area shape="rect" id="node16" href="$_c_p_t_platform_specific_defines_8h.html" title="CPTPlatformSpecificDefines.h" alt="" coords="730,345,941,375"/>
-<area shape="rect" id="node13" href="$_c_p_t_responder_8h.html" title="CPTResponder.h" alt="" coords="640,265,767,295"/>
-<area shape="rect" id="node24" href="$_c_p_t_definitions_8h.html" title="CPTDefinitions.h" alt="" coords="213,265,341,295"/>
+<map id="iPhoneOnly/CPTPlatformSpecificCategories.m" name="iPhoneOnly/CPTPlatformSpecificCategories.m">
+<area shape="rect" id="node2" href="$_c_p_t_platform_specific_categories_8h.html" title="CPTPlatformSpecificCategories.h" alt="" coords="20,105,251,135"/>
+<area shape="rect" id="node11" href="$_c_p_t_platform_specific_functions_8h.html" title="CPTPlatformSpecificFunctions.h" alt="" coords="275,105,500,135"/>
+<area shape="rect" id="node3" href="$_c_p_t_color_8h.html" title="CPTColor.h" alt="" coords="5,185,99,215"/>
+<area shape="rect" id="node4" href="$_c_p_t_layer_8h.html" title="CPTLayer.h" alt="" coords="281,185,373,215"/>
+<area shape="rect" id="node6" href="$_c_p_t_platform_specific_defines_8h.html" title="CPTPlatformSpecificDefines.h" alt="" coords="81,345,292,375"/>
+<area shape="rect" id="node5" href="$_c_p_t_responder_8h.html" title="CPTResponder.h" alt="" coords="174,265,300,295"/>
+<area shape="rect" id="node8" href="$_c_p_t_definitions_8h.html" title="CPTDefinitions.h" alt="" coords="539,265,668,295"/>
 </map>

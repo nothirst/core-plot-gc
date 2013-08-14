@@ -17,13 +17,14 @@ static const CGFloat titleOffset = 25.0;
 -(id)init
 {
     if ( (self = [super init]) ) {
-        title = @"Line Caps";
+        self.title   = @"Line Caps";
+        self.section = kDemoPlots;
     }
 
     return self;
 }
 
--(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated
 {
 #if TARGET_OS_IPHONE
     CGRect bounds = layerHostingView.bounds;
@@ -46,6 +47,7 @@ static const CGFloat titleOffset = 25.0;
     graph.plotAreaFrame.paddingBottom = 25.0;
     graph.plotAreaFrame.paddingLeft   = 25.0;
     graph.plotAreaFrame.paddingRight  = 25.0;
+    graph.plotAreaFrame.masksToBorder = NO;
 
     // Setup plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;

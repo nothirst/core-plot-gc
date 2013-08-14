@@ -131,34 +131,34 @@
 {
     if ( index == 0 ) {
         [self addInputPortWithType:QCPortTypeStructure
-                            forKey:[NSString stringWithFormat:@"plotNumbers%i", index]
+                            forKey:[NSString stringWithFormat:@"plotNumbers%lu", (unsigned long)index]
                     withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                         [NSString stringWithFormat:@"Data Values", index + 1], QCPortAttributeNameKey,
-                         QCPortTypeStructure, QCPortAttributeTypeKey,
-                         nil]];
+                                    [NSString stringWithFormat:@"Data Values %u", (unsigned)(index + 1)], QCPortAttributeNameKey,
+                                    QCPortTypeStructure, QCPortAttributeTypeKey,
+                                    nil]];
 
         [self addInputPortWithType:QCPortTypeStructure
-                            forKey:[NSString stringWithFormat:@"plotLabels%i", index]
+                            forKey:[NSString stringWithFormat:@"plotLabels%lu", (unsigned long)index]
                     withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                         [NSString stringWithFormat:@"Data Labels", index + 1], QCPortAttributeNameKey,
-                         QCPortTypeStructure, QCPortAttributeTypeKey,
-                         nil]];
+                                    [NSString stringWithFormat:@"Data Labels %lu", (unsigned long)(index + 1)], QCPortAttributeNameKey,
+                                    QCPortTypeStructure, QCPortAttributeTypeKey,
+                                    nil]];
 
         // TODO: add support for used defined fill colors.  As of now we use a single color
         // multiplied against the 'default' pie chart colors
         CGColorRef grayColor = CGColorCreateGenericGray(1.0, 1.0);
         [self addInputPortWithType:QCPortTypeColor
-                            forKey:[NSString stringWithFormat:@"plotFillColor%i", index]
+                            forKey:[NSString stringWithFormat:@"plotFillColor%lu", (unsigned long)index]
                     withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                         [NSString stringWithFormat:@"Primary Fill Color", index + 1], QCPortAttributeNameKey,
-                         QCPortTypeColor, QCPortAttributeTypeKey,
-                         grayColor, QCPortAttributeDefaultValueKey,
-                         nil]];
+                                    [NSString stringWithFormat:@"Primary Fill Color %lu", (unsigned long)(index + 1)], QCPortAttributeNameKey,
+                                    QCPortTypeColor, QCPortAttributeTypeKey,
+                                    grayColor, QCPortAttributeDefaultValueKey,
+                                    nil]];
         CGColorRelease(grayColor);
 
         // Add the new plot to the graph
         CPTPieChart *pieChart = [[[CPTPieChart alloc] init] autorelease];
-        pieChart.identifier = [NSString stringWithFormat:@"Pie Chart %i", index + 1];
+        pieChart.identifier = [NSString stringWithFormat:@"Pie Chart %lu", (unsigned long)(index + 1)];
         pieChart.dataSource = self;
 
         [graph addPlot:pieChart];
@@ -222,7 +222,7 @@
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
     NSUInteger plotIndex = [[graph allPlots] indexOfObject:plot];
-    NSString *key        = [NSString stringWithFormat:@"plotNumbers%i", plotIndex];
+    NSString *key        = [NSString stringWithFormat:@"plotNumbers%lu", (unsigned long)plotIndex];
 
     if ( ![self valueForInputKey:key] ) {
         return 0;
@@ -234,14 +234,14 @@
 -(NSNumber *)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
     NSUInteger plotIndex = [[graph allPlots] indexOfObject:plot];
-    NSString *key        = [NSString stringWithFormat:@"plotNumbers%i", plotIndex];
+    NSString *key        = [NSString stringWithFormat:@"plotNumbers%lu", (unsigned long)plotIndex];
 
     if ( ![self valueForInputKey:key] ) {
         return nil;
     }
 
     NSDictionary *dict = [self valueForInputKey:key];
-    return [NSDecimalNumber decimalNumberWithString:[[dict valueForKey:[NSString stringWithFormat:@"%i", index]] stringValue]];
+    return [NSDecimalNumber decimalNumberWithString:[[dict valueForKey:[NSString stringWithFormat:@"%lu", (unsigned long)index]] stringValue]];
 }
 
 -(CPTFill *)sliceFillForPieChart:(CPTPieChart *)pieChart recordIndex:(NSUInteger)index
@@ -261,13 +261,13 @@
 
     CGColorRelease(fillColor);
 
-    return [[(CPTFill *)[CPTFill alloc] initWithColor:fillCPColor] autorelease];
+    return [[(CPTFill *)[CPTFill alloc] initWithColor : fillCPColor] autorelease];
 }
 
 -(CPTTextLayer *)sliceLabelForPieChart:(CPTPieChart *)pieChart recordIndex:(NSUInteger)index
 {
     NSUInteger plotIndex = [[graph allPlots] indexOfObject:pieChart];
-    NSString *key        = [NSString stringWithFormat:@"plotLabels%i", plotIndex];
+    NSString *key        = [NSString stringWithFormat:@"plotLabels%lu", (unsigned long)plotIndex];
 
     if ( ![self valueForInputKey:key] ) {
         return nil;
@@ -275,7 +275,7 @@
 
     NSDictionary *dict = [self valueForInputKey:key];
 
-    NSString *label = [dict valueForKey:[NSString stringWithFormat:@"%i", index]];
+    NSString *label = [dict valueForKey:[NSString stringWithFormat:@"%lu", (unsigned long)index]];
 
     CPTTextLayer *layer = [[[CPTTextLayer alloc] initWithText:label] autorelease];
     [layer sizeToFit];

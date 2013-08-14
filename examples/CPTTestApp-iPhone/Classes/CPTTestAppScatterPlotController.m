@@ -19,12 +19,6 @@
 #pragma mark -
 #pragma mark Initialization and teardown
 
--(void)dealloc
-{
-    [dataForPlot release];
-    [super dealloc];
-}
-
 -(void)viewDidLoad
 {
     [super viewDidLoad];
@@ -74,7 +68,7 @@
     y.delegate             = self;
 
     // Create a blue plot area
-    CPTScatterPlot *boundLinePlot  = [[[CPTScatterPlot alloc] init] autorelease];
+    CPTScatterPlot *boundLinePlot  = [[CPTScatterPlot alloc] init];
     CPTMutableLineStyle *lineStyle = [CPTMutableLineStyle lineStyle];
     lineStyle.miterLimit        = 1.0f;
     lineStyle.lineWidth         = 3.0f;
@@ -102,7 +96,7 @@
     boundLinePlot.plotSymbol = plotSymbol;
 
     // Create a green plot area
-    CPTScatterPlot *dataSourceLinePlot = [[[CPTScatterPlot alloc] init] autorelease];
+    CPTScatterPlot *dataSourceLinePlot = [[CPTScatterPlot alloc] init];
     lineStyle                        = [CPTMutableLineStyle lineStyle];
     lineStyle.lineWidth              = 3.f;
     lineStyle.lineColor              = [CPTColor greenColor];
@@ -168,7 +162,7 @@
     NSNumber *num = [[dataForPlot objectAtIndex:index] valueForKey:key];
 
     // Green plot gets shifted above the blue
-    if ( [(NSString *)plot.identifier isEqualToString:@"Green Plot"] ) {
+    if ( [(NSString *)plot.identifier isEqualToString : @"Green Plot"] ) {
         if ( fieldEnum == CPTScatterPlotFieldY ) {
             num = [NSNumber numberWithDouble:[num doubleValue] + 1.0];
         }
@@ -184,9 +178,9 @@
     static CPTTextStyle *positiveStyle = nil;
     static CPTTextStyle *negativeStyle = nil;
 
-    NSNumberFormatter *formatter = axis.labelFormatter;
-    CGFloat labelOffset          = axis.labelOffset;
-    NSDecimalNumber *zero        = [NSDecimalNumber zero];
+    NSFormatter *formatter = axis.labelFormatter;
+    CGFloat labelOffset    = axis.labelOffset;
+    NSDecimalNumber *zero  = [NSDecimalNumber zero];
 
     NSMutableSet *newLabels = [NSMutableSet set];
 
@@ -218,9 +212,6 @@
         newLabel.offset       = labelOffset;
 
         [newLabels addObject:newLabel];
-
-        [newLabel release];
-        [newLabelLayer release];
     }
 
     axis.axisLabels = newLabels;
