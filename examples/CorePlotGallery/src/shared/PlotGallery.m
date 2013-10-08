@@ -12,34 +12,39 @@
 
 static PlotGallery *sharedPlotGallery = nil;
 
-+ (PlotGallery *)sharedPlotGallery
++(PlotGallery *)sharedPlotGallery
 {
-    @synchronized(self) {
-        if (sharedPlotGallery == nil) {
+    @synchronized(self)
+    {
+        if ( sharedPlotGallery == nil ) {
             sharedPlotGallery = [[self alloc] init];
         }
     }
     return sharedPlotGallery;
 }
 
-+ (id)allocWithZone:(NSZone *)zone
++(id)allocWithZone:(NSZone *)zone
 {
-    @synchronized(self)	{
-        if (sharedPlotGallery == nil) {
-            return[super allocWithZone:zone];
+    @synchronized(self)
+    {
+        if ( sharedPlotGallery == nil ) {
+            return [super allocWithZone:zone];
         }
     }
     return sharedPlotGallery;
 }
 
-- (id)init
+-(id)init
 {
     Class thisClass = [self class];
-    @synchronized(thisClass) {
-        if (sharedPlotGallery == nil) {
-            if ((self = [super init])) {
+
+    @synchronized(thisClass)
+    {
+        if ( sharedPlotGallery == nil ) {
+            if ( (self = [super init]) ) {
                 sharedPlotGallery = self;
-                plotItems = [[NSMutableArray alloc] init];
+                plotItems         = [[NSMutableArray alloc] init];
+                plotSections      = [[NSCountedSet alloc] init];
             }
         }
     }
@@ -47,48 +52,74 @@ static PlotGallery *sharedPlotGallery = nil;
     return sharedPlotGallery;
 }
 
-- (id)copyWithZone:(NSZone *)zone
+-(id)copyWithZone:(NSZone *)zone
 {
     return self;
 }
 
-- (id)retain
+-(id)retain
 {
     return self;
 }
 
-- (NSUInteger)retainCount
+-(NSUInteger)retainCount
 {
     return UINT_MAX;
 }
 
-- (void)release
+-(oneway void)release
 {
 }
 
-- (id)autorelease
+-(id)autorelease
 {
     return self;
 }
 
-- (void)addPlotItem:(PlotItem *)plotItem
+-(void)addPlotItem:(PlotItem *)plotItem
 {
     [plotItems addObject:plotItem];
+
+    NSString *sectionName = plotItem.section;
+    if ( sectionName ) {
+        [plotSections addObject:sectionName];
+    }
 }
 
-- (int)count
+-(NSUInteger)count
 {
-    return [plotItems count];
+    return plotItems.count;
 }
 
-- (PlotItem *)objectAtIndex:(int)index
+-(NSUInteger)numberOfSections
 {
-    return [plotItems objectAtIndex:index];
+    return plotSections.count;
 }
 
-- (void)sortByTitle
+-(NSInteger)numberOfRowsInSection:(NSInteger)section
+{
+    return [plotSections countForObject:[[self sectionTitles] objectAtIndex:section]];
+}
+
+-(PlotItem *)objectInSection:(NSInteger)section atIndex:(NSUInteger)index
+{
+    NSUInteger offset = 0;
+
+    for ( NSUInteger i = 0; i < section; i++ ) {
+        offset += [self numberOfRowsInSection:i];
+    }
+
+    return [plotItems objectAtIndex:offset + index];
+}
+
+-(void)sortByTitle
 {
     [plotItems sortUsingSelector:@selector(titleCompare:)];
+}
+
+-(NSArray *)sectionTitles
+{
+    return [[plotSections allObjects] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
 @end

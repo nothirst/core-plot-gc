@@ -11,19 +11,22 @@
 
 @implementation AAPLotAppDelegate
 
-
 @synthesize window;
 @synthesize rootViewController;
 
-
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
-    
-    [window addSubview:[rootViewController view]];
-    [window makeKeyAndVisible];
+-(void)applicationDidFinishLaunching:(UIApplication *)application
+{
+    if ( [self.window respondsToSelector:@selector(setRootViewController:)] ) {
+        self.window.rootViewController = self.rootViewController;
+    }
+    else {
+        [self.window addSubview:self.rootViewController.view];
+    }
+    [self.window makeKeyAndVisible];
 }
 
-
-- (void)dealloc {
+-(void)dealloc
+{
     [rootViewController release];
     [window release];
     [super dealloc];

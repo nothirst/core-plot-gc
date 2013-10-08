@@ -1,15 +1,12 @@
-
-
 #import <Cocoa/Cocoa.h>
 #import <CorePlot/CorePlot.h>
 
-@interface Controller : NSObject <CPPlotDataSource> {
-    IBOutlet CPLayerHostingView *hostView;
-    CPXYGraph *graph;
+@interface Controller : NSObject<CPTPlotDataSource, CPTPlotSpaceDelegate> {
+    IBOutlet CPTGraphHostingView *hostView;
+    CPTXYGraph *graph;
     NSArray *plotData;
-    CPFill *areaFill;
-    CPLineStyle *barLineStyle;
+    CPTFill *areaFill;
+    CPTLineStyle *barLineStyle;
 }
 
 @end
-

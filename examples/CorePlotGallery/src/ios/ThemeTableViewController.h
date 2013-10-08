@@ -8,21 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
-#define kThemeTableViewControllerNoTheme @"None"
+#define kThemeTableViewControllerNoTheme      @"None"
 #define kThemeTableViewControllerDefaultTheme @"Default"
 
-@protocol ThemeTableViewControllerDelegate <NSObject>
+@protocol ThemeTableViewControllerDelegate<NSObject>
 
-- (void)themeSelectedAtIndex:(NSString*)themeName;
+-(void)themeSelectedAtIndex:(NSString *)themeName;
 
 @end
 
-
 @interface ThemeTableViewController : UITableViewController
 {
-    UIPopoverController                     *themePopoverController;
-    id<ThemeTableViewControllerDelegate>    delegate;
-    NSMutableArray                          *themes;
+    @private
+    UIPopoverController *themePopoverController;
+    id<ThemeTableViewControllerDelegate> delegate;
+    NSMutableArray *themes;
 }
 
 @property (nonatomic, retain) UIPopoverController *themePopoverController;

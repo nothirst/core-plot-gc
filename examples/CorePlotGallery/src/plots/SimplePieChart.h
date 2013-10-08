@@ -7,11 +7,13 @@
 //
 
 #import "PlotItem.h"
-#import "PlotGallery.h"
 
-@interface SimplePieChart : PlotItem <CPPlotSpaceDelegate,
-									  CPPlotDataSource>
+@interface SimplePieChart : PlotItem<CPTPlotSpaceDelegate,
+                                     CPTPieChartDelegate,
+                                     CPTLegendDelegate,
+                                     CPTPlotDataSource>
 {
+    @private
     NSArray *plotData;
 }
 

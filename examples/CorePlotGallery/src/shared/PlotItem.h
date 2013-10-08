@@ -9,64 +9,66 @@
 #import <Foundation/Foundation.h>
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
 #import "CorePlot-CocoaTouch.h"
+#import <UIKit/UIKit.h>
 
 typedef CGRect CGNSRect;
 
 #else
 
 #import <CorePlot/CorePlot.h>
-typedef CPLayerHostingView CPGraphHostingView;
-
 typedef NSRect CGNSRect;
-
 #endif
 
-@class CPGraph;
-@class CPTheme;
+extern NSString *const kDemoPlots;
+extern NSString *const kPieCharts;
+extern NSString *const kLinePlots;
+extern NSString *const kBarPlots;
+extern NSString *const kFinancialPlots;
+
+@class CPTGraph;
+@class CPTTheme;
 
 @interface PlotItem : NSObject
 {
-    CPGraphHostingView  *defaultLayerHostingView;
+    @private
+    CPTGraphHostingView *defaultLayerHostingView;
 
-    NSMutableArray      *graphs;
-    NSString            *title;
-    CPNativeImage       *cachedImage;
+    NSMutableArray *graphs;
+    NSString *section;
+    NSString *title;
+    CPTNativeImage *cachedImage;
 }
 
-#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-@property (nonatomic, retain) CPGraphHostingView *defaultLayerHostingView;
-#else
-@property (nonatomic, retain) CPLayerHostingView *defaultLayerHostingView;
-#endif
-
+@property (nonatomic, retain) CPTGraphHostingView *defaultLayerHostingView;
 @property (nonatomic, retain) NSMutableArray *graphs;
+@property (nonatomic, retain) NSString *section;
 @property (nonatomic, retain) NSString *title;
 
-+ (void)registerPlotItem:(id)item;
++(void)registerPlotItem:(id)item;
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-- (void)renderInView:(UIView *)hostingView withTheme:(CPTheme *)theme;
+-(void)renderInView:(UIView *)hostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated;
 #else
-- (void)renderInView:(NSView *)hostingView withTheme:(CPTheme *)theme;
-- (void)setFrameSize:(NSSize)size;
+-(void)renderInView:(NSView *)hostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated;
+-(void)setFrameSize:(NSSize)size;
 #endif
-- (CPNativeImage *)image;
+-(CPTNativeImage *)image;
 
+-(void)renderInLayer:(CPTGraphHostingView *)layerHostingView withTheme:(CPTTheme *)theme animated:(BOOL)animated;
 
-- (void)renderInLayer:(CPGraphHostingView *)layerHostingView withTheme:(CPTheme *)theme;
+-(void)setTitleDefaultsForGraph:(CPTGraph *)graph withBounds:(CGRect)bounds;
+-(void)setPaddingDefaultsForGraph:(CPTGraph *)graph withBounds:(CGRect)bounds;
 
-- (void)setTitleDefaultsForGraph:(CPGraph *)graph withBounds:(CGRect)bounds;
-- (void)setPaddingDefaultsForGraph:(CPGraph *)graph withBounds:(CGRect)bounds;
+-(void)reloadData;
+-(void)applyTheme:(CPTTheme *)theme toGraph:(CPTGraph *)graph withDefault:(CPTTheme *)defaultTheme;
 
-- (void)reloadData;
-- (void)applyTheme:(CPTheme *)theme toGraph:(CPGraph *)graph withDefault:(CPTheme *)defaultTheme;
+-(void)addGraph:(CPTGraph *)graph;
+-(void)addGraph:(CPTGraph *)graph toHostingView:(CPTGraphHostingView *)layerHostingView;
+-(void)killGraph;
 
-- (void)addGraph:(CPGraph *)graph;
-- (void)addGraph:(CPGraph *)graph toHostingView:(CPGraphHostingView *)layerHostingView;
-- (void)killGraph;
+-(void)generateData;
 
-- (NSComparisonResult)titleCompare:(PlotItem *)other;
+-(NSComparisonResult)titleCompare:(PlotItem *)other;
 
 @end

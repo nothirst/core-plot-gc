@@ -12,7 +12,8 @@
 
 @interface RootViewController : UITableViewController
 {
-    DetailViewController    *detailViewController;
+    @private
+    DetailViewController *detailViewController;
 }
 
 @property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;

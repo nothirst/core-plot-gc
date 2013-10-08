@@ -10,15 +10,22 @@
 
 @interface PlotGallery : NSObject
 {
+    @private
     NSMutableArray *plotItems;
+    NSCountedSet *plotSections;
 }
 
-+ (PlotGallery *)sharedPlotGallery;
+@property (nonatomic, readonly) NSUInteger count;
+@property (nonatomic, readonly) NSUInteger numberOfSections;
+@property (nonatomic, readonly, retain) NSArray *sectionTitles;
 
-- (void)addPlotItem:(PlotItem *)plotItem;
++(PlotGallery *)sharedPlotGallery;
 
-- (void)sortByTitle;
-- (int)count;
-- (PlotItem *)objectAtIndex:(int)index;
+-(void)addPlotItem:(PlotItem *)plotItem;
+
+-(void)sortByTitle;
+
+-(PlotItem *)objectInSection:(NSInteger)section atIndex:(NSUInteger)index;
+-(NSInteger)numberOfRowsInSection:(NSInteger)section;
 
 @end

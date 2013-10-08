@@ -7,20 +7,15 @@
 //
 
 #import "PlotItem.h"
-#import "PlotGallery.h"
 
-@interface GradientScatterPlot : PlotItem <	CPPlotSpaceDelegate,
-                                            CPPlotDataSource,
-                                            CPScatterPlotDelegate>
+@interface GradientScatterPlot : PlotItem<CPTPlotSpaceDelegate,
+                                          CPTPlotDataSource,
+                                          CPTScatterPlotDelegate>
 {
-    CPLayerAnnotation   *symbolTextAnnotation;
+    @private
+    CPTPlotSpaceAnnotation *symbolTextAnnotation;
 
-    CGFloat             xShift;
-    CGFloat             yShift;
-
-    CGFloat             labelRotation;
-
-    NSArray*            plotData;
+    NSArray *plotData;
 }
 
 @end

@@ -7,14 +7,13 @@
 //
 
 #import "PlotItem.h"
-#import "PlotGallery.h"
 
-@interface DatePlot : PlotItem < CPPlotSpaceDelegate,
-                                 CPPlotDataSource,
-                                 CPScatterPlotDelegate>
-{    
-    CGFloat     labelRotation;
-    NSArray     *plotData;
+@interface DatePlot : PlotItem<CPTPlotSpaceDelegate,
+                               CPTPlotDataSource,
+                               CPTScatterPlotDelegate>
+{
+    @private
+    NSArray *plotData;
 }
 
 @end

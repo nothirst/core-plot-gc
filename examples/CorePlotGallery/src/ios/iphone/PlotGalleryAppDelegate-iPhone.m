@@ -6,31 +6,38 @@
 //  Copyright 2010 Jeff Buck. All rights reserved.
 //
 
-#import "PlotGalleryAppDelegate-iPhone.h"
 #import "PlotGallery.h"
+#import "PlotGalleryAppDelegate-iPhone.h"
 
 @implementation PlotGalleryAppDelegate_iPhone
 
 @synthesize window;
 @synthesize navigationController;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[PlotGallery sharedPlotGallery] sortByTitle];
-	[window addSubview:[navigationController view]];
-    [window makeKeyAndVisible];
-	return YES;
+
+    if ( [self.window respondsToSelector:@selector(setRootViewController:)] ) {
+        self.window.rootViewController = self.navigationController;
+    }
+    else {
+        [self.window addSubview:self.navigationController.view];
+    }
+    [self.window makeKeyAndVisible];
+
+    return YES;
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
+-(void)applicationWillTerminate:(UIApplication *)application
 {
 }
 
-- (void)dealloc
+-(void)dealloc
 {
-	[navigationController release];
-	[window release];
-	[super dealloc];
+    [navigationController release];
+    [window release];
+    [super dealloc];
 }
 
 @end
