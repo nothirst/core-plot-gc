@@ -47,13 +47,27 @@
     // Color
     NSColor *styleColor = [attributes valueForKey:NSForegroundColorAttributeName];
     if ( styleColor ) {
-        newStyle.color = [CPTColor colorWithCGColor:styleColor.CGColor];
+        // CGColor property is available in Mac OS 10.8 and later
+        if ( [styleColor respondsToSelector:@selector(CGColor)] ) {
+            newStyle.color = [CPTColor colorWithCGColor:styleColor.CGColor];
+        }
+        else {
+            const NSInteger numberOfComponents = [styleColor numberOfComponents];
+            CGFloat components[numberOfComponents];
+            CGColorSpaceRef colorSpace = [[styleColor colorSpace] CGColorSpace];
+
+            [styleColor getComponents:components];
+
+            CGColorRef styleCGColor = CGColorCreate(colorSpace, components);
+            newStyle.color = [CPTColor colorWithCGColor:styleCGColor];
+            CGColorRelease(styleCGColor);
+        }
     }
 
     // Text alignment and line break mode
     NSParagraphStyle *paragraphStyle = [attributes valueForKey:NSParagraphStyleAttributeName];
     if ( paragraphStyle ) {
-        newStyle.textAlignment = paragraphStyle.alignment;
+        newStyle.textAlignment = (CPTTextAlignment)paragraphStyle.alignment;
         newStyle.lineBreakMode = paragraphStyle.lineBreakMode;
     }
 
@@ -86,7 +100,7 @@
 
     // Text alignment and line break mode
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.alignment     = self.textAlignment;
+    paragraphStyle.alignment     = (NSTextAlignment)self.textAlignment;
     paragraphStyle.lineBreakMode = self.lineBreakMode;
 
     [myAttributes setValue:paragraphStyle
@@ -122,13 +136,27 @@
     // Color
     NSColor *styleColor = [attributes valueForKey:NSForegroundColorAttributeName];
     if ( styleColor ) {
-        newStyle.color = [CPTColor colorWithCGColor:styleColor.CGColor];
+        // CGColor property is available in Mac OS 10.8 and later
+        if ( [styleColor respondsToSelector:@selector(CGColor)] ) {
+            newStyle.color = [CPTColor colorWithCGColor:styleColor.CGColor];
+        }
+        else {
+            const NSInteger numberOfComponents = [styleColor numberOfComponents];
+            CGFloat components[numberOfComponents];
+            CGColorSpaceRef colorSpace = [[styleColor colorSpace] CGColorSpace];
+
+            [styleColor getComponents:components];
+
+            CGColorRef styleCGColor = CGColorCreate(colorSpace, components);
+            newStyle.color = [CPTColor colorWithCGColor:styleCGColor];
+            CGColorRelease(styleCGColor);
+        }
     }
 
     // Text alignment and line break mode
     NSParagraphStyle *paragraphStyle = [attributes valueForKey:NSParagraphStyleAttributeName];
     if ( paragraphStyle ) {
-        newStyle.textAlignment = paragraphStyle.alignment;
+        newStyle.textAlignment = (CPTTextAlignment)paragraphStyle.alignment;
         newStyle.lineBreakMode = paragraphStyle.lineBreakMode;
     }
 
@@ -196,7 +224,7 @@
     if ( theFont ) {
         NSColor *foregroundColor                = style.color.nsColor;
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        paragraphStyle.alignment     = style.textAlignment;
+        paragraphStyle.alignment     = (NSTextAlignment)style.textAlignment;
         paragraphStyle.lineBreakMode = style.lineBreakMode;
 
         NSDictionary *attributes = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -204,7 +232,9 @@
                                     foregroundColor, NSForegroundColorAttributeName,
                                     paragraphStyle, NSParagraphStyleAttributeName,
                                     nil];
-        [self drawInRect:NSRectFromCGRect(rect) withAttributes:attributes];
+        [self drawWithRect:NSRectFromCGRect(rect)
+                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading | NSStringDrawingTruncatesLastVisibleLine
+                attributes:attributes];
 
         [paragraphStyle release];
         [attributes release];

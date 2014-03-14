@@ -126,6 +126,9 @@ NSString *const kSecond = @"Second Derivative";
     graph.plotAreaFrame.paddingBottom += 40.0;
     graph.plotAreaFrame.masksToBorder  = NO;
 
+    // Plot area delegate
+    graph.plotAreaFrame.plotArea.delegate = self;
+
     // Setup scatter plot space
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)graph.defaultPlotSpace;
     plotSpace.allowsUserInteraction = YES;
@@ -253,7 +256,7 @@ NSString *const kSecond = @"Second Derivative";
     // Set plot delegate, to know when symbols have been touched
     // We will display an annotation when a symbol is touched
     dataSourceLinePlot.delegate                        = self;
-    dataSourceLinePlot.plotSymbolMarginForHitDetection = 5.0f;
+    dataSourceLinePlot.plotSymbolMarginForHitDetection = 5.0;
 
     // Add legend
     graph.legend                 = [CPTLegend legendWithGraph:graph];
@@ -357,7 +360,7 @@ NSString *const kSecond = @"Second Derivative";
     // Setup a style for the annotation
     CPTMutableTextStyle *hitAnnotationTextStyle = [CPTMutableTextStyle textStyle];
     hitAnnotationTextStyle.color    = [CPTColor whiteColor];
-    hitAnnotationTextStyle.fontSize = 16.0f;
+    hitAnnotationTextStyle.fontSize = 16.0;
     hitAnnotationTextStyle.fontName = @"Helvetica-Bold";
 
     // Determine point of symbol in plot coordinates
@@ -375,8 +378,23 @@ NSString *const kSecond = @"Second Derivative";
     CPTTextLayer *textLayer = [[[CPTTextLayer alloc] initWithText:yString style:hitAnnotationTextStyle] autorelease];
     symbolTextAnnotation              = [[CPTPlotSpaceAnnotation alloc] initWithPlotSpace:graph.defaultPlotSpace anchorPlotPoint:anchorPoint];
     symbolTextAnnotation.contentLayer = textLayer;
-    symbolTextAnnotation.displacement = CGPointMake(0.0f, 20.0f);
+    symbolTextAnnotation.displacement = CGPointMake(0.0, 20.0);
     [graph.plotAreaFrame.plotArea addAnnotation:symbolTextAnnotation];
+}
+
+#pragma mark -
+#pragma mark Plot area delegate method
+
+-(void)plotAreaWasSelected:(CPTPlotArea *)plotArea
+{
+    // Remove the annotation
+    if ( symbolTextAnnotation ) {
+        CPTXYGraph *graph = [self.graphs objectAtIndex:0];
+
+        [graph.plotAreaFrame.plotArea removeAnnotation:symbolTextAnnotation];
+        [symbolTextAnnotation release];
+        symbolTextAnnotation = nil;
+    }
 }
 
 @end

@@ -5,6 +5,7 @@
 /// @file
 
 @class CPTAxis;
+@class CPTAxisLabel;
 @class CPTAxisSet;
 @class CPTAxisTitle;
 @class CPTGridLines;
@@ -72,6 +73,45 @@ CPTAxisLabelingPolicy;
 
 /// @}
 
+/// @name Label Selection
+/// @{
+
+/** @brief @optional Informs the delegate that an axis label was
+ *  @if MacOnly clicked. @endif
+ *  @if iOSOnly touched. @endif
+ *  @param axis The axis.
+ *  @param label The selected axis label.
+ **/
+-(void)axis:(CPTAxis *)axis labelWasSelected:(CPTAxisLabel *)label;
+
+/** @brief @optional Informs the delegate that an axis label was
+ *  @if MacOnly clicked. @endif
+ *  @if iOSOnly touched. @endif
+ *  @param axis The axis.
+ *  @param label The selected axis label.
+ *  @param event The event that triggered the selection.
+ **/
+-(void)axis:(CPTAxis *)axis labelWasSelected:(CPTAxisLabel *)label withEvent:(CPTNativeEvent *)event;
+
+/** @brief @optional Informs the delegate that a minor tick axis label was
+ *  @if MacOnly clicked. @endif
+ *  @if iOSOnly touched. @endif
+ *  @param axis The axis.
+ *  @param label The selected minor tick axis label.
+ **/
+-(void)axis:(CPTAxis *)axis minorTickLabelWasSelected:(CPTAxisLabel *)label;
+
+/** @brief @optional Informs the delegate that a minor tick axis label was
+ *  @if MacOnly clicked. @endif
+ *  @if iOSOnly touched. @endif
+ *  @param axis The axis.
+ *  @param label The selected minor tick axis label.
+ *  @param event The event that triggered the selection.
+ **/
+-(void)axis:(CPTAxis *)axis minorTickLabelWasSelected:(CPTAxisLabel *)label withEvent:(CPTNativeEvent *)event;
+
+/// @}
+
 @end
 
 #pragma mark -
@@ -118,6 +158,7 @@ CPTAxisLabelingPolicy;
     NSAttributedString *attributedTitle;
     CGFloat titleOffset;
     CGFloat titleRotation;
+    CPTSign titleDirection;
     NSDecimal titleLocation;
     CPTSign tickDirection;
     BOOL needsRelabel;
@@ -155,6 +196,7 @@ CPTAxisLabelingPolicy;
 @property (nonatomic, readwrite, copy) NSString *title;
 @property (nonatomic, readwrite, copy) NSAttributedString *attributedTitle;
 @property (nonatomic, readwrite, assign) CGFloat titleRotation;
+@property (nonatomic, readwrite, assign) CPTSign titleDirection;
 @property (nonatomic, readwrite, assign) NSDecimal titleLocation;
 @property (nonatomic, readonly, assign) NSDecimal defaultTitleLocation;
 /// @}
